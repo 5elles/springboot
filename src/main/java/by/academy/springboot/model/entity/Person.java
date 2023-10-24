@@ -37,7 +37,7 @@ public class Person {
     private Integer isStaff;
     @Column(name = "is_client")
     private Integer isClient;
-//    @OneToOne(mappedBy = "person_id")
-//    @JoinColumn(name = "person_id")
-//    private Contact contact;
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private Contact contact;
 }

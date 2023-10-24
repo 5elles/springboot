@@ -18,9 +18,9 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-//    @OneToOne
-//    @JoinColumn(name = "person_id")
-//    private Person person;
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
     @OneToMany
     @JoinColumn(name = "contact_id")
     private List<Email> emails;
