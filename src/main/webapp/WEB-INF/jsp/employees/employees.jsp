@@ -13,9 +13,11 @@
         <ul>
         <c:forEach items = "${employees}" var = "employee">
             <li>
-                <a href="employee"></a>
-                ${employee.person.citizenIdNumber},
-                        ${employee.person.lastName} ${employee.person.firstName} ${employee.person.middleName},  ${employee.person.dateOfBirth} <br>
+                <a href="/employees/${employee.id}">
+                        ${employee.person.citizenIdNumber}
+                </a>
+                , ${employee.person.lastName} ${employee.person.firstName} ${employee.person.middleName},  ${employee.person.dateOfBirth}
+                <br>
             </li>
         </c:forEach>
         </ul>

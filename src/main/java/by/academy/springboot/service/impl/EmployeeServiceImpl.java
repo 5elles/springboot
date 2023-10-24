@@ -4,6 +4,7 @@ import by.academy.springboot.model.entity.Employee;
 import by.academy.springboot.model.repository.EmployeeRepository;
 import by.academy.springboot.service.EmployeeService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +20,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepository.findAll();
     }
 
-//    public Employee get(Integer id){
-//        return  employeeRepository.findById(id);
-//    }
-
-
+    @Override
+    public Employee getById(Integer id) {
+        return employeeRepository.findById(id).orElse(null);
+    }
 
 }

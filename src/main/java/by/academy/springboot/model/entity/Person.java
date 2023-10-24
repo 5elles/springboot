@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Data
@@ -33,7 +34,10 @@ public class Person {
     @Column(name = "passport_number")
     private String passportNumber;
     @Column(name = "is_staff")
-    private boolean isStaff;
+    private Integer isStaff;
     @Column(name = "is_client")
-    private boolean isClient;
+    private Integer isClient;
+//    @OneToOne(mappedBy = "person_id")
+//    @JoinColumn(name = "person_id")
+//    private Contact contact;
 }

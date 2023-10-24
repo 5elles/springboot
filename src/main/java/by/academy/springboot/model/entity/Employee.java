@@ -20,7 +20,7 @@ public class Employee {
     @OneToOne
     @JoinColumn(name = "person_id")
     private Person person;
-    @OneToMany
-    @JoinColumn(name = "wage_rate_id")
-    private List<WageRate> wageRates;
+//    @OneToMany
+//    @JoinColumn(name = "wage_rate_id")
+//    private List<WageRate> wageRates;
 }

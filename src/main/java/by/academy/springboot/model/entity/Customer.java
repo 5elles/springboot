@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -27,5 +28,8 @@ public class Customer {
     private LocalDate agreementDate;
     @Column(name = "closure_date")
     private LocalDate closureDate;
+    @OneToMany
+    @JoinColumn(name = "customer_id")
+    private List<BankAccount> bankAccounts;
 
 }

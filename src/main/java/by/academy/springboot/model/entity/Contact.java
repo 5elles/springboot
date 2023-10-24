@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -16,8 +18,13 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private Person person;
-
+//    @OneToOne
+//    @JoinColumn(name = "person_id")
+//    private Person person;
+    @OneToMany
+    @JoinColumn(name = "contact_id")
+    private List<Email> emails;
+    @OneToMany
+    @JoinColumn(name = "contact_id")
+    private List<PhoneNumber> phoneNumbers;
 }

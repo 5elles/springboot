@@ -22,4 +22,6 @@ public class Currency {
     private String currencyAbbreviation;
     @Column(name = "currency_code")
     private String currencyCode;
+    @Column(name = "currency_rate")
+    private Double currencyRate;
 }
