@@ -1,0 +1,8 @@
+table{
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    margin: auto;
+}
+th, td{
+    border: 1px solid;
+}

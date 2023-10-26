@@ -26,7 +26,7 @@ public class BankAccount {
     private LocalDate closureDate;
     @Column(name = "current_balance")
     private Double currentBalance;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
     @OneToOne

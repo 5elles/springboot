@@ -37,7 +37,7 @@ public class Person {
     private Integer isStaff;
     @Column(name = "is_client")
     private Integer isClient;
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "person_id")
-    private Contact contact;
+    private List<Address> addresses;
 }

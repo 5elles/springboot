@@ -10,33 +10,33 @@
 <body>
 <b>Досье</b>
 <br>
-<p>
-    Фамилия: <b>${person.lastName}</b><br>
-    Имя: <b>${person.firstName}</b> <br>
-    Отчество: <b>${person.middleName}</b> <br>
-    Дата рождения: <b>${person.dateOfBirth}</b> <br>
-    ID гражданина: <b>${person.citizenIdNumber}</b> <br>
-    Паспорт №: <b>${person.passportNumber}</b> <br>
+    <p>
+        Фамилия: <b>${person.lastName}</b><br>
+        Имя: <b>${person.firstName}</b> <br>
+        Отчество: <b>${person.middleName}</b> <br>
+        Дата рождения: <b>${person.dateOfBirth}</b> <br>
+        ID гражданина: <b>${person.citizenIdNumber}</b> <br>
+        Паспорт №: <b>${person.passportNumber}</b> <br>
 
     </p>
 <p>
-    Отношение к банку:<br>
+    <b>Отношение к банку:</b><br>
     Сотрудник:
     <c:choose>
-    <c:when test="${person.isStaff == 0}"><b>нет</b></c:when>
-    <c:otherwise><b>да</b></c:otherwise>
+    <c:when test="${person.isStaff == 0}">нет</c:when>
+    <c:otherwise><a href="employee?id=${employeesID}">да</a></c:otherwise>
     </c:choose>;
 
     Клиент:
     <c:choose>
-        <c:when test="${person.isClient == 0}"><b>нет</b></c:when>
-        <c:otherwise><b>да</b></c:otherwise>
+        <c:when test="${person.isClient == 0}">нет</c:when>
+        <c:otherwise><a href="customer?id=${customersID}">да</a></c:otherwise>
     </c:choose>
     <br>
 </p>
 
 <p>
-    Контактные данные:
+    <p><b>Контактные данные:</b></p> <br>
     Телефон:
     <ul>
         <c:forEach items="${person.contact.phoneNumbers}" var="entity">
@@ -54,12 +54,11 @@
             </li>
         </c:forEach>
     </ul>
-
 </p>
 
 
 <p>
-    Адреса регистрации:
+    <b>Адреса регистрации:</b>
 <ol>
     <c:forEach items="${person.addresses}" var="entity">
         <li>

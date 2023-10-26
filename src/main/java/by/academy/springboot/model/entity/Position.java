@@ -21,6 +21,6 @@ public class Position {
     @Column(name = "salary")
     private Double salary;
     @OneToOne
-    @JoinColumn(name = "clearance_level_id")
+    @JoinColumn(name = "id", referencedColumnName = "clearence_level_id")
     private ClearanceLevel clearanceLevel;
 }
