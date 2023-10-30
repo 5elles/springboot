@@ -1,9 +1,5 @@
 package by.academy.springboot.dto;
 
-import by.academy.springboot.model.entity.Address;
-import by.academy.springboot.model.entity.Person;
-import by.academy.springboot.model.entity.WageRate;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -19,5 +15,5 @@ public class EmployeeDTO {
     private String citizenIdNumber;
     private String passportNumber;
     private List<AddressDTO> addresses;
-    private List<WageRateDTO> wageRates;
+    private List<WageRateFullDataDTO> wageRates;
 }

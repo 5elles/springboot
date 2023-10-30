@@ -20,8 +20,8 @@
             </tr>
             <c:forEach items="${customers}" var="item">
                 <tr>
-                    <td><b><a href="/customer?id=${item.id}">${item.person.lastName}</a></b>
-                     ${item.person.firstName} ${item.person.middleName}</td>
+                    <td><b><a href="/customer?id=${item.id}">${item.lastName}</a></b>
+                     ${item.firstName} ${item.middleName}</td>
                     <td align="center">${item.agreementNumber} от ${item.agreementDate.getDayOfMonth()}.${item.agreementDate.getMonthValue()}.${item.agreementDate.getYear()}г.</td>
                 </tr>
             </c:forEach>

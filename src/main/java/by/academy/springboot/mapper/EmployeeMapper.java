@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(uses = {
         AddressListMapper.class,
-        WageRateListMapper.class
+        WageRateFullDataListMapper.class
 })
 public interface EmployeeMapper {
     EmployeeMapper INSTANCE = Mappers.getMapper(EmployeeMapper.class);

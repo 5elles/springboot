@@ -7,7 +7,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = PaymentOrderMapper.class)
 public interface PaymentOrderListMapper {
     PaymentOrderListMapper INSTANCE = Mappers.getMapper(PaymentOrderListMapper.class);
     List<PaymentOrderDTO> toDTOList(List<PaymentOrder> modelList);

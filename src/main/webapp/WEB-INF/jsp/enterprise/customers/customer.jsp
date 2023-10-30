@@ -14,29 +14,29 @@
             <td colspan="4" align="center">персональные данные клиента</td>
         </tr>
         <tr>
-            <th colspan="3"><b>${customer.person.lastName} ${customer.person.firstName} ${customer.person.middleName}</b></th>
-            <td>${customer.person.dateOfBirth.getDayOfMonth()}.${customer.person.dateOfBirth.getMonthValue()}.${customer.person.dateOfBirth.getYear()}</td>
+            <th colspan="3"><b>${customerFullData.lastName} ${customerFullData.firstName} ${customerFullData.middleName}</b></th>
+            <td>${customerFullData.dateOfBirth.getDayOfMonth()}.${customerFullData.dateOfBirth.getMonthValue()}.${customerFullData.dateOfBirth.getYear()}</td>
         </tr>
         <tr>
             <td>личный №</td>
-            <td colspan="3"><b>${customer.person.citizenIdNumber}</b></td>
+            <td colspan="3"><b>${customerFullData.citizenIdNumber}</b></td>
 
         </tr>
         <tr>
             <td>паспорт </td>
-            <td colspan="3"><b>${customer.person.passportNumber}</b></td>
+            <td colspan="3"><b>${customerFullData.passportNumber}</b></td>
         </tr>
         <tr></tr>
         <tr><td colspan="4" align="center">контактные данные</td></tr>
         <tr>
-            <td rowspan="${contact.phoneNumbers.size()}">телефон</td>
-            <c:forEach items="${contact.phoneNumbers}" var="item">
+            <td rowspan="${customerFullData.phoneNumbers.size()}">телефон</td>
+            <c:forEach items="${customerFullData.phoneNumbers}" var="item">
             <td colspan="3">${item.phoneNumber}</td>
         </tr>
         </c:forEach>
         <tr>
-            <td rowspan="${contact.emails.size()}">email</td>
-            <c:forEach items="${contact.emails}" var="item">
+            <td rowspan="${customerFullData.emails.size()}">email</td>
+            <c:forEach items="${customerFullData.emails}" var="item">
             <td colspan="3">${item.email}</td>
         </tr>
         </c:forEach>
@@ -44,12 +44,12 @@
         <tr>
             <td colspan="4">
                 <ol>
-                    <c:forEach items="${customer.person.addresses}" var="entity">
+                    <c:forEach items="${customerFullData.addresses}" var="entity">
                         <li>
-                                ${entity.settlement.region.country.countryName},
-                                ${entity.settlement.region.regionName},
-                                ${entity.settlement.settlementType.shortName} ${entity.settlement.settlementName},
-                                ${entity.streetType.shortName} ${entity.streetName}
+                                ${entity.countryName},
+                                ${entity.regionName},
+                                ${entity.settlementTypeShortName} ${entity.settlementName},
+                                ${entity.streetTypeShortName} ${entity.streetName}
                             д. ${entity.houseNumber}
                             кв. ${entity.apartmentNumber}
                         </li>
@@ -73,13 +73,13 @@
             <th>Баланс в BYN</th>
             <th>Дата закрытия</th>
         </tr>
-        <c:forEach items = "${customer.bankAccounts}" var = "entity">
+        <c:forEach items = "${customerFullData.bankAccounts}" var = "entity">
             <tr>
                 <td>${entity.openingDate.getDayOfMonth()}.${entity.openingDate.getMonthValue()}.${entity.openingDate.getYear()}</td>
                 <td><a href="/bankAccount?id=${entity.id}">${entity.accountNumber}</a></td>
-                <td>${entity.currency.currencyAbbreviation}</td>
+                <td>${entity.currencyAbbreviation}</td>
                 <td>${entity.currentBalance}</td>
-                <td>${entity.currency.currencyRate * entity.currentBalance}</td>
+                <td>${entity.currencyRate * entity.currentBalance}</td>
                 <td>${entity.closureDate.getDayOfMonth()}.${entity.closureDate.getMonthValue()}.${entity.closureDate.getYear()}</td>
             </tr>
         </c:forEach>

@@ -9,6 +9,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(uses = {
         BankAccountListMapper.class,
+        BankAccountMapper.class,
         AddressListMapper.class,
         EmailListMapper.class,
         PhoneNumberListMapper.class

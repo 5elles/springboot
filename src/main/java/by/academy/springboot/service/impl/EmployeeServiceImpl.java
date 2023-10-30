@@ -41,7 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeFullDataDTO getEmployeeWithContacts(int employeeId)
+    public EmployeeFullDataDTO getEmployeeFullData(int employeeId)
             throws IllegalArgumentException {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElse(null);

@@ -31,11 +31,11 @@ public class EmployeesController {
     @GetMapping(value = "/employee")
     public String showEmployee(@RequestParam("id") int id,
                               Model model){
-        EmployeeFullDataDTO employeeWithContacts = employeeService.getEmployeeWithContacts(id);
-        if (employeeWithContacts == null){
+        EmployeeFullDataDTO employeeFullData = employeeService.getEmployeeFullData(id);
+        if (employeeFullData == null){
             return "notFound";
         } else {
-            model.addAttribute("employee", employeeWithContacts);
+            model.addAttribute("employee", employeeFullData);
             return PATH + "employee";
         }
     }

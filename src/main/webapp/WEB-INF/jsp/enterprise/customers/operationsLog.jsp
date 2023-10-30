@@ -33,12 +33,12 @@
                             ${item.timeStamp.getHour()}:${item.timeStamp.getMinute()}:${item.timeStamp.getSecond()}
                         </a>
                     </td>
-                    <td>${item.fromAccount.accountNumber}</td>
+                    <td>${item.fromAccountNumber}</td>
                     <td>${item.amount}</td>
-                    <td>${item.fromAccount.currency.currencyAbbreviation}</td>
-                    <td>${item.toAccount.accountNumber}</td>
-                    <td>${item.toAccount.currency.currencyAbbreviation}</td>
-                    <td>${item.amount * item.fromAccount.currency.currencyRate / item.toAccount.currency.currencyRate}</td>
+                    <td>${item.fromAccountCurrencyAbbreviation}</td>
+                    <td>${item.toAccountNumber}</td>
+                    <td>${item.toAccountCurrencyAbbreviation}</td>
+                    <td>${item.amount * item.fromAccountCurrencyRate / item.toAccountCurrencyRate}</td>
                 </tr>
             </c:forEach>
 

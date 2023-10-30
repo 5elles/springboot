@@ -7,7 +7,9 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {
+        CustomerMapper.class
+})
 public interface CustomerListMapper {
     CustomerListMapper INSTANCE = Mappers.getMapper(CustomerListMapper.class);
     List<CustomerDTO> toDTOList(List<Customer> modelList);

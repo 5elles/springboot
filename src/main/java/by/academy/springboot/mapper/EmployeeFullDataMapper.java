@@ -6,7 +6,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(uses = {
+        AddressListMapper.class,
+        EmailListMapper.class,
+        PhoneNumberListMapper.class,
+        WageRateFullDataListMapper.class
+})
 public interface EmployeeFullDataMapper {
     EmployeeFullDataMapper INSTANCE = Mappers.getMapper(EmployeeFullDataMapper.class);
     @Mapping(source = "employee.person.firstName", target = "firstName")

@@ -2,7 +2,6 @@ package by.academy.springboot.controller.enterprise;
 
 import by.academy.springboot.dto.BankAccountFullDataDTO;
 import by.academy.springboot.dto.CustomerFullDataDTO;
-import by.academy.springboot.model.entity.*;
 import by.academy.springboot.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -65,7 +64,7 @@ public class CustomersController {
 
     @GetMapping("/operationsLog")
     public String showBankOperationsLog(Model model) {
-        model.addAttribute("orders", customerService.findAll());
+        model.addAttribute("orders", customerService.findAllPaymentOrders());
         return PATH + "operationsLog";
     }
 

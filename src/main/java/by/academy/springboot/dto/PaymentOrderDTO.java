@@ -10,22 +10,20 @@ public class PaymentOrderDTO {
     private Integer id;
     private LocalDateTime timeStamp;
     private Double amount;
-    //fromAccount
     private String fromAccountNumber;
-    //--customer
+    private String fromAccountCurrencyAbbreviation;
+    private Double fromAccountCurrencyRate;
     private Integer fromAccountCustomerId;
-    // ----customer.person
     private String fromAccountCustomerFirstName;
     private String fromAccountCustomerMiddleName;
     private String fromAccountCustomerLastName;
     private LocalDate fromAccountCustomerDateOfBirth;
     private String fromAccountCustomerCitizenIdNumber;
     private String fromAccountCustomerPassportNumber;
-    //toAccount
     private String toAccountNumber;
-    //--customer
+    private String toAccountCurrencyAbbreviation;
+    private Double toAccountCurrencyRate;
     private Integer toAccountCustomerId;
-    // ----customer.person
     private String toAccountCustomerFirstName;
     private String toAccountCustomerMiddleName;
     private String toAccountCustomerLastName;

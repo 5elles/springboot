@@ -47,10 +47,10 @@
                         <ol>
                             <c:forEach items="${employee.addresses}" var="entity">
                                 <li>
-                                        ${entity.settlement.region.country.countryName},
-                                        ${entity.settlement.region.regionName},
-                                        ${entity.settlement.settlementType.shortName} ${entity.settlement.settlementName},
-                                        ${entity.streetType.shortName} ${entity.streetName}
+                                        ${entity.countryName},
+                                        ${entity.regionName},
+                                        ${entity.settlementTypeShortName} ${entity.settlementName},
+                                        ${entity.streetTypeShortName} ${entity.streetName}
                                     д. ${entity.houseNumber}
                                     кв. ${entity.apartmentNumber}
                                 </li>
@@ -78,11 +78,11 @@
                 <c:forEach items="${employee.wageRates}" var="entity">
                     <tr>
                         <td align="center">${entity.startDate.getDayOfMonth()}.${entity.startDate.getMonthValue()}.${entity.startDate.getYear()}</td>
-                        <td align="center">${entity.finishDate}</td>
-                        <td align="center">${entity.position.positionName}</td>
-                        <td align="center">${entity.position.salary}</td>
+                        <td align="center">${entity.finishDate.getDayOfMonth()}.${entity.finishDate.getMonthValue()}.${entity.finishDate.getYear()}</td>
+                        <td align="center">${entity.positionName}</td>
+                        <td align="center">${entity.positionSalary}</td>
                         <td align="center">${entity.rate}</td>
-                        <td align="center">${entity.rate * entity.position.salary}</td>
+                        <td align="center">${entity.rate * entity.positionSalary}</td>
                     </tr>
                 </c:forEach>
             </table>

@@ -11,6 +11,10 @@ public interface PaymentOrderMapper {
     PaymentOrderMapper INSTANCE = Mappers.getMapper(PaymentOrderMapper.class);
     @Mapping(source = "model.fromAccount.accountNumber",
             target = "fromAccountNumber")
+    @Mapping(source = "model.fromAccount.currency.currencyAbbreviation",
+            target = "fromAccountCurrencyAbbreviation")
+    @Mapping(source = "model.fromAccount.currency.currencyRate",
+            target = "fromAccountCurrencyRate")
     @Mapping(source = "model.fromAccount.customer.id",
             target = "fromAccountCustomerId")
     @Mapping(source = "model.fromAccount.customer.person.firstName",
@@ -27,6 +31,10 @@ public interface PaymentOrderMapper {
             target = "fromAccountCustomerPassportNumber")
     @Mapping(source = "model.toAccount.accountNumber",
             target = "toAccountNumber")
+    @Mapping(source = "model.toAccount.currency.currencyAbbreviation",
+            target = "toAccountCurrencyAbbreviation")
+    @Mapping(source = "model.toAccount.currency.currencyRate",
+            target = "toAccountCurrencyRate")
     @Mapping(source = "model.toAccount.customer.id",
             target = "toAccountCustomerId")
     @Mapping(source = "model.toAccount.customer.person.firstName",

@@ -17,5 +17,5 @@ public class EmployeeFullDataDTO {
     private List<AddressDTO> addresses;
     private List<EmailDTO> emails;
     private List<PhoneNumberDTO> phoneNumbers;
-    private List<WageRateDTO> wageRates;
+    private List<WageRateFullDataDTO> wageRates;
 }

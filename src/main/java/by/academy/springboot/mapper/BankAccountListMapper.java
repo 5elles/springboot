@@ -10,6 +10,8 @@ import java.util.List;
 @Mapper(uses = BankAccountMapper.class)
 public interface BankAccountListMapper {
     BankAccountListMapper INSTANCE = Mappers.getMapper(BankAccountListMapper.class);
+
     List<BankAccount> toModelList(List<BankAccountDTO> dtoList);
-    List<BankAccount> toDTOList(List<BankAccount> modelList);
+
+    List<BankAccountDTO> toDTOList(List<BankAccount> modelList);
 }

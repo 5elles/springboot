@@ -126,7 +126,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<PaymentOrderDTO> findAll() {
+    public List<PaymentOrderDTO> findAllPaymentOrders() {
         List<PaymentOrder> orders = paymentOrderRepository.findAll();
         orders.sort(Comparator.comparing(PaymentOrder::getTimeStamp));
         return PaymentOrderListMapper.INSTANCE.toDTOList(orders);

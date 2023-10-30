@@ -9,12 +9,9 @@
         <title>log</title>
     </head>
     <body>
-    <c:set var="fromPerson" value="${order.fromAccount.customer.person}" scope="session"/>
-    <c:set var="toPerson" value="${order.toAccount.customer.person}" scope="session"/>
-
         <table border="1" cellspacing="0" cellpadding="12">
             <tr>
-                <td colspan="2" align="center">платёжное поручение</td>
+                <td colspan="2" align="center"><b>платёжное поручение</b></td>
             </tr>
             <tr>
                 <td>Дата и время операции</td>
@@ -30,14 +27,16 @@
 
             <tr>
                 <td>номер счета</td>
-                <td style="color: crimson">${order.fromAccount.accountNumber}</td>
+                <td style="color: crimson">${order.fromAccountNumber}</td>
             </tr>
             <tr>
                 <td>владелец счета</td>
-                <td>${fromPerson.lastName} ${fromPerson.firstName} ${fromPerson.middleName}</td>
+                <td>${order.fromAccountCustomerLastName}
+                    ${order.fromAccountCustomerFirstName}
+                    ${order.fromAccountCustomerMiddleName}</td>
             </tr>
             <tr>
-                <td>личный номер</td><td>${fromPerson.citizenIdNumber}</td>
+                <td>личный номер</td><td>${order.fromAccountCustomerCitizenIdNumber}</td>
             </tr>
 
 
@@ -46,23 +45,22 @@
             <tr>
             <tr>
                 <td>номер счета</td>
-                <td style="color: crimson">${order.toAccount.accountNumber}</td>
+                <td style="color: crimson">${order.toAccountNumber}</td>
             </tr>
             <tr>
                 <td>владелец счета</td>
-                <td>${toPerson.lastName} ${toPerson.firstName} ${toPerson.middleName}</td>
+                <td>${order.toAccountCustomerLastName}
+                    ${order.toAccountCustomerFirstName}
+                    ${order.toAccountCustomerMiddleName}</td>
             </tr>
             <tr>
-                <td>личный номер</td><td>${toPerson.citizenIdNumber}</td>
+                <td>личный номер</td><td>${order.toAccountCustomerCitizenIdNumber}</td>
             </tr>
 
             <tr>
                 <td>cумма в валюте платежа</td>
-                <td>${order.amount}${order.fromAccount.currency.currencyAbbreviation}</td>
+                <td>${order.amount} ${order.fromAccountCurrencyAbbreviation}</td>
             </tr>
-
         </table>
-
-
     </body>
 </html>

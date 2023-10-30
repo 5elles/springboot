@@ -8,6 +8,6 @@ import java.util.List;
 public interface EmployeeService  {
     List<EmployeeDTO> findAll();
     EmployeeDTO findById(int id);
-    EmployeeFullDataDTO getEmployeeWithContacts(int employeeId);
+    EmployeeFullDataDTO getEmployeeFullData(int employeeId);
 
 }

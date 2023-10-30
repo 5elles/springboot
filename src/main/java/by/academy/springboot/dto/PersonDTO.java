@@ -19,5 +19,5 @@ public class PersonDTO {
     private String passportNumber;
     private Integer isStaff;
     private Integer isClient;
-    private List<Address> addresses;
+    private List<AddressDTO> addresses;
 }
