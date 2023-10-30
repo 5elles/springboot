@@ -7,8 +7,6 @@
     </head>
 
     <body>
-
-
         <table border="1" cellspacing="0" cellpadding="12">
             <tr>
                 <td colspan="4" align="center">Список сотрудников банка</td>
@@ -20,9 +18,11 @@
             <c:forEach items="${employees}" var="item">
                 <tr>
                     <td>
-                        <b><a href="/employee?id=${item.id}">${item.person.lastName}</a></b>
-                            ${item.person.firstName} ${item.person.middleName}</td>
-                    <td align="center">${item.person.dateOfBirth.getDayOfMonth()}.${item.person.dateOfBirth.getMonthValue()}.${item.person.dateOfBirth.getYear()}</td>
+                        <b><a href="/employee?id=${item.id}">${item.lastName}</a></b>
+                            ${item.firstName} ${item.middleName}</td>
+                    <td align="center">${item.dateOfBirth.getDayOfMonth()}.
+                            ${item.dateOfBirth.getMonthValue()}.
+                            ${item.dateOfBirth.getYear()}</td>
                 </tr>
             </c:forEach>
         </table>

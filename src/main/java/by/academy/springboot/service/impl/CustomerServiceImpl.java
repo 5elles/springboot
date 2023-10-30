@@ -1,9 +1,11 @@
 package by.academy.springboot.service.impl;
 
+import by.academy.springboot.dto.*;
+import by.academy.springboot.mapper.*;
 import by.academy.springboot.model.entity.*;
 import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.CustomerService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +14,7 @@ import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final PersonRepository personRepository;
@@ -21,94 +23,131 @@ public class CustomerServiceImpl implements CustomerService {
     private final ContactRepository contactRepository;
 
     @Override
-    public List<Customer> findAllCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerDTO> findAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        customers.sort(Comparator.comparing(o -> o.getPerson().getLastName()));
+        return CustomerListMapper.INSTANCE.toDTOList(customers);
     }
 
     @Override
-    public Customer findCustomerById(int id) {
-        return customerRepository.findById(id).orElse(null);
+    public CustomerDTO findCustomerById(int id) {
+        Customer customer = customerRepository.findById(id).orElse(null);
+        if (customer == null) {
+            return null;
+        }
+        return CustomerMapper.INSTANCE.modelToDTO(customer);
     }
 
     @Override
-    public Customer findCustomerByPerson(Person person) {
-        return customerRepository.findCustomerByPerson(person);
+    public CustomerFullDataDTO findFullData(Integer customerId) {
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if (customer == null) {
+            return null;
+        }
+        Contact contact = contactRepository.findByPerson(customer.getPerson());
+        return CustomerFullDataMapper.INSTANCE.modelsToDTO(customer, contact);
     }
 
     @Override
-    public Customer findCustomerByPersonId(int id) {
-        return customerRepository.findCustomerByPersonId(id);
+    public PersonDTO findPersonById(int id) {
+        Person person = personRepository.findById(id).orElse(null);
+        if (person == null) {
+            return null;
+        }
+        return PersonMapper.INSTANCE.toDTO(person);
     }
 
     @Override
-    public Person findPersonById(int id) {
-        return personRepository.findById(id).orElse(null);
+    public List<PaymentOrderDTO> findAllOutgoingAndIncoming(String outgoingAccountNumber, String incomingAccountNumber) {
+        List<PaymentOrder> orders = paymentOrderRepository
+                .findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(outgoingAccountNumber, incomingAccountNumber);
+        return orders.stream()
+                .map(PaymentOrderMapper.INSTANCE::toDTO)
+                .toList();
     }
 
     @Override
-    public List<PaymentOrder> findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(String accountNumber1, String accountNumber2) {
-        return paymentOrderRepository.findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(accountNumber1, accountNumber2);
+    public PaymentOrderDTO findById(int id) {
+        PaymentOrder order = paymentOrderRepository.findById(id).orElse(null);
+        if (order == null) {
+            return null;
+        }
+        return PaymentOrderMapper.INSTANCE.toDTO(order);
     }
 
     @Override
-    public PaymentOrder findPaymentOrderById(int id) {
-        return paymentOrderRepository.findById(id).orElse(null);
+    public List<PaymentOrderDTO> findByFromAccountNumber(String accountNumber) {
+        List<PaymentOrder> order = paymentOrderRepository.findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(accountNumber);
+        return order.stream()
+                .map(PaymentOrderMapper.INSTANCE::toDTO)
+                .toList();
     }
 
     @Override
-    public List<PaymentOrder> findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(String accountNumber) {
-        return paymentOrderRepository.findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(accountNumber);
+    public List<PaymentOrderDTO> findByToAccountNumber(String accountNumber) {
+        List<PaymentOrder> orders = paymentOrderRepository.findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(accountNumber);
+        return orders.stream()
+                .map(PaymentOrderMapper.INSTANCE::toDTO)
+                .toList();
     }
 
     @Override
-    public List<PaymentOrder> findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(String accountNumber) {
-        return paymentOrderRepository.findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(accountNumber);
+    public BankAccountDTO findBankAccountById(int id) {
+        BankAccount account = bankAccountRepository.findById(id).orElse(null);
+        if (account == null) {
+            return null;
+        }
+        return BankAccountMapper.INSTANCE.modelToDTO(account);
     }
 
     @Override
-    public BankAccount findBankAccountById(int id) {
-        return bankAccountRepository.findById(id).orElse(null);
+    public BankAccountFullDataDTO findBankAccountFullData(int bankAccountId) {
+        BankAccount account = bankAccountRepository.findById(bankAccountId).orElse(null);
+        if (account == null) {
+            return null;
+        }
+        String accountNumber = account.getAccountNumber();
+        List<PaymentOrderDTO> allPayments = findAllOutgoingAndIncoming(accountNumber, accountNumber);
+        List<PaymentOrderDTO> outgoingPayments = findByFromAccountNumber(accountNumber);
+        List<PaymentOrderDTO> incomingPayments = findByToAccountNumber(accountNumber);
+        return BankAccountFullDataMapper.INSTANCE.modelsToDTO(
+                account,
+                allPayments,
+                outgoingPayments,
+                incomingPayments
+        );
+    }
+
+
+    @Override
+    public ContactDTO findContact(Person person) {
+        Contact contact = contactRepository.findByPerson(person);
+        return ContactMapper.INSTANCE.toDTO(contact);
     }
 
     @Override
-    public Customer findCustomerByID(Integer customerID) {
-        return customerRepository.findById(customerID).orElse(null);
-    }
-
-    @Override
-    public List<Person> findByLastNameLike(String lastNameLike) {
-        return personRepository.findByLastNameLikeIgnoreCaseOrderByLastName(lastNameLike);
-    }
-
-    @Override
-    public Contact findContactByPerson(Person person) {
-        return contactRepository.findContactByPerson(person);
-    }
-
-    @Override
-    public List<PaymentOrder> findAllPaymentOrdersSortedByDate() {
+    public List<PaymentOrderDTO> findAll() {
         List<PaymentOrder> orders = paymentOrderRepository.findAll();
         orders.sort(Comparator.comparing(PaymentOrder::getTimeStamp));
-        return orders;
+        return PaymentOrderListMapper.INSTANCE.toDTOList(orders);
     }
 
-
-    @Override
-    @Transactional
-    public void saveCustomer(Customer customer) {
-        customerRepository.save(customer);
-    }
-
-    @Override
-    @Transactional
-    public void updateCustomer(int id, Customer updatedCustomer) {
-        updatedCustomer.setId(id);
-        customerRepository.save(updatedCustomer);
-    }
-
-    @Override
-    @Transactional
-    public void deleteCustomerById(int id) {
-        customerRepository.deleteById(id);
-    }
+//    @Override
+//    @Transactional
+//    public void saveCustomer(Customer customer) {
+//        customerRepository.save(customer);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void updateCustomer(int id, Customer updatedCustomer) {
+//        updatedCustomer.setId(id);
+//        customerRepository.save(updatedCustomer);
+//    }
+//
+//    @Override
+//    @Transactional
+//    public void deleteCustomerById(int id) {
+//        customerRepository.deleteById(id);
+//    }
 }

@@ -2,13 +2,14 @@ package by.academy.springboot.controller.enterprise;
 
 import by.academy.springboot.service.EmployeeService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EnterpriseController {
     private final EmployeeService employeeService;
     private static final String PATH = "/enterprise/";

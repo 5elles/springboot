@@ -15,29 +15,29 @@
                     <td colspan="4" align="center">досье сотрудника</td>
                 </tr>
                 <tr>
-                    <th colspan="3"><b>${employee.person.lastName} ${employee.person.firstName} ${employee.person.middleName}</b></th>
-                    <td>${employee.person.dateOfBirth.getDayOfMonth()}.${employee.person.dateOfBirth.getMonthValue()}.${employee.person.dateOfBirth.getYear()}</td>
+                    <th colspan="3"><b>${employee.lastName} ${employee.firstName} ${employee.middleName}</b></th>
+                    <td>${employee.dateOfBirth.getDayOfMonth()}.${employee.dateOfBirth.getMonthValue()}.${employee.dateOfBirth.getYear()}</td>
                 </tr>
                 <tr>
                     <td>личный №</td>
-                    <td colspan="3"><b>${employee.person.citizenIdNumber}</b></td>
+                    <td colspan="3"><b>${employee.citizenIdNumber}</b></td>
 
                 </tr>
                 <tr>
                     <td>паспорт </td>
-                    <td colspan="3"><b>${employee.person.passportNumber}</b></td>
+                    <td colspan="3"><b>${employee.passportNumber}</b></td>
                 </tr>
                 <tr></tr>
                 <tr><td colspan="4" align="center">контактные данные</td></tr>
                 <tr>
-                    <td rowspan="${contact.phoneNumbers.size()}">телефон</td>
-                    <c:forEach items="${contact.phoneNumbers}" var="item">
+                    <td rowspan="${employee.phoneNumbers.size()}">телефон</td>
+                    <c:forEach items="${employee.phoneNumbers}" var="item">
                     <td colspan="3">${item.phoneNumber}</td>
                 </tr>
                 </c:forEach>
                 <tr>
-                    <td rowspan="${contact.emails.size()}">email</td>
-                    <c:forEach items="${contact.emails}" var="item">
+                    <td rowspan="${employee.emails.size()}">email</td>
+                    <c:forEach items="${employee.emails}" var="item">
                     <td colspan="3">${item.email}</td>
                 </tr>
                 </c:forEach>
@@ -45,7 +45,7 @@
                 <tr>
                     <td colspan="4">
                         <ol>
-                            <c:forEach items="${employee.person.addresses}" var="entity">
+                            <c:forEach items="${employee.addresses}" var="entity">
                                 <li>
                                         ${entity.settlement.region.country.countryName},
                                         ${entity.settlement.region.regionName},

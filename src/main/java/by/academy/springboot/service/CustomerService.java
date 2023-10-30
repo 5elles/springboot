@@ -1,26 +1,26 @@
 package by.academy.springboot.service;
 
+import by.academy.springboot.dto.*;
 import by.academy.springboot.model.entity.*;
 
 import java.util.List;
 
 public interface CustomerService {
-    List<Customer> findAllCustomers();
-    Customer findCustomerById(int id);
-    Customer findCustomerByPerson(Person person);
-    Customer findCustomerByPersonId(int id);
-    Person findPersonById(int id);
-    List<PaymentOrder> findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(String accountNumber1, String accountNumber2);
-    PaymentOrder findPaymentOrderById(int id);
-    List<PaymentOrder> findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(String accountNumber);
-    List<PaymentOrder> findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(String accountNumber);
-    BankAccount findBankAccountById(int id);
-    Customer findCustomerByID(Integer customerID);
-    List<Person> findByLastNameLike(String lastNameLike);
-    Contact findContactByPerson(Person person);
-    List<PaymentOrder> findAllPaymentOrdersSortedByDate();
+    List<CustomerDTO> findAllCustomers();
+    CustomerDTO findCustomerById(int id);
+    CustomerFullDataDTO findFullData(Integer customerId);
+    PersonDTO findPersonById(int id);
+    List<PaymentOrderDTO> findAllOutgoingAndIncoming(String outgoingAccountNumber, String incomingAccountNumber);
+    PaymentOrderDTO findById(int id);
+    List<PaymentOrderDTO> findByFromAccountNumber(String accountNumber);
+    List<PaymentOrderDTO> findByToAccountNumber(String accountNumber);
+    BankAccountDTO findBankAccountById(int id);
+    BankAccountFullDataDTO findBankAccountFullData(int bankAccountId);
+    ContactDTO findContact(Person person);
+    List<PaymentOrderDTO> findAll();
 
-    void saveCustomer(Customer customer);
-    void updateCustomer(int id, Customer updatedCustomer);
-    void deleteCustomerById(int id);
+
+//    void saveCustomer(Customer customer);
+//    void updateCustomer(int id, Customer updatedCustomer);
+//    void deleteCustomerById(int id);
 }

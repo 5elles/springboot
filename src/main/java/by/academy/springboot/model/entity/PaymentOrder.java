@@ -28,5 +28,4 @@ public class PaymentOrder {
     @OneToOne
     @JoinColumn(name = "to_account_id")
     private BankAccount toAccount;
-
 }

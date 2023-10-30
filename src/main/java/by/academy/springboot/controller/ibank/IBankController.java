@@ -4,7 +4,7 @@ import by.academy.springboot.model.entity.BankAccount;
 import by.academy.springboot.model.entity.Customer;
 import by.academy.springboot.model.entity.PaymentOrder;
 import by.academy.springboot.service.IBankService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class IBankController {
     private final IBankService iBankService;
     @GetMapping()

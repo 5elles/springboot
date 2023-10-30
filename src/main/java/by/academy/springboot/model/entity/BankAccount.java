@@ -32,6 +32,4 @@ public class BankAccount {
     @OneToOne
     @JoinColumn(name = "currency_id")
     private Currency currency;
-
-
 }

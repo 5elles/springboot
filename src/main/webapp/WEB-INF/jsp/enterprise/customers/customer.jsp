@@ -76,7 +76,7 @@
         <c:forEach items = "${customer.bankAccounts}" var = "entity">
             <tr>
                 <td>${entity.openingDate.getDayOfMonth()}.${entity.openingDate.getMonthValue()}.${entity.openingDate.getYear()}</td>
-                <td><a href="/bankAccount?aid=${entity.id}&cid=${customer.id}">${entity.accountNumber}</a></td>
+                <td><a href="/bankAccount?id=${entity.id}">${entity.accountNumber}</a></td>
                 <td>${entity.currency.currencyAbbreviation}</td>
                 <td>${entity.currentBalance}</td>
                 <td>${entity.currency.currencyRate * entity.currentBalance}</td>

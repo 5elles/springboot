@@ -12,6 +12,7 @@ import by.academy.springboot.model.repository.PaymentOrderRepository;
 import by.academy.springboot.service.IBankService;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class IBankServiceImpl implements IBankService {
     private final BankAccountRepository bankAccountRepository;
     private final CustomerRepository customerRepository;

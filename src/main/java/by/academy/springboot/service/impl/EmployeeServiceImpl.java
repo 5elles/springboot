@@ -1,54 +1,55 @@
 package by.academy.springboot.service.impl;
 
-import by.academy.springboot.model.entity.Contact;
+import by.academy.springboot.dto.EmployeeFullDataDTO;
+import by.academy.springboot.dto.EmployeeDTO;
+import by.academy.springboot.mapper.EmployeeFullDataMapper;
+import by.academy.springboot.mapper.EmployeeMapper;
 import by.academy.springboot.model.entity.Employee;
-import by.academy.springboot.model.entity.Person;
-import by.academy.springboot.model.entity.WageRate;
 import by.academy.springboot.model.repository.ContactRepository;
 import by.academy.springboot.model.repository.EmployeeRepository;
 import by.academy.springboot.service.EmployeeService;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    private EmployeeRepository employeeRepository;
-    private ContactRepository contactRepository;
+    private final EmployeeRepository employeeRepository;
+    private final ContactRepository contactRepository;
 
 
     @Override
-    public List<Employee> findAllSortedByLastName() {
-        List<Employee> result = employeeRepository.findAll();
-        result.sort(Comparator.comparing(o -> o.getPerson().getLastName()));
-        return result;
+    public List<EmployeeDTO> findAll() {
+        List<Employee> list = employeeRepository.findAll();
+        list.sort(Comparator.comparing(o -> o.getPerson().getLastName()));
+        return list.stream()
+                .map(EmployeeMapper.INSTANCE::toDTO)
+                .toList();
     }
 
     @Override
-    public Contact findContactByPerson(Person person) {
-        return contactRepository.findContactByPerson(person);
+    public EmployeeDTO findById(int id) {
+        Employee employee = employeeRepository.findById(id).orElse(null);
+        if (employee == null){
+            return null;
+        } else {
+            return EmployeeMapper.INSTANCE.toDTO(employee);
+        }
     }
 
     @Override
-    public Employee findById(int id) {
-        return employeeRepository.findById(id).orElse(null);
+    public EmployeeFullDataDTO getEmployeeWithContacts(int employeeId)
+            throws IllegalArgumentException {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElse(null);
+        if (employee == null) {
+            return null;
+        } else {
+        return EmployeeFullDataMapper.INSTANCE.toDTO(
+                employee,
+                contactRepository.findByPerson(employee.getPerson()));}
     }
-
-    @Override
-    public Employee findEmployeeByPersonId(int id) {
-        return employeeRepository.findEmployeeByPersonId(id);
-    }
-
-    @Override
-    public WageRate findTheFirstWageRateByEmployeesId(int id) {
-        List<WageRate> wageRates = employeeRepository.findById(id).get().getWageRates();
-
-        return null;
-    }
-
 }
