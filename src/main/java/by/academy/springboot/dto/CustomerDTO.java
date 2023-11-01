@@ -20,4 +20,5 @@ public class CustomerDTO {
     private LocalDate agreementDate;
     private LocalDate closureDate;
     private List<BankAccountDTO> bankAccounts;
+    private List<CurrencyDTO> currencies;
 }

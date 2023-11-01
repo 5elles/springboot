@@ -8,13 +8,13 @@
         <title>customer</title>
     </head>
     <body>
-        Здравствуйте, <b>${customer.person.firstName} ${customer.person.middleName}</b>!
+        Здравствуйте, <b>${customer.firstName} ${customer.middleName}</b>!
 
         <br>
         <p>
             <b>Текущие курсы валют:</b>
             <table>
-                <c:forEach var="entry" items="${currencies}">
+                <c:forEach var="entry" items="${customer.currencies}">
                     <tr>
                         <td><c:out value="${entry.currencyAbbreviation}"    /></td>
                         <td><c:out value="${entry.currencyRate}"/> </td>
@@ -40,10 +40,10 @@
             <c:forEach items = "${customer.bankAccounts}" var = "entity">
                 <tr>
                     <td>${entity.openingDate.getDayOfMonth()}.${entity.openingDate.getMonthValue()}.${entity.openingDate.getYear()}</td>
-                    <td><a href="/account?aid=${entity.id}&cid=${customer.id}">${entity.accountNumber}</a></td>
-                    <td>${entity.currency.currencyAbbreviation}</td>
+                    <td><a href="/account?aid=${entity.id}">${entity.accountNumber}</a></td>
+                    <td>${entity.currencyAbbreviation}</td>
                     <td>${entity.currentBalance}</td>
-                    <td>${entity.currency.currencyRate * entity.currentBalance}</td>
+                    <td>${entity.currencyRate * entity.currentBalance}</td>
                     <td>${entity.closureDate.getDayOfMonth()}.${entity.closureDate.getMonthValue()}.${entity.closureDate.getYear()}</td>
                 </tr>
             </c:forEach>

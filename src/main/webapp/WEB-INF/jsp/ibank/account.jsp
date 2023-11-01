@@ -16,11 +16,11 @@
         </tr>
         <tr>
             <td>Получатель</td>
-            <th>${customer.person.lastName} ${customer.person.firstName} ${customer.person.middleName}</th>
+            <th>${data.accountHolderLastName} ${data.accountHolderFirstName} ${data.accountHolderMiddleName}</th>
         </tr>
         <tr align="left">
             <td>Номер счета</td>
-            <th style="color: crimson">${bankAccount.accountNumber}</th>
+            <th style="color: crimson">${data.accountNumber}</th>
         </tr>
         <tr align="left">
             <td>Банк получателя</td>
@@ -42,9 +42,23 @@
 </div>
 <div>
     <p>
-        Остаток по счету: <b>${bankAccount.currentBalance}</b> ${bankAccount.currency.currencyAbbreviation}
+        Остаток по счету: <b>${data.currentBalance}</b> ${data.currencyAbbreviation}
     </p>
 </div>
+<div>
+    <p>
+        <h2>Перевести деньги на другой счет</h2>
+    <form action="/action_page.php">
+        <label for="ammount">сумма</label><br>
+        <input type="number" id="ammount" name="ammount"><br> ${data.currencyAbbreviation}
+        <label for="toAccount">счёт получателя:</label><br>
+        <input type="text" id="toAccount" name="toAccount" ><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    </p>
+</div>
+
+
 
 <div>
     <table border="1" cellspacing="0" cellpadding="12">
@@ -56,19 +70,19 @@
             <th>Счет отправителя</th>
             <th>Счет получателя</th>
             <th>Сумма</th>
-            <th>Валюта операции</th>
+            <th>Валюта отправителя</th>
         </tr>
-        <c:forEach items="${allBankOrders}" var="item">
+        <c:forEach items="${data.allPayments}" var="item">
             <tr>
                 <td>
                         ${item.timeStamp.getDayOfMonth()}.${item.timeStamp.getMonthValue()}.${item.timeStamp.getYear()}
 
                         ${item.timeStamp.getHour()}:${item.timeStamp.getMinute()}:${item.timeStamp.getSecond()}
                 </td>
-                <td>${item.fromAccount.accountNumber}</td>
-                <td>${item.toAccount.accountNumber}</td>
+                <td>${item.fromAccountNumber}</td>
+                <td>${item.toAccountNumber}</td>
                 <td>${item.amount}</td>
-                <td>${item.fromAccount.currency.currencyAbbreviation}</td>
+                <td>${item.fromAccountCurrencyAbbreviation}</td>
             </tr>
         </c:forEach>
     </table>
@@ -86,19 +100,19 @@
             <th>Счет отправителя</th>
             <th>Счет получателя</th>
             <th>Сумма</th>
-            <th>Валюта операции</th>
+            <th>Валюта отправителя</th>
         </tr>
-        <c:forEach items="${toAccountOrders}" var="item">
+        <c:forEach items="${data.incomingPayments}" var="item">
             <tr>
                 <td>
                         ${item.timeStamp.getDayOfMonth()}.${item.timeStamp.getMonthValue()}.${item.timeStamp.getYear()}
 
                         ${item.timeStamp.getHour()}:${item.timeStamp.getMinute()}:${item.timeStamp.getSecond()}
                 </td>
-                <td>${item.fromAccount.accountNumber}</td>
-                <td>${item.toAccount.accountNumber}</td>
+                <td>${item.fromAccountNumber}</td>
+                <td>${item.toAccountNumber}</td>
                 <td>${item.amount}</td>
-                <td>${item.fromAccount.currency.currencyAbbreviation}</td>
+                <td>${item.fromAccountCurrencyAbbreviation}</td>
             </tr>
         </c:forEach>
     </table>
@@ -116,19 +130,19 @@
             <th>Счет отправителя</th>
             <th>Счет получателя</th>
             <th>Сумма</th>
-            <th>Валюта операции</th>
+            <th>Валюта отправителя</th>
         </tr>
-        <c:forEach items="${fromAccountOrders}" var="item">
+        <c:forEach items="${data.outgoingPayments}" var="item">
             <tr>
                 <td>
                         ${item.timeStamp.getDayOfMonth()}.${item.timeStamp.getMonthValue()}.${item.timeStamp.getYear()}
 
                         ${item.timeStamp.getHour()}:${item.timeStamp.getMinute()}:${item.timeStamp.getSecond()}
                 </td>
-                <td>${item.fromAccount.accountNumber}</td>
-                <td>${item.toAccount.accountNumber}</td>
+                <td>${item.fromAccountNumber}</td>
+                <td>${item.toAccountNumber}</td>
                 <td>${item.amount}</td>
-                <td>${item.fromAccount.currency.currencyAbbreviation}</td>
+                <td>${item.fromAccountCurrencyAbbreviation}</td>
             </tr>
         </c:forEach>
     </table>

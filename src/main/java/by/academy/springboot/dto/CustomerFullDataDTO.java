@@ -21,4 +21,5 @@ public class CustomerFullDataDTO {
     private List<BankAccountDTO> bankAccounts;
     private List<EmailDTO> emails;
     private List<PhoneNumberDTO> phoneNumbers;
+    private List<CurrencyDTO> currencies;
 }

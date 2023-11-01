@@ -1,23 +1,19 @@
 package by.academy.springboot.service.impl;
 
-
-import by.academy.springboot.model.entity.BankAccount;
-import by.academy.springboot.model.entity.Currency;
-import by.academy.springboot.model.entity.Customer;
-import by.academy.springboot.model.entity.PaymentOrder;
-import by.academy.springboot.model.repository.BankAccountRepository;
-import by.academy.springboot.model.repository.CurrencyRepository;
-import by.academy.springboot.model.repository.CustomerRepository;
-import by.academy.springboot.model.repository.PaymentOrderRepository;
+import by.academy.springboot.dto.BankAccountFullDataDTO;
+import by.academy.springboot.dto.CustomerFullDataDTO;
+import by.academy.springboot.dto.PaymentOrderDTO;
+import by.academy.springboot.mapper.BankAccountFullDataMapper;
+import by.academy.springboot.mapper.CustomerFullDataMapper;
+import by.academy.springboot.mapper.PaymentOrderMapper;
+import by.academy.springboot.model.entity.*;
+import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.IBankService;
-import java.util.Collections;
-import lombok.AllArgsConstructor;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,71 +22,60 @@ public class IBankServiceImpl implements IBankService {
     private final CustomerRepository customerRepository;
     private final CurrencyRepository currencyRepository;
     private final PaymentOrderRepository paymentOrderRepository;
-
+    private final ContactRepository contactRepository;
 
     @Override
-    public BankAccount findBankAccountById(int id) {
-        return bankAccountRepository.findById(id).orElse(null);
+    public CustomerFullDataDTO findFullData(Integer customerId) {
+        Customer iBankCustomer = customerRepository.findById(customerId).orElse(null);
+        if (iBankCustomer == null) {
+            return null;
+        }
+        Contact contact = contactRepository.findByPerson(iBankCustomer.getPerson());
+        List<Currency> currencies = currencyRepository.findAllByCurrencyAbbreviationIsNot("BYN");
+        return CustomerFullDataMapper.INSTANCE.modelsToDTO(iBankCustomer, contact, currencies);
     }
 
     @Override
-    public List<BankAccount> findAllBankAccountsByCustomerID(Integer customersID) {
-        Customer customer = customerRepository.findById(customersID).orElse(null);
-        if (customer!=null) {
-            return customer.getBankAccounts();
-        } return Collections.emptyList();
+    public BankAccountFullDataDTO findBankAccountFullData(int id) {
+        BankAccount account = bankAccountRepository.findById(id).orElse(null);
+        if (account == null) {
+            return null;
+        }
+        String accountNumber = account.getAccountNumber();
+        List<PaymentOrderDTO> allPayments = findAllOutgoingAndIncoming(accountNumber, accountNumber);
+        List<PaymentOrderDTO> outgoingPayments = findByFromAccountNumber(accountNumber);
+        List<PaymentOrderDTO> incomingPayments = findByToAccountNumber(accountNumber);
+        return BankAccountFullDataMapper.INSTANCE.modelsToDTO(
+                account,
+                allPayments,
+                outgoingPayments,
+                incomingPayments
+        );
     }
 
     @Override
-    public List<PaymentOrder> findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(String accountNumber1, String accountNumber2) {
-        return paymentOrderRepository.findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(accountNumber1, accountNumber2);
+    public List<PaymentOrderDTO> findAllOutgoingAndIncoming(String outgoingAccountNumber, String incomingAccountNumber) {
+        List<PaymentOrder> orders = paymentOrderRepository
+                .findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(outgoingAccountNumber, incomingAccountNumber);
+        return orders.stream()
+                .map(PaymentOrderMapper.INSTANCE::toDTO)
+                .toList();
     }
 
     @Override
-    public PaymentOrder findPaymentOrderById(int id) {
-        return paymentOrderRepository.findById(id).orElse(null);
+    public List<PaymentOrderDTO> findByFromAccountNumber(String accountNumber) {
+        List<PaymentOrder> order = paymentOrderRepository.findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(accountNumber);
+        return order.stream()
+                .map(PaymentOrderMapper.INSTANCE::toDTO)
+                .toList();
     }
 
     @Override
-    public List<PaymentOrder> findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(String accountNumber) {
-        return paymentOrderRepository.findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(accountNumber);
-    }
-
-    @Override
-    public List<PaymentOrder> findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(String accountNumber) {
-        return paymentOrderRepository.findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(accountNumber);
-    }
-
-
-    @Override
-    public Customer findCustomerByID(Integer customerID) {
-        return customerRepository.findById(customerID).orElse(null);
-    }
-
-    @Override
-    public List<Currency> findAllCurrencies() {
-        return currencyRepository.findAll();
-    }
-
-    @Override
-    public List<Currency> findCurrenciesByCurrencyAbbreviationIsNotOrderByCurrencyAbbreviation(String abbreviation) {
-        return currencyRepository.findCurrenciesByCurrencyAbbreviationIsNotOrderByCurrencyAbbreviation(abbreviation);
-    }
-
-    @Override
-    public Currency findCurrencyByCurrencyAbbreviationIgnoreCase(String string) {
-        return currencyRepository.findCurrencyByCurrencyAbbreviationIgnoreCase(string);
-    }
-
-    @Override
-    public List<BankAccount> findBankAccountsByCustomerId(int customerId) {
-        return bankAccountRepository.findBankAccountsByCustomerId(customerId);
-    }
-
-
-    @Override
-    public Boolean sendMoneyToBankAccountByAccountsID(Integer toBankAccountID, Double amountInBYN) {
-
-        return null;
+    public List<PaymentOrderDTO> findByToAccountNumber(String accountNumber) {
+        List<PaymentOrder> orders = paymentOrderRepository.findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(accountNumber);
+        return orders.stream()
+                .map(PaymentOrderMapper.INSTANCE::toDTO)
+                .toList();
     }
 }
+

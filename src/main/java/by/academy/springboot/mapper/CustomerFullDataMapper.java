@@ -2,17 +2,21 @@ package by.academy.springboot.mapper;
 
 import by.academy.springboot.dto.CustomerFullDataDTO;
 import by.academy.springboot.model.entity.Contact;
+import by.academy.springboot.model.entity.Currency;
 import by.academy.springboot.model.entity.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+
+import java.util.List;
 
 @Mapper(uses = {
         BankAccountListMapper.class,
         BankAccountMapper.class,
         AddressListMapper.class,
         EmailListMapper.class,
-        PhoneNumberListMapper.class
+        PhoneNumberListMapper.class,
+        CurrencyListMapper.class
 })
 public interface CustomerFullDataMapper {
     CustomerFullDataMapper INSTANCE = Mappers.getMapper(CustomerFullDataMapper.class);
@@ -27,5 +31,5 @@ public interface CustomerFullDataMapper {
     @Mapping(source = "customer.person.addresses", target = "addresses")
     @Mapping(source = "contact.emails", target = "emails")
     @Mapping(source = "contact.phoneNumbers", target = "phoneNumbers")
-    CustomerFullDataDTO modelsToDTO(Customer customer, Contact contact);
+    CustomerFullDataDTO modelsToDTO(Customer customer, Contact contact, List<Currency> currencies);
 }

@@ -11,4 +11,5 @@ import java.util.List;
 public interface CurrencyRepository extends JpaRepository<Currency, Integer> {
     Currency findCurrencyByCurrencyAbbreviationIgnoreCase(String string);
     List<Currency> findCurrenciesByCurrencyAbbreviationIsNotOrderByCurrencyAbbreviation(String abbreviation);
+    List<Currency> findAllByCurrencyAbbreviationIsNot(String excludeCurrencyAbbr);
 }

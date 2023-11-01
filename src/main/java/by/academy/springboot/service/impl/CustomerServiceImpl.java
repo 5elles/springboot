@@ -21,6 +21,7 @@ public class CustomerServiceImpl implements CustomerService {
     private final PaymentOrderRepository paymentOrderRepository;
     private final BankAccountRepository bankAccountRepository;
     private final ContactRepository contactRepository;
+    private final CurrencyRepository currencyRepository;
 
     @Override
     public List<CustomerDTO> findAllCustomers() {
@@ -45,7 +46,8 @@ public class CustomerServiceImpl implements CustomerService {
             return null;
         }
         Contact contact = contactRepository.findByPerson(customer.getPerson());
-        return CustomerFullDataMapper.INSTANCE.modelsToDTO(customer, contact);
+        List<Currency> currencies = currencyRepository.findAllByCurrencyAbbreviationIsNot("BYN");
+        return CustomerFullDataMapper.INSTANCE.modelsToDTO(customer, contact, currencies);
     }
 
     @Override

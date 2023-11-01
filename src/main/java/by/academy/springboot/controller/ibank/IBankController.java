@@ -30,29 +30,14 @@ public class IBankController {
     @GetMapping("/lc")
     public String showAllBankAccounts(@RequestParam(value = "id") int id,
                                      Model model){
-        model.addAttribute(
-                "customer", iBankService.findCustomerByID(id));
-        model.addAttribute(
-                "bankAccounts", iBankService.findAllBankAccountsByCustomerID(id));
-        model.addAttribute(
-                "currencies", iBankService.findCurrenciesByCurrencyAbbreviationIsNotOrderByCurrencyAbbreviation("BYN"));
+        model.addAttribute("customer", iBankService.findFullData(id));
         return "ibank/main";
     }
 
     @GetMapping("/account")
     public String showBankAccount(@RequestParam(value = "aid") int aid,
-                                  @RequestParam(value = "cid") int cid,
                                   Model model){
-        BankAccount account = iBankService.findBankAccountById(aid);
-        Customer customer = iBankService.findCustomerByID(cid);
-        List<PaymentOrder> allBankOrders = iBankService.findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(account.getAccountNumber(), account.getAccountNumber());
-        List<PaymentOrder> fromAccountOrders = iBankService.findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(account.getAccountNumber());
-        List<PaymentOrder> toAccountOrders = iBankService.findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(account.getAccountNumber());
-        model.addAttribute("bankAccount", account);
-        model.addAttribute("customer", customer);
-        model.addAttribute("allBankOrders", allBankOrders);
-        model.addAttribute("fromAccountOrders", fromAccountOrders);
-        model.addAttribute("toAccountOrders", toAccountOrders);
+        model.addAttribute("data", iBankService.findBankAccountFullData(aid));
         return "ibank/account";
     }
 
