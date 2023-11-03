@@ -2,6 +2,7 @@ package by.academy.springboot.controller.enterprise;
 
 import by.academy.springboot.dto.BankAccountFullDataDTO;
 import by.academy.springboot.dto.CustomerFullDataDTO;
+import by.academy.springboot.dto.PersonDTO;
 import by.academy.springboot.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class CustomersController {
     private final CustomerService customerService;
     private static final String PATH = "/enterprise/customers/";
-
 
     @GetMapping("/customers")
     public String showAllCustomers(Model model) {
@@ -48,19 +48,6 @@ public class CustomersController {
         return PATH + "bankAccount";
     }
 
-//    @GetMapping("/new/{id}")
-//    public String newCustomer(@PathVariable("id") int id,
-//                              @ModelAttribute("customer") Customer customer) {
-//        customer.setPerson(customerService.findPersonById(id));
-//        return PATH + "newCustomer";
-//
-//    }
-
-//    @PostMapping()
-//    public String create(@ModelAttribute("customer") Customer customer){
-//        customerService.saveCustomer(customer);
-//        return "redirect:" + PATH + "customers";
-//    }
 
     @GetMapping("/operationsLog")
     public String showBankOperationsLog(Model model) {
@@ -74,4 +61,29 @@ public class CustomersController {
         model.addAttribute("order", customerService.findById(id));
         return PATH + "paymentOrder";
     }
+
+    @GetMapping("/newperson")
+    public String showNewPersonForm(){
+        return PATH + "personForm";
+    }
+
+    @PostMapping("/newperson")
+    public String create(@ModelAttribute("person") PersonDTO personDTO) {
+        int id = customerService.save(personDTO);
+        if (id > 0) {
+            return "redirect:/addressForm?pid=" + id;
+        }
+        return "operationError";
+    }
+
+    @GetMapping("/newAddress")
+    public String showNewAddressForm(@RequestParam int id,
+                                     Model model){
+        model.addAttribute("personId", id);
+        model.addAttribute("data", customerService.findFullData());
+        return "addressForm";
+    }
+
+//    @PostMapping("/newAddress")
+//    public String
 }

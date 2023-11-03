@@ -1,7 +1,5 @@
 package by.academy.springboot.dto;
 
-import by.academy.springboot.model.entity.*;
-import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -15,4 +13,5 @@ public class AddressDTO {
     private String streetName;
     private String houseNumber;
     private String apartmentNumber;
+    private int personId;
 }

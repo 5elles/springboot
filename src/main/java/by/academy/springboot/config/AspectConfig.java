@@ -7,5 +7,5 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @Configuration
 @ComponentScan(basePackages = {"by"})
 @EnableAspectJAutoProxy
-public class MainConfig {
+public class AspectConfig {
 }

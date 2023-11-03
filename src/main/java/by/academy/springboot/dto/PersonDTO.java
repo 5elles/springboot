@@ -17,7 +17,5 @@ public class PersonDTO {
     private LocalDate dateOfBirth;
     private String citizenIdNumber;
     private String passportNumber;
-    private Integer isStaff;
-    private Integer isClient;
     private List<AddressDTO> addresses;
 }

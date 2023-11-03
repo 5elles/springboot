@@ -4,12 +4,13 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>log</title>
-    </head>
-    <body>
-
+<head>
+    <meta charset="UTF-8">
+    <title>log</title>
+</head>
+<body>
+<div style="width: 100%; display: flex">
+    <div style="justify-content: center">
         <table border="1" cellspacing="0" cellpadding="12">
             <tr>
                 <td colspan="7" align="center">реестр банковских операций</td>
@@ -28,9 +29,9 @@
                 <tr>
                     <td>
                         <a href="/po?id=${item.id}">
-                            ${item.timeStamp.getDayOfMonth()}.${item.timeStamp.getMonthValue()}.${item.timeStamp.getYear()}
+                                ${item.timeStamp.getDayOfMonth()}.${item.timeStamp.getMonthValue()}.${item.timeStamp.getYear()}
 
-                            ${item.timeStamp.getHour()}:${item.timeStamp.getMinute()}:${item.timeStamp.getSecond()}
+                                ${item.timeStamp.getHour()}:${item.timeStamp.getMinute()}:${item.timeStamp.getSecond()}
                         </a>
                     </td>
                     <td>${item.fromAccountNumber}</td>
@@ -43,7 +44,8 @@
             </c:forEach>
 
         </table>
-        </p>
+    </div>
+</div>
 
-    </body>
+</body>
 </html>

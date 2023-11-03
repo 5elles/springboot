@@ -18,9 +18,8 @@ public interface CustomerService {
     BankAccountFullDataDTO findBankAccountFullData(int bankAccountId);
     ContactDTO findContact(Person person);
     List<PaymentOrderDTO> findAllPaymentOrders();
+    int save(PersonDTO dto);
+    AddressFullDataDTO findFullData();
 
 
-//    void saveCustomer(Customer customer);
-//    void updateCustomer(int id, Customer updatedCustomer);
-//    void deleteCustomerById(int id);
 }

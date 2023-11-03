@@ -33,10 +33,6 @@ public class Person {
     private String citizenIdNumber;
     @Column(name = "passport_number")
     private String passportNumber;
-    @Column(name = "is_staff")
-    private Integer isStaff;
-    @Column(name = "is_client")
-    private Integer isClient;
     @OneToMany
     @JoinColumn(name = "person_id")
     private List<Address> addresses;

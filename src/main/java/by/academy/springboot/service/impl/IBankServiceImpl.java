@@ -2,6 +2,7 @@ package by.academy.springboot.service.impl;
 
 import by.academy.springboot.dto.BankAccountFullDataDTO;
 import by.academy.springboot.dto.CustomerFullDataDTO;
+import by.academy.springboot.dto.OrderDTO;
 import by.academy.springboot.dto.PaymentOrderDTO;
 import by.academy.springboot.mapper.BankAccountFullDataMapper;
 import by.academy.springboot.mapper.CustomerFullDataMapper;
@@ -12,8 +13,11 @@ import by.academy.springboot.service.IBankService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +80,32 @@ public class IBankServiceImpl implements IBankService {
         return orders.stream()
                 .map(PaymentOrderMapper.INSTANCE::toDTO)
                 .toList();
+    }
+
+    @Override
+    public void save(PaymentOrder order) {
+        paymentOrderRepository.save(order);
+    }
+
+    @Transactional
+    @Override
+    public boolean save(OrderDTO order) {
+        BankAccount fromBankAccount = bankAccountRepository.findById(order.getFromAccountId()).orElseThrow(NoSuchElementException::new);
+        BankAccount toBankAccount = bankAccountRepository.findBankAccountByAccountNumber(order.getToAccountNumber());
+        if (toBankAccount == null
+                || !fromBankAccount.getCurrency().getCurrencyAbbreviation().equals(toBankAccount.getCurrency().getCurrencyAbbreviation())
+                || toBankAccount.getClosureDate() != null) {
+            return false;
+        }
+        double amount = order.getAmount() * fromBankAccount.getCurrency().getCurrencyRate() / toBankAccount.getCurrency().getCurrencyRate();
+        PaymentOrder paymentOrder = PaymentOrder.builder()
+                .amount(amount)
+                .timeStamp(LocalDateTime.now())
+                .fromAccount(fromBankAccount)
+                .toAccount(toBankAccount)
+                .build();
+        save(paymentOrder);
+        return true;
     }
 }
 

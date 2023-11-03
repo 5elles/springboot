@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface PersonRepository extends JpaRepository<Person, Integer> {
     List<Person> findByLastNameLikeIgnoreCaseOrderByLastName(String lastName);
+    Person findByCitizenIdNumber(String citizenId);
 }

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<html lang="en" xmlns:th="http://thymeleaf.org">
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,13 +48,15 @@
 </div>
 <div>
     <p>
-        <h2>Перевести деньги на другой счет</h2>
-    <form action="/action_page.php">
-        <label for="ammount">сумма</label><br>
-        <input type="number" id="ammount" name="ammount"><br> ${data.currencyAbbreviation}
-        <label for="toAccount">счёт получателя:</label><br>
-        <input type="text" id="toAccount" name="toAccount" ><br><br>
-        <input type="submit" value="Submit">
+        <h3>перевести деньги на другой счет:</h3>
+
+    <form id="add_form" name="payment" action="/account?aid=${data.id}" method="post" >
+        <label for="amount">cумма </label>
+        <input type="number" name="amount" id="amount" required value="0" min="0.1" step="any"/> <b>${data.currencyAbbreviation}</b>
+        <label for="toAccountNumber">cчет получателя: </label>
+        <input type="text" name="toAccountNumber" id="toAccountNumber" required/><br/>
+        <input type="hidden" name="fromAccountId" id="fromAccountId" value="${data.id}"/><br/>
+        <input style="width: 250px; margin: 20px" type="submit" value="перевести" name="Add" />
     </form>
     </p>
 </div>

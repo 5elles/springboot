@@ -22,6 +22,11 @@ public class CustomerServiceImpl implements CustomerService {
     private final BankAccountRepository bankAccountRepository;
     private final ContactRepository contactRepository;
     private final CurrencyRepository currencyRepository;
+    private final CountryRepository countryRepository;
+    private final RegionRepository regionRepository;
+    private final SettlementTypeRepository settlementTypeRepository;
+    private final SettlementRepository settlementRepository;
+    private final StreeetTypeRepository streeetTypeRepository;
 
     @Override
     public List<CustomerDTO> findAllCustomers() {
@@ -133,6 +138,31 @@ public class CustomerServiceImpl implements CustomerService {
         orders.sort(Comparator.comparing(PaymentOrder::getTimeStamp));
         return PaymentOrderListMapper.INSTANCE.toDTOList(orders);
     }
+
+    @Override
+    @Transactional
+    /**
+     * @return new person`s id or -1
+     */
+    public int save(PersonDTO dto) {
+        if (dto == null
+                || personRepository.findByCitizenIdNumber(dto.getCitizenIdNumber()) != null) {
+            return -1;
+        }
+        Person model = PersonMapper.INSTANCE.toModel(dto);
+        return personRepository.save(model).getId();
+    }
+
+    @Override
+    public AddressFullDataDTO findFullData() {
+        List<Country> countries = countryRepository.findAll();
+        List<Region> regions = regionRepository.findAll();
+        List<SettlementType> settlementTypes = settlementTypeRepository.findAll();
+        List<Settlement> settlements = settlementRepository.findAll();
+        List<StreetType> streetTypes = streeetTypeRepository.findAll();
+        return AddressFullDataMapper.INSTANCE.toDTO(countries, regions, settlementTypes,settlements,streetTypes);
+    }
+
 
 //    @Override
 //    @Transactional
