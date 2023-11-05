@@ -5,6 +5,7 @@ import by.academy.springboot.dto.CustomerFullDataDTO;
 import by.academy.springboot.dto.OrderDTO;
 import by.academy.springboot.dto.PaymentOrderDTO;
 import by.academy.springboot.mapper.BankAccountFullDataMapper;
+import by.academy.springboot.mapper.BankAccountMapper;
 import by.academy.springboot.mapper.CustomerFullDataMapper;
 import by.academy.springboot.mapper.PaymentOrderMapper;
 import by.academy.springboot.model.entity.*;
@@ -92,12 +93,15 @@ public class IBankServiceImpl implements IBankService {
     public boolean save(OrderDTO order) {
         BankAccount fromBankAccount = bankAccountRepository.findById(order.getFromAccountId()).orElseThrow(NoSuchElementException::new);
         BankAccount toBankAccount = bankAccountRepository.findBankAccountByAccountNumber(order.getToAccountNumber());
-        if (toBankAccount == null
-                || !fromBankAccount.getCurrency().getCurrencyAbbreviation().equals(toBankAccount.getCurrency().getCurrencyAbbreviation())
-                || toBankAccount.getClosureDate() != null) {
+        if (
+                toBankAccount == null
+                        || !fromBankAccount.getCurrency().getCurrencyAbbreviation().equals(toBankAccount.getCurrency().getCurrencyAbbreviation())
+                        || toBankAccount.getClosureDate() != null
+                        || fromBankAccount.getCurrentBalance() < order.getAmount()
+        ) {
             return false;
         }
-        double amount = order.getAmount() * fromBankAccount.getCurrency().getCurrencyRate() / toBankAccount.getCurrency().getCurrencyRate();
+        double amount = order.getAmount();
         PaymentOrder paymentOrder = PaymentOrder.builder()
                 .amount(amount)
                 .timeStamp(LocalDateTime.now())
@@ -105,6 +109,10 @@ public class IBankServiceImpl implements IBankService {
                 .toAccount(toBankAccount)
                 .build();
         save(paymentOrder);
+        fromBankAccount.setCurrentBalance(fromBankAccount.getCurrentBalance() - amount);
+        toBankAccount.setCurrentBalance(toBankAccount.getCurrentBalance() + amount);
+        bankAccountRepository.save(fromBankAccount);
+        bankAccountRepository.save(toBankAccount);
         return true;
     }
 }

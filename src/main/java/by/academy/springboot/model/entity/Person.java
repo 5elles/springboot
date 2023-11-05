@@ -36,4 +36,8 @@ public class Person {
     @OneToMany
     @JoinColumn(name = "person_id")
     private List<Address> addresses;
+    @OneToOne(mappedBy = "person")
+    private Customer customer;
+    @OneToOne(mappedBy = "person")
+    private Employee employee;
 }

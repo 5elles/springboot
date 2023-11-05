@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @Controller
 @RequiredArgsConstructor
 public class CustomersController {
@@ -62,8 +64,23 @@ public class CustomersController {
         return PATH + "paymentOrder";
     }
 
+    @GetMapping("/persons")
+    public String showFoundPersons(@RequestParam("lastName") String lastName,
+                                   @RequestParam("firstName") String firstName,
+                                   @RequestParam("middleName") String middleName,
+                                   Model model) {
+        model.addAttribute("data",
+                customerService.findByLastNameOrFirstNameOrMiddleNameOrDOBOrCitizenID(
+                        lastName,
+                        firstName,
+                        middleName
+                )
+        );
+        return PATH + "persons";
+    }
+
     @GetMapping("/newperson")
-    public String showNewPersonForm(){
+    public String showNewPersonForm() {
         return PATH + "personForm";
     }
 
@@ -76,12 +93,12 @@ public class CustomersController {
         return "operationError";
     }
 
-    @GetMapping("/newAddress")
+    @GetMapping("/newaddress")
     public String showNewAddressForm(@RequestParam int id,
-                                     Model model){
+                                     Model model) {
         model.addAttribute("personId", id);
         model.addAttribute("data", customerService.findFullData());
-        return "addressForm";
+        return PATH + "addressForm";
     }
 
 //    @PostMapping("/newAddress")

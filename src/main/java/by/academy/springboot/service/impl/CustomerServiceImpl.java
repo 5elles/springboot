@@ -6,9 +6,14 @@ import by.academy.springboot.model.entity.*;
 import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.CustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.config.SortedResourcesFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -160,7 +165,26 @@ public class CustomerServiceImpl implements CustomerService {
         List<SettlementType> settlementTypes = settlementTypeRepository.findAll();
         List<Settlement> settlements = settlementRepository.findAll();
         List<StreetType> streetTypes = streeetTypeRepository.findAll();
-        return AddressFullDataMapper.INSTANCE.toDTO(countries, regions, settlementTypes,settlements,streetTypes);
+        return AddressFullDataMapper.INSTANCE.toDTO(countries, regions, settlementTypes, settlements, streetTypes);
+    }
+
+    @Override
+    public List<PersonDTO> findByLastNameOrFirstNameOrMiddleNameOrDOBOrCitizenID(String lastName,
+                                                                                 String firstName,
+                                                                                 String middleName
+    ) {
+        Person person = Person.builder()
+                .lastName(lastName)
+                .firstName(firstName)
+                .middleName(middleName)
+                .build();
+        return PersonListMapper.INSTANCE.toDTO(
+                personRepository.findAll(
+                        Example.of(person, ExampleMatcher.matchingAll().withIgnoreCase())
+                )
+        );
+
+
     }
 
 

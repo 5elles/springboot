@@ -7,7 +7,14 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {
+        CountryListMapper.class,
+        RegionListMapper.class,
+        SettlementTypeListMapper.class,
+        SettlementListMapper.class,
+        StreetTypeMapper.class
+}
+)
 public interface AddressFullDataMapper {
     AddressFullDataMapper INSTANCE = Mappers.getMapper(AddressFullDataMapper.class);
 
