@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PersonRepository extends JpaRepository<Person, Integer> {
-    List<Person> findByLastNameLikeIgnoreCaseOrderByLastName(String lastName);
     Person findByCitizenIdNumber(String citizenId);
+    List<Person> findAllByLastNameIgnoreCaseAndFirstNameIgnoreCaseAndMiddleNameIgnoreCaseOrderByLastName(String lastName, String firstName, String middleName);
 }

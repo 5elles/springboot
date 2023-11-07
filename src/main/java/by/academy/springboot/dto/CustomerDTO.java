@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class CustomerDTO {
     private Integer id;
+    private Integer personId;
     private String firstName;
     private String middleName;
     private String lastName;

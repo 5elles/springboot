@@ -6,6 +6,7 @@
     <head>
         <meta charset="UTF-8">
         <title>search result</title>
+        <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
         <c:choose>
@@ -24,19 +25,19 @@
                                 <tr>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${item.customerId > 0}">
+                                            <c:when test="${item.customerId != null}">
                                                 клиент
                                             </c:when>
                                             <c:otherwise>
-                                                <form action="/newcustomer?pid=${data.id}">
-                                                    <button>оформить</button>
+                                                <form action="/newcustomer?pid=${item.id}" method="post">
+                                                    <button class="btn success">оформить</button>
                                                 </form>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${item.customerId > 0}">
+                                            <c:when test="${item.customerId != null}">
                                                 <a href="/customer?id=${item.customerId}">${item.lastName} ${item.firstName} ${item.middleName}</a>
                                             </c:when>
                                             <c:otherwise>
@@ -59,7 +60,7 @@
 
         <br>
         <form action="/newperson">
-            <button>Создать новый профиль</button>
+            <button>добавить в систему физлицо</button>
         </form>
     </body>
 </html>

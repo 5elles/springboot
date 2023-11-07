@@ -21,4 +21,5 @@ public interface IBankService {
     List<PaymentOrderDTO> findByToAccountNumber(String accountNumber);
     void save(PaymentOrder order);
     boolean save(OrderDTO order);
+    boolean closeBankAccount(int accountId);
 }

@@ -12,5 +12,7 @@ public class BankAccountDTO {
     private LocalDate closureDate;
     private Double currentBalance;
     private String currencyAbbreviation;
+    private Integer currencyID;
+    private Integer customerID;
     private Double currencyRate;
 }

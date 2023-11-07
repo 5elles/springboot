@@ -14,7 +14,10 @@ public interface BankAccountMapper {
 
     @Mapping(source = "model.currency.currencyAbbreviation", target = "currencyAbbreviation")
     @Mapping(source = "model.currency.currencyRate", target = "currencyRate")
+    @Mapping(source = "model.customer.id", target = "customerID")
     BankAccountDTO modelToDTO(BankAccount model);
 
+    @Mapping(source = "dto.currencyID", target = "currency.id")
+    @Mapping(source = "dto.customerID", target = "customer.id")
     BankAccount dtoToModel(BankAccountDTO dto);
 }

@@ -19,29 +19,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IBankController {
     private final IBankService iBankService;
+    private static final String PATH = "/ibank/";
 
     @GetMapping()
     public String showHomePage() {
-        return "ibank/startPage";
+        return PATH + "startPage";
     }
 
     @GetMapping("/login")
     public String login() {
-        return "ibank/login";
+        return PATH + "login";
     }
 
     @GetMapping("/lc")
     public String showAllBankAccounts(@RequestParam(value = "id") int id,
                                       Model model) {
         model.addAttribute("customer", iBankService.findFullData(id));
-        return "ibank/main";
+        return PATH + "main";
     }
 
     @GetMapping("/account")
     public String showBankAccount(@RequestParam(value = "aid") int aid,
                                   Model model) {
         model.addAttribute("data", iBankService.findBankAccountFullData(aid));
-        return "ibank/account";
+        return PATH + "account";
     }
 
     @PostMapping("/account")
@@ -53,5 +54,12 @@ public class IBankController {
             return "redirect:/account?aid=" + aid;
         }
         return "operationError";
+    }
+
+    @PostMapping("/ibankCloseAccount")
+    public String closeBankAccount(@RequestParam("aid") int aid,
+                                   @RequestParam("cid") int cid){
+        iBankService.closeBankAccount(aid);
+        return "redirect:/lc?id=" + cid;
     }
 }

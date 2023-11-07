@@ -6,27 +6,37 @@
     <head>
         <meta charset="UTF-8">
         <title>customers</title>
+        <link rel="stylesheet" href="/css/style.css">
     </head>
 
 
     <body>
         <div>
-            <div>
-                <h5>поиск лица</h5>
-                <form id="searching_form" name="lastName" action="/persons" method="get" >
-                    <label for="lastName">фамилия </label>
-                    <input type="text" name="lastName" id="lastName" required/> <br/>
+            <div class="container">
+                <h3>Поиск лица в системе</h3>
+                <form id="add_form" class="form" name="searchThePerson" action="/persons" method="get">
+                    <fieldset>
+                        <legend>данные для поиска</legend>
+                        <div class="field">
+                            <label for="lastName">фамилия</label>
+                            <input type="text" name="lastName" id="lastName" required />
+                        </div>
 
-                    <label for="firstName">имя </label>
-                    <input type="text" name="firstName" id="firstName" required/><br/>
+                        <div class="field">
+                            <label for="firstName">имя</label>
+                            <input type="text" name="firstName" id="firstName" required/>
+                        </div>
 
-                    <label for="middleName">отчество </label>
-                    <input type="text" name="middleName" id="middleName" required/><br/>
-
-                    <input style="width: 250px; margin: 20px" type="submit" value="найти" name="search" />
+                        <div class="field">
+                            <label for="middleName">отчество</label>
+                            <input type="text" name="middleName" id="middleName" required/>
+                        </div>
+                    </fieldset>
+                    <button class="btn info" type="submit" name="Add">найти</button>
                 </form>
             </div>
         </div>
+        <br>
         <div>
             <div>
                 <table border="1" cellspacing="0" cellpadding="12">
@@ -52,7 +62,7 @@
                                                 актуальный
                                             </c:when>
                                             <c:otherwise>
-                                                архивный
+                                                <span class="highlight">архивный</span>
                                             </c:otherwise>
                                         </c:choose>
                             </td>
@@ -63,6 +73,8 @@
         </div>
 
         <br>
-        <a href="/operationsLog">Журнал учета банковских операций</a>
+        <form class="redirect_btn" name="redirect" action="/operationsLog" method="get">
+            <button class="transparent_btn default">Журнал учета банковских операций</button>
+        </form>
     </body>
 </html>

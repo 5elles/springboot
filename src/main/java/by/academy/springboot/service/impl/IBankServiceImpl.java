@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -97,11 +98,12 @@ public class IBankServiceImpl implements IBankService {
                 toBankAccount == null
                         || !fromBankAccount.getCurrency().getCurrencyAbbreviation().equals(toBankAccount.getCurrency().getCurrencyAbbreviation())
                         || toBankAccount.getClosureDate() != null
+                        || fromBankAccount.getClosureDate() != null
                         || fromBankAccount.getCurrentBalance() < order.getAmount()
         ) {
             return false;
         }
-        double amount = order.getAmount();
+        double amount = (double) Math.round(order.getAmount() * 100) / 100;
         PaymentOrder paymentOrder = PaymentOrder.builder()
                 .amount(amount)
                 .timeStamp(LocalDateTime.now())
@@ -113,6 +115,20 @@ public class IBankServiceImpl implements IBankService {
         toBankAccount.setCurrentBalance(toBankAccount.getCurrentBalance() + amount);
         bankAccountRepository.save(fromBankAccount);
         bankAccountRepository.save(toBankAccount);
+        return true;
+    }
+
+    @Transactional
+    @Override
+    public boolean closeBankAccount(int accountId) {
+        BankAccount account = bankAccountRepository.findById(accountId).orElse(null);
+        if (
+                account == null ||
+                        account.getCurrentBalance() != 0
+        ) {
+            return false;
+        }
+        account.setClosureDate(LocalDate.now());
         return true;
     }
 }

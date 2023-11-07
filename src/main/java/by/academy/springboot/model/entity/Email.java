@@ -18,4 +18,7 @@ public class Email {
     private Integer id;
     @Column(name = "email")
     private String email;
+    @ManyToOne
+    @JoinColumn(name = "contact_id")
+    Contact contact;
 }

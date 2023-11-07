@@ -1,15 +1,11 @@
 package by.academy.springboot.controller.enterprise;
 
-import by.academy.springboot.dto.BankAccountFullDataDTO;
-import by.academy.springboot.dto.CustomerFullDataDTO;
-import by.academy.springboot.dto.PersonDTO;
+import by.academy.springboot.dto.*;
 import by.academy.springboot.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,6 +33,33 @@ public class CustomersController {
         return PATH + "customer";
     }
 
+    @PostMapping("/customer")
+    public String createNewContract(@RequestParam("cid") int cid,
+                                    CustomerDTO dto) {
+        if (customerService.createNewBankContract(dto)) {
+            return "redirect:/customer?id=" + cid;
+        }
+        return "notFound";
+    }
+
+    @PostMapping("/closeAccount")
+    public String closeAccount(@RequestParam("aid") int aid,
+                               @RequestParam("cid") int cid) {
+        boolean closed = customerService.closeAccount(aid);
+        if (closed) {
+            return "redirect:/customer?id=" + cid;
+        }
+        return "operationError";
+    }
+
+    @PostMapping("/terminate")
+    public String terminateContract(@RequestParam("cid") int cid) {
+        if (customerService.terminateContract(cid)) {
+            return "redirect:/customer?id=" + cid;
+        }
+        return "operationError";
+    }
+
     @GetMapping("/bankAccount")
     public String showBankAccount(
             @RequestParam(value = "id") int id,
@@ -49,7 +72,6 @@ public class CustomersController {
         model.addAttribute("data", dto);
         return PATH + "bankAccount";
     }
-
 
     @GetMapping("/operationsLog")
     public String showBankOperationsLog(Model model) {
@@ -70,7 +92,7 @@ public class CustomersController {
                                    @RequestParam("middleName") String middleName,
                                    Model model) {
         model.addAttribute("data",
-                customerService.findByLastNameOrFirstNameOrMiddleNameOrDOBOrCitizenID(
+                customerService.findByLastNameAndFirstNameAndMiddleName(
                         lastName,
                         firstName,
                         middleName
@@ -85,12 +107,28 @@ public class CustomersController {
     }
 
     @PostMapping("/newperson")
-    public String create(@ModelAttribute("person") PersonDTO personDTO) {
+    public String createNewPerson(@ModelAttribute("person") PersonDTO personDTO) {
         int id = customerService.save(personDTO);
         if (id > 0) {
             return "redirect:/addressForm?pid=" + id;
         }
         return "operationError";
+    }
+
+    @PostMapping("/newcustomer")
+    public String showNewCustomerForm(@RequestParam("pid") int pid,
+                                      Model model) {
+        model.addAttribute("pid", pid);
+        return PATH + "newCustomerForm";
+    }
+
+    @PostMapping("/createnewcustomer")
+    public String createNewCustomer(@ModelAttribute("customer") CustomerDTO customerDTO) {
+        int id = customerService.createCustomer(customerDTO);
+        if (id < 0) {
+            return "operationError";
+        }
+        return "redirect:/customer?id=" + id;
     }
 
     @GetMapping("/newaddress")
@@ -101,6 +139,55 @@ public class CustomersController {
         return PATH + "addressForm";
     }
 
-//    @PostMapping("/newAddress")
-//    public String
+    @PostMapping("/newbankaccount")
+    public String showNewBankAccountForm(@RequestParam("cid") int cid,
+                                         Model model) {
+        model.addAttribute("cid", cid);
+        model.addAttribute("currencies", customerService.findAllCurrencies());
+        return PATH + "newBankAccountForm";
+    }
+
+    @PostMapping("/createBankAccount")
+    public String createNewBankAccount(@ModelAttribute("bankAccount") BankAccountDTO dto,
+                                       @RequestParam("cid") int cid) {
+        if (customerService.createNewBankAccount(dto)) {
+            return "redirect:/customer?id=" + cid;
+        }
+        return "operationError";
+    }
+
+    @PostMapping("/addPhoneNumber")
+    public String addPhoneNumber(@RequestParam("cid") int cid,
+                                 Model model) {
+        model.addAttribute("pid", customerService.findPersonIdByCustomerId(cid));
+        model.addAttribute("cid", cid);
+        return PATH + "newPhoneNumberForm";
+    }
+
+    @PostMapping("/savePhoneNumber")
+    public String savePhoneNumber(@ModelAttribute("phoneNumber") PhoneNumberDTO dto,
+                                  @RequestParam("cid") int cid) {
+        if (customerService.createNewPhoneNumber(dto)) {
+            return "redirect:/customer?id=" + cid;
+        }
+        return "operationError";
+    }
+
+    @PostMapping("/addEmail")
+    public String addEmail(@RequestParam("cid") int cid,
+                           Model model) {
+        model.addAttribute("pid", customerService.findPersonIdByCustomerId(cid));
+        model.addAttribute("cid", cid);
+        return PATH + "newEmailForm";
+    }
+
+    @PostMapping("/saveEmail")
+    public String saveEmail(@ModelAttribute("emal") EmailDTO dto,
+                            @RequestParam("cid") int cid) {
+
+        if (customerService.createNewEmail(dto)) {
+            return "redirect:/customer?id=" + cid;
+        }
+        return "operationError";
+    }
 }

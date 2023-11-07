@@ -18,4 +18,8 @@ public class PhoneNumber {
     private Integer id;
     @Column(name = "phone_number")
     private String phoneNumber;
+    @ManyToOne
+    @JoinColumn(name = "contact_id")
+    Contact contact;
+
 }

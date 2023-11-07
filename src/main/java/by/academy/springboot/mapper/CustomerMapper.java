@@ -1,17 +1,10 @@
 package by.academy.springboot.mapper;
 
-import by.academy.springboot.dto.AddressDTO;
-import by.academy.springboot.dto.BankAccountDTO;
-import by.academy.springboot.dto.ContactDTO;
 import by.academy.springboot.dto.CustomerDTO;
 import by.academy.springboot.model.entity.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Mapper(uses = {
         BankAccountListMapper.class,
@@ -28,8 +21,11 @@ public interface CustomerMapper {
     @Mapping(source = "customer.person.citizenIdNumber", target = "citizenIdNumber")
     @Mapping(source = "customer.person.passportNumber", target = "passportNumber")
     @Mapping(source = "customer.person.addresses", target = "addresses")
+    @Mapping(source = "customer.person.id", target = "personId")
     CustomerDTO modelToDTO(Customer customer);
-    Customer dtoToModel(CustomerDTO dto);
+
+    @Mapping(source = "dto.personId", target = "person.id")
+    Customer toModel(CustomerDTO dto);
 }
 
 

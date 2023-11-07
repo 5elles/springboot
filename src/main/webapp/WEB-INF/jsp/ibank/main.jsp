@@ -6,21 +6,26 @@
     <head>
         <meta charset="UTF-8">
         <title>customer</title>
+        <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
         Здравствуйте, <b>${customer.firstName} ${customer.middleName}</b>!
 
         <br>
-        <p>
-            <b>Текущие курсы валют:</b>
-            <table>
-                <c:forEach var="entry" items="${customer.currencies}">
-                    <tr>
-                        <td><c:out value="${entry.currencyAbbreviation}"    /></td>
-                        <td><c:out value="${entry.currencyRate}"/> </td>
-                    </tr>
-                </c:forEach>
-            </table>
+        <div class="container">
+            <div>
+                <h3>Текущие курсы валют:</h3>
+                <table>
+                    <c:forEach var="entry" items="${customer.currencies}">
+                        <tr>
+                            <td><c:out value="${entry.currencyAbbreviation}"    /></td>
+                            <td><c:out value="${entry.currencyRate}"/> </td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </div>
+        </div>
+
         </p>
 
         <br>
@@ -43,8 +48,28 @@
                     <td><a href="/account?aid=${entity.id}">${entity.accountNumber}</a></td>
                     <td>${entity.currencyAbbreviation}</td>
                     <td>${entity.currentBalance}</td>
-                    <td>${entity.currencyRate * entity.currentBalance}</td>
-                    <td>${entity.closureDate.getDayOfMonth()}.${entity.closureDate.getMonthValue()}.${entity.closureDate.getYear()}</td>
+                    <td>${Math.round(entity.currencyRate * entity.currentBalance *100)/100}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${entity.closureDate != null}">
+                                ${entity.closureDate.getDayOfMonth()}.${entity.closureDate.getMonthValue()}.${entity.closureDate.getYear()}
+                            </c:when>
+                            <c:otherwise>
+                                <c:choose>
+                                    <c:when test="${entity.currentBalance > 0}">
+                                        <form action="" >
+                                            <button disabled>закрыть</button>
+                                        </form>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <form name="closeAccount" action="/ibankCloseAccount?aid=${entity.id}&cid=${customer.id}" method="post">
+                                            <button type="submit">закрыть</button>
+                                        </form>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                 </tr>
             </c:forEach>
         </table>

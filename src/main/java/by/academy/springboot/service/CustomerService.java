@@ -1,19 +1,14 @@
 package by.academy.springboot.service;
 
 import by.academy.springboot.dto.*;
-import by.academy.springboot.model.entity.*;
+import by.academy.springboot.model.entity.Person;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface CustomerService {
     List<CustomerDTO> findAllCustomers();
 
-    CustomerDTO findCustomerById(int id);
-
     CustomerFullDataDTO findFullData(Integer customerId);
-
-    PersonDTO findPersonById(int id);
 
     List<PaymentOrderDTO> findAllOutgoingAndIncoming(String outgoingAccountNumber, String incomingAccountNumber);
 
@@ -23,11 +18,7 @@ public interface CustomerService {
 
     List<PaymentOrderDTO> findByToAccountNumber(String accountNumber);
 
-    BankAccountDTO findBankAccountById(int id);
-
     BankAccountFullDataDTO findBankAccountFullData(int bankAccountId);
-
-    ContactDTO findContact(Person person);
 
     List<PaymentOrderDTO> findAllPaymentOrders();
 
@@ -35,10 +26,21 @@ public interface CustomerService {
 
     AddressFullDataDTO findFullData();
 
-    List<PersonDTO> findByLastNameOrFirstNameOrMiddleNameOrDOBOrCitizenID(String lastName,
-                                                                          String firstName,
-                                                                          String middleName
+    List<PersonDTO> findByLastNameAndFirstNameAndMiddleName(String lastName,
+                                                         String firstName,
+                                                         String middleName
     );
+    boolean closeAccount(int accountId);
+    boolean terminateContract(int customerId);
+    boolean hasActiveBankAccounts(int customerID);
+    boolean createNewBankContract(CustomerDTO dto);
+    List<CurrencyDTO> findAllCurrencies();
+    boolean createNewBankAccount(BankAccountDTO dto);
 
+    Integer createCustomer(CustomerDTO dto);
+
+    Integer findPersonIdByCustomerId(Integer customerId);
+    boolean createNewPhoneNumber(PhoneNumberDTO dto);
+    boolean createNewEmail(EmailDTO dto);
 
 }
