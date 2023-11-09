@@ -6,8 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -20,7 +21,7 @@ public class Position {
     private String positionName;
     @Column(name = "salary")
     private Double salary;
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "clearence_level_id")
-    private ClearanceLevel clearanceLevel;
+    @OneToMany
+    @JoinColumn(name = "position_id")
+    private List<WageRate> wageRates;
 }

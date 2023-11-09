@@ -22,14 +22,6 @@ public interface CustomerService {
 
     List<PaymentOrderDTO> findAllPaymentOrders();
 
-    int save(PersonDTO dto);
-
-    AddressFullDataDTO findFullData();
-
-    List<PersonDTO> findByLastNameAndFirstNameAndMiddleName(String lastName,
-                                                         String firstName,
-                                                         String middleName
-    );
     boolean closeAccount(int accountId);
     boolean terminateContract(int customerId);
     boolean hasActiveBankAccounts(int customerID);
@@ -40,7 +32,6 @@ public interface CustomerService {
     Integer createCustomer(CustomerDTO dto);
 
     Integer findPersonIdByCustomerId(Integer customerId);
-    boolean createNewPhoneNumber(PhoneNumberDTO dto);
-    boolean createNewEmail(EmailDTO dto);
+
 
 }

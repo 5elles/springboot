@@ -8,4 +8,5 @@ import java.util.List;
 public interface PersonRepository extends JpaRepository<Person, Integer> {
     Person findByCitizenIdNumber(String citizenId);
     List<Person> findAllByLastNameIgnoreCaseAndFirstNameIgnoreCaseAndMiddleNameIgnoreCaseOrderByLastName(String lastName, String firstName, String middleName);
+    Person findByEmployeeId(Integer employeeId);
 }

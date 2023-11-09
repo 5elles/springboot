@@ -11,7 +11,7 @@
         <div>
             <div class="container">
                 <h3>Регистрация лица в системе</h3>
-                <form id="add_form" class="form" name="newperson" action="/newperson" method="post" >
+                <form id="add_form" class="form" name="newperson" action="/newPerson${status}" method="post" >
                     <fieldset>
                         <legend>паспортные данные</legend>
                         <div class="field">

@@ -10,17 +10,17 @@
     <body>
         <div>
             <div class="container">
-                <h3>Добавление нового номера телефона</h3>
-                <form id="add_form" class="form" name="newEmail" action="/saveEmail?cid=${cid}" method="post" >
+                <h3>Добавить новый email</h3>
+                <form id="add_form" class="form" name="newEmail" action="/saveEmail${entityId}" method="post" >
                     <fieldset>
-                        <legend>Электронная почта</legend>
+                        <legend>электронная почта</legend>
                         <div class="field">
                             <label for="email">Email</label>
                             <input type="email" name="email" id="email" required/>
                         </div>
 
                         <div class="field">
-                            <input hidden="hidden" type="text" name="personId" id="personId" value="${pid}" required/>
+                            <input hidden="hidden" name="personId" id="personId" value="${pid}"/>
                         </div>
                     </fieldset>
                     <button class="btn success" type="submit" name="Add">сохранить</button>

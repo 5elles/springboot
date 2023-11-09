@@ -2,16 +2,22 @@ package by.academy.springboot.service.impl;
 
 import by.academy.springboot.dto.EmployeeFullDataDTO;
 import by.academy.springboot.dto.EmployeeDTO;
-import by.academy.springboot.mapper.EmployeeFullDataMapper;
-import by.academy.springboot.mapper.EmployeeMapper;
+import by.academy.springboot.dto.PositionDTO;
+import by.academy.springboot.dto.WageRateFullDataDTO;
+import by.academy.springboot.mapper.*;
 import by.academy.springboot.model.entity.Employee;
-import by.academy.springboot.model.repository.ContactRepository;
-import by.academy.springboot.model.repository.EmployeeRepository;
+import by.academy.springboot.model.entity.Person;
+import by.academy.springboot.model.entity.Position;
+import by.academy.springboot.model.entity.WageRate;
+import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -19,6 +25,9 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final ContactRepository contactRepository;
+    private final PositionRepository positionRepository;
+    private final PersonRepository personRepository;
+    private final WageRateRepository wageRateRepository;
 
 
     @Override
@@ -33,7 +42,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO findById(int id) {
         Employee employee = employeeRepository.findById(id).orElse(null);
-        if (employee == null){
+        if (employee == null) {
             return null;
         } else {
             return EmployeeMapper.INSTANCE.toDTO(employee);
@@ -41,15 +50,112 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmployeeFullDataDTO getEmployeeFullData(int employeeId)
+    public EmployeeFullDataDTO findEmployeeFullData(int employeeId)
             throws IllegalArgumentException {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElse(null);
         if (employee == null) {
             return null;
         } else {
-        return EmployeeFullDataMapper.INSTANCE.toDTO(
-                employee,
-                contactRepository.findByPerson(employee.getPerson()));}
+            return EmployeeFullDataMapper.INSTANCE.toDTO(
+                    employee,
+                    contactRepository.findByPerson(employee.getPerson()));
+        }
+    }
+
+    @Override
+    public List<PositionDTO> findAllPositions() {
+        List<Position> positions = positionRepository.findAll().stream()
+                .sorted(Comparator.comparing(Position::getPositionName))
+                .toList();
+        return PositionListMapper.INSTANCE.toDTO(positions);
+    }
+
+
+    @Override
+    @Transactional
+    public boolean createNewWageRate(WageRateFullDataDTO dto, Integer personId) {
+        Person person = personRepository.findById(personId).orElse(null);
+        Position position = positionRepository.findPositionByPositionName(dto.getPositionName());
+        if (person != null ||
+                position != null) {
+            Employee employee = employeeRepository.findByPerson(person);
+            if (employee == null) {
+                Employee newEmployee = new Employee();
+                newEmployee.setPerson(person);
+                employeeRepository.saveAndFlush(newEmployee);
+                employee = employeeRepository.findByPerson(person);
+            }
+            dto.setEmployeeId(employee.getId());
+            dto.setPositionId(position.getId());
+            wageRateRepository.save(WageRateFullDataMapper.INSTANCE.toModel(dto));
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return employee id or -1
+     */
+    @Override
+    public Integer findEmployeeIdByPersonId(Integer pid) {
+        Person person = personRepository.findById(pid).orElse(null);
+        if (person != null) {
+            return employeeRepository.findByPerson(person).getId();
+        }
+        return -1;
+    }
+
+    /**
+     * @return person id or -1
+     */
+    @Override
+    public Integer findPersonIdByEmployeeId(Integer employeeId){
+        Person person = personRepository.findByEmployeeId(employeeId);
+        if (person != null){
+            return person.getId();
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean closeWageRate(Integer wageRateId) {
+        WageRate wageRate = wageRateRepository.findById(wageRateId).orElse(null);
+        if (wageRate != null){
+            wageRate.setFinishDate(LocalDate.now());
+            wageRateRepository.save(wageRate);
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public List<PositionDTO> getAllPositions(){
+        List<Position> positions = positionRepository.findAll();
+        if (!positions.isEmpty()){
+            positions.sort(Comparator.comparing(Position::getPositionName));
+        }
+        return PositionListMapper.INSTANCE.toDTO(positions);
+    }
+
+    @Override
+    public List<EmployeeDTO> findAlLActualEmployeesByPositionId(Integer positionId) {
+        List<WageRate> wageRates = wageRateRepository.findActualWageRatesPositionId(positionId);
+        List<Employee> employees = employeeRepository.findAllById(new HashSet<>(wageRates.stream()
+                .map(wageRate -> wageRate
+                        .getEmployee()
+                        .getId())
+                .toList()));
+        List<EmployeeDTO> dtos = EmployeeListMapper.INSTANCE.toDTO(employees);
+        dtos.sort(Comparator.comparing(EmployeeDTO::getLastName));
+        return dtos;
+    }
+
+    @Override
+    public String findPositionNameById(Integer positionId) {
+        Position position = positionRepository.findPositionById(positionId);
+        if (position != null){
+            return position.getPositionName();
+        }
+        return null;
     }
 }

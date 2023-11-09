@@ -20,6 +20,7 @@ import java.util.List;
 public class IBankController {
     private final IBankService iBankService;
     private static final String PATH = "/ibank/";
+    private static final String OPERATION_ERROR = "operationError";
 
     @GetMapping()
     public String showHomePage() {
@@ -53,13 +54,15 @@ public class IBankController {
         if (isDone) {
             return "redirect:/account?aid=" + aid;
         }
-        return "operationError";
+        return OPERATION_ERROR;
     }
 
     @PostMapping("/ibankCloseAccount")
     public String closeBankAccount(@RequestParam("aid") int aid,
                                    @RequestParam("cid") int cid){
-        iBankService.closeBankAccount(aid);
-        return "redirect:/lc?id=" + cid;
+        if (iBankService.closeBankAccount(aid)){
+            return "redirect:/lc?id=" + cid;
+        }
+        return OPERATION_ERROR;
     }
 }

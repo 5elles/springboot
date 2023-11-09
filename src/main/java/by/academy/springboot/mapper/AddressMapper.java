@@ -15,6 +15,8 @@ public interface AddressMapper {
             target = "countryName")
     @Mapping(source = "address.settlement.region.regionName",
             target = "regionName")
+    @Mapping(source = "address.settlement.settlementType.settlementTypeName",
+            target = "settlementTypeName")
     @Mapping(source = "address.settlement.settlementType.shortName",
             target = "settlementTypeShortName")
     @Mapping(source = "address.settlement.settlementName",

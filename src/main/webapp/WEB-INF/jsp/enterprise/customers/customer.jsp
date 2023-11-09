@@ -12,38 +12,38 @@
     <body>
         <div>
             <div>
-                <table>
+                <table border="1" cellspacing="0" cellpadding="12">
                     <tr>
-                        <td colspan="4">персональные данные клиента</td>
+                        <th colspan="4">персональные данные клиента</th>
                     </tr>
                     <tr>
-                        <th colspan="3"><b>${customerFullData.lastName} ${customerFullData.firstName} ${customerFullData.middleName}</b></th>
-                        <td colspan="1">${customerFullData.dateOfBirth.getDayOfMonth()}.${customerFullData.dateOfBirth.getMonthValue()}.${customerFullData.dateOfBirth.getYear()} г.р.</td>
+                        <th colspan="2"><b>${customerFullData.lastName} ${customerFullData.firstName} ${customerFullData.middleName}</b></th>
+                        <td colspan="2">${customerFullData.dateOfBirth.getDayOfMonth()}.${customerFullData.dateOfBirth.getMonthValue()}.${customerFullData.dateOfBirth.getYear()} г.р.</td>
                     </tr>
                     <tr>
-                        <td>личный №</td>
-                        <td colspan="1"><b>${customerFullData.citizenIdNumber}</b></td>
+                        <td colspan="2">личный №</td>
+                        <td colspan="2"><b>${customerFullData.citizenIdNumber}</b></td>
 
                     </tr>
                     <tr>
-                        <td>паспорт </td>
-                        <td colspan="1"><b>${customerFullData.passportNumber}</b></td>
+                        <td colspan="2">паспорт </td>
+                        <td colspan="2"><b>${customerFullData.passportNumber}</b></td>
                     </tr>
                     <tr></tr>
-                    <tr><td colspan="4">контактные данные</td></tr>
+                    <tr><th colspan="4">контактные данные</th></tr>
                     <tr>
-                        <td rowspan="${customerFullData.phoneNumbers.size()}">телефон</td>
+                        <td rowspan="${customerFullData.phoneNumbers.size()}" colspan="2">телефон</td>
                         <c:forEach items="${customerFullData.phoneNumbers}" var="item">
-                        <td colspan="1">${item.phoneNumber}</td>
+                        <td colspan="2">${item.phoneNumber}</td>
                     </tr>
                     </c:forEach>
                     <tr>
-                        <td rowspan="${customerFullData.emails.size()}">email</td>
+                        <td rowspan="${customerFullData.emails.size()}" colspan="2">email</td>
                         <c:forEach items="${customerFullData.emails}" var="item">
-                        <td colspan="1">${item.email}</td>
+                        <td colspan="2">${item.email}</td>
                     </tr>
-                    </c:forEach>
-                    <tr><td colspan="4">адрес</td></tr>
+                        </c:forEach>
+                    <tr><th colspan="4">адрес</th></tr>
                     <tr>
                         <td colspan="4">
                             <ol>
@@ -63,18 +63,18 @@
                     <tr></tr>
                     <tr>
                         <td colspan="1">
-                            <form action="/addEmail?cid=${customerFullData.id}" method="post" >
+                            <form action="/addEmailCustomer?cid=${customerFullData.id}" method="post" >
                                 <button class="btn success" id="add-email">добавить email</button>
                             </form>
                         </td>
                         <td colspan="2">
-                            <form action="/addPhoneNumber?cid=${customerFullData.id}" method="post" >
+                            <form action="/addPhoneNumberCustomer?cid=${customerFullData.id}" method="post" >
                                 <button class="btn success" id="add-phone">добавить телефон</button>
                             </form>
                         </td>
                         <td colspan="1">
-                            <form action="" method="post" >
-                                <button class="btn success" id="add-address">добавить адрес</button>
+                            <form action="/newAddress?cid=${customerFullData.id}" method="post" >
+                                <button class="btn default" id="add-address">добавить адрес</button>
                             </form>
                         </td>
                     </tr>
@@ -134,12 +134,12 @@
                                     <c:choose>
                                         <c:when test="${activeAccounts > 0}">
                                             <form action="" >
-                                                <button id="disabled-button" disabled>расторгнуть</button>
+                                                <button class="btn default" id="disabled-button" disabled>расторгнуть</button>
                                             </form>
                                         </c:when>
                                         <c:otherwise>
                                             <form action="/terminate?cid=${customerFullData.id}" method="post" >
-                                                <button id="delete-button">расторгнуть</button>
+                                                <button class="btn danger" id="delete-button">расторгнуть</button>
                                             </form>
                                         </c:otherwise>
                                     </c:choose>
@@ -184,7 +184,7 @@
                                         <c:choose>
                                             <c:when test="${entity.currentBalance > 0}">
                                                 <form action="" >
-                                                    <button class="btn danger" disabled>закрыть</button>
+                                                    <button class="btn default" disabled>закрыть</button>
                                                 </form>
                                             </c:when>
                                             <c:otherwise>
@@ -211,15 +211,13 @@
                                 </c:when>
                                 <c:otherwise>
                                     <form action="" method="post" >
-                                        <button class="btn success" disabled id="add-button_disabled">добавить счет</button>
+                                        <button class="btn default" disabled id="add-button_disabled">добавить счет</button>
                                     </form>
                                 </c:otherwise>
                             </c:choose>
-
                         </td>
                     </tr>
                 </table>
-
             </div>
         </div>
     </body>

@@ -24,13 +24,6 @@ public class CustomerServiceImpl implements CustomerService {
     private final BankAccountRepository bankAccountRepository;
     private final ContactRepository contactRepository;
     private final CurrencyRepository currencyRepository;
-    private final CountryRepository countryRepository;
-    private final RegionRepository regionRepository;
-    private final SettlementTypeRepository settlementTypeRepository;
-    private final SettlementRepository settlementRepository;
-    private final StreeetTypeRepository streeetTypeRepository;
-    private final PhoneNumberRepository phoneNumberRepository;
-    private final EmailRepository emailRepository;
 
     @Override
     public List<CustomerDTO> findAllCustomers() {
@@ -38,7 +31,6 @@ public class CustomerServiceImpl implements CustomerService {
         customers.sort(Comparator.comparing(o -> o.getPerson().getLastName()));
         return CustomerListMapper.INSTANCE.toDTOList(customers);
     }
-
 
     @Override
     public CustomerFullDataDTO findFullData(Integer customerId) {
@@ -109,44 +101,6 @@ public class CustomerServiceImpl implements CustomerService {
         List<PaymentOrder> orders = paymentOrderRepository.findAll();
         orders.sort(Comparator.comparing(PaymentOrder::getTimeStamp));
         return PaymentOrderListMapper.INSTANCE.toDTOList(orders);
-    }
-
-    /**
-     * @return new person`s id or -1
-     */
-    @Override
-    @Transactional
-    public int save(PersonDTO dto) {
-        if (dto == null
-                || personRepository.findByCitizenIdNumber(dto.getCitizenIdNumber()) != null) {
-            return -1;
-        }
-        Person model = PersonMapper.INSTANCE.toModel(dto);
-        return personRepository.save(model).getId();
-    }
-
-    @Override
-    public AddressFullDataDTO findFullData() {
-        List<Country> countries = countryRepository.findAll();
-        List<Region> regions = regionRepository.findAll();
-        List<SettlementType> settlementTypes = settlementTypeRepository.findAll();
-        List<Settlement> settlements = settlementRepository.findAll();
-        List<StreetType> streetTypes = streeetTypeRepository.findAll();
-        return AddressFullDataMapper.INSTANCE.toDTO(countries, regions, settlementTypes, settlements, streetTypes);
-    }
-
-    @Override
-    public List<PersonDTO> findByLastNameAndFirstNameAndMiddleName(String lastName,
-                                                                   String firstName,
-                                                                   String middleName
-    ) {
-        List<Person> personList = personRepository.findAllByLastNameIgnoreCaseAndFirstNameIgnoreCaseAndMiddleNameIgnoreCaseOrderByLastName(
-                lastName,
-                firstName,
-                middleName
-        );
-        List<PersonDTO> dtoList = PersonListMapper.INSTANCE.toDTO(personList);
-        return dtoList;
     }
 
     @Transactional
@@ -251,44 +205,5 @@ public class CustomerServiceImpl implements CustomerService {
             return -1;
         }
         return customer.getPerson().getId();
-    }
-
-    @Override
-    @Transactional
-    public boolean createNewPhoneNumber(PhoneNumberDTO dto) {
-        if (dto == null
-        || dto.getPersonId() == null){
-            return false;
-        }
-        Person person = personRepository.findById(dto.getPersonId()).orElse(null);
-        Contact contact = contactRepository.findByPerson(person);
-        if (contact == null){
-            Contact newContact = new Contact();
-            newContact.setPerson(person);
-            contactRepository.save(newContact);
-            contact = contactRepository.findByPerson(person);
-        }
-        dto.setContactId(contact.getId());
-        phoneNumberRepository.save(PhoneNumberMapper.INSTANCE.toModel(dto));
-        return true;
-    }
-
-    @Override
-    public boolean createNewEmail(EmailDTO dto) {
-        if (dto == null
-                || dto.getPersonId() == null){
-            return false;
-        }
-        Person person = personRepository.findById(dto.getPersonId()).orElse(null);
-        Contact contact = contactRepository.findByPerson(person);
-        if (contact == null){
-            Contact newContact = new Contact();
-            newContact.setPerson(person);
-            contactRepository.save(newContact);
-            contact = contactRepository.findByPerson(person);
-        }
-        dto.setContactId(contact.getId());
-        emailRepository.save(EmailMapper.INSTANCE.toModel(dto));
-        return true;
     }
 }

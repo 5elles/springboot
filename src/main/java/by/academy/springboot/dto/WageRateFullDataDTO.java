@@ -8,8 +8,10 @@ import java.time.LocalDate;
 public class WageRateFullDataDTO {
     private Integer id;
     private String positionName;
+    private Integer positionId;
     private Double positionSalary;
     private LocalDate startDate;
     private LocalDate finishDate;
     private Double rate;
+    private Integer employeeId;
 }

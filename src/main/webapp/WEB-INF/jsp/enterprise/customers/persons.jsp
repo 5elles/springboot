@@ -59,7 +59,7 @@
         </c:choose>
 
         <br>
-        <form action="/newperson">
+        <form action="/newPersonCustomer">
             <button>добавить в систему физлицо</button>
         </form>
     </body>

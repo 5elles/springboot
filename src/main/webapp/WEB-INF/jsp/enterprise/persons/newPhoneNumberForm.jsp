@@ -11,7 +11,7 @@
         <div>
             <div class="container">
                 <h3>Добавление нового номера телефона</h3>
-                <form id="add_form" class="form" name="newPhoneNumber" action="/savePhoneNumber?cid=${cid}" method="post" >
+                <form id="add_form" class="form" name="newPhoneNumber" action="/savePhoneNumber${entityId}" method="post" >
                     <fieldset>
                         <legend>телефон</legend>
                         <div class="field">
@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="field">
-                            <input hidden="hidden" type="text" name="personId" id="personId" value="${pid}" required/>
+                            <input hidden="hidden" name="personId" id="personId" value="${pid}" required/>
                         </div>
                     </fieldset>
                     <button class="btn success" type="submit" name="Add">сохранить</button>

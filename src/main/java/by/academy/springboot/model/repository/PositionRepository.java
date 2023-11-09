@@ -9,4 +9,6 @@ import java.util.List;
 
 @Repository
 public interface PositionRepository extends JpaRepository<Position, Integer> {
+    Position findPositionByPositionName(String positionName);
+    Position findPositionById(Integer positionId);
 }

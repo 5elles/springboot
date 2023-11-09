@@ -17,6 +17,7 @@ import java.time.LocalDate;
 public class WageRate {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @ManyToOne
     @JoinColumn(name = "position_id", referencedColumnName = "id")
@@ -27,4 +28,7 @@ public class WageRate {
     private LocalDate finishDate;
     @Column(name = "rate")
     private Double rate;
+    @ManyToOne
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+    private Employee employee;
 }

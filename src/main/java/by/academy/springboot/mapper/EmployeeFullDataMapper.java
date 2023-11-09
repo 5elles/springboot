@@ -23,6 +23,8 @@ public interface EmployeeFullDataMapper {
     @Mapping(source = "employee.person.addresses", target = "addresses")
     @Mapping(source = "contact.phoneNumbers", target = "phoneNumbers")
     @Mapping(source = "contact.emails", target = "emails")
+    @Mapping(source = "employee.id", target = "id")
+    @Mapping(source = "employee.person.id", target = "personId")
     EmployeeFullDataDTO toDTO(Employee employee,
                               Contact contact);
 }

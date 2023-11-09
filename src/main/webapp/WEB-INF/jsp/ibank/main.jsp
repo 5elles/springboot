@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
-        Здравствуйте, <b>${customer.firstName} ${customer.middleName}</b>!
+        Мы рады Вам, <b>${customer.firstName} ${customer.middleName}</b>!
 
         <br>
         <div class="container">
@@ -32,7 +32,7 @@
 
         <table border="1" cellspacing="0" cellpadding="12">
             <tr>
-                <td colspan="6" align="center">Ваши счета</td>
+                <th colspan="6" >Ваши счета</th>
             </tr>
             <tr>
                 <th>Дата открытия</th>
@@ -58,12 +58,12 @@
                                 <c:choose>
                                     <c:when test="${entity.currentBalance > 0}">
                                         <form action="" >
-                                            <button disabled>закрыть</button>
+                                            <button class="btn default" disabled>закрыть</button>
                                         </form>
                                     </c:when>
                                     <c:otherwise>
                                         <form name="closeAccount" action="/ibankCloseAccount?aid=${entity.id}&cid=${customer.id}" method="post">
-                                            <button type="submit">закрыть</button>
+                                            <button class="btn danger" type="submit">закрыть</button>
                                         </form>
                                     </c:otherwise>
                                 </c:choose>
