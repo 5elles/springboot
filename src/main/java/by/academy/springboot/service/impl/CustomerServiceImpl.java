@@ -1,13 +1,12 @@
 package by.academy.springboot.service.impl;
 
 import by.academy.springboot.dto.*;
+import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.*;
 import by.academy.springboot.model.entity.*;
 import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.CustomerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -79,15 +78,14 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public BankAccountFullDataDTO findBankAccountFullData(int bankAccountId) {
-        BankAccount account = bankAccountRepository.findById(bankAccountId).orElse(null);
-        if (account == null) {
-            return null;
-        }
+    public BankAccountFullDataDTO findBankAccountFullData(int bankAccountId) throws IncorrectParameterException {
+        BankAccount account = bankAccountRepository.findById(bankAccountId)
+                .orElseThrow(() -> new IncorrectParameterException("no such bank account: id" + bankAccountId));
+
         String accountNumber = account.getAccountNumber();
+        List<PaymentOrderDTO> incomingPayments = findByToAccountNumber(accountNumber);
         List<PaymentOrderDTO> allPayments = findAllOutgoingAndIncoming(accountNumber, accountNumber);
         List<PaymentOrderDTO> outgoingPayments = findByFromAccountNumber(accountNumber);
-        List<PaymentOrderDTO> incomingPayments = findByToAccountNumber(accountNumber);
         return BankAccountFullDataMapper.INSTANCE.modelsToDTO(
                 account,
                 allPayments,

@@ -1,6 +1,23 @@
 .main {
 }
 
+* {
+    margin: 0;
+    padding: 0;
+}
+html,
+body {
+    height: 100%;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.content {
+    flex: 1 0 auto;
+}
+
 .container {
     display: flex;
     align-items: center;
@@ -175,4 +192,68 @@ input[type=submit]:hover {
 .text-red{
     color: crimson;
     text-align: center;
+}
+
+
+.hero {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-image: url('https://i.ibb.co/PM6cMBn/image.png');
+    background-size: cover;
+    background-position: center center;
+}
+
+.hero__message {
+    font-family: Roboto, sans-serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 56px;
+    text-align: center;
+    color: #fff;
+}
+
+.header{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #0a2149;
+    position: sticky;
+    top: 0;
+}
+
+.header_li, .active {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    float: left;
+}
+
+.footer {
+    background-color: #0a2149;
+    text-align: center;
+    padding: 10px;
+    color: white;
+    font-family: "Helvetica Now", serif;
+    flex: 0 0 auto;
+
+}
+#Mail__footer{
+    font-size: 48px;
+
+}
+#mail{
+    text-decoration: none;
+    color: white;
+}
+#Company__footer{
+    font-size: 15px;
+    text-align: left;
+}
+#City__footer{
+    font-size: 12px;
+    padding-bottom: 0;
 }

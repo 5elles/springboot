@@ -1,6 +1,7 @@
 package by.academy.springboot.controller.enterprise;
 
 import by.academy.springboot.dto.*;
+import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.service.CustomerService;
 import by.academy.springboot.service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -67,10 +68,9 @@ public class CustomersController {
     }
 
     @GetMapping("/bankAccount")
-    public String showBankAccount(
-            @RequestParam(value = "id") int id,
-            Model model
-    ) {
+    public String showBankAccount(@RequestParam(value = "id") int id,
+                                  Model model
+    ) throws IncorrectParameterException {
         BankAccountFullDataDTO dto = customerService.findBankAccountFullData(id);
         if (dto == null) {
             return NOT_FOUND;
@@ -147,8 +147,8 @@ public class CustomersController {
         return PERSONS_PATH + "newAddressForm";
     }
 
-    @PostMapping("createNewAddress")
-    public String createNewAddress(@RequestParam("cid") int cid){
+    @PostMapping("/createNewAddress")
+    public String createNewAddress(@RequestParam("cid") int cid) {
         return "redirect:" + CUSTOMER_PAGE + cid;
     }
 
@@ -174,7 +174,7 @@ public class CustomersController {
     public String addPhoneNumber(@RequestParam("cid") int cid,
                                  Model model) {
         model.addAttribute("pid", customerService.findPersonIdByCustomerId(cid));
-        model.addAttribute("entityId", "Customer?cid="+cid);
+        model.addAttribute("entityId", "Customer?cid=" + cid);
         return PERSONS_PATH + "newPhoneNumberForm";
     }
 
@@ -191,7 +191,7 @@ public class CustomersController {
     public String addEmail(@RequestParam("cid") int cid,
                            Model model) {
         model.addAttribute("pid", customerService.findPersonIdByCustomerId(cid));
-        model.addAttribute("entityId", "Customer?cid="+cid);
+        model.addAttribute("entityId", "Customer?cid=" + cid);
         return PERSONS_PATH + "newEmailForm";
     }
 

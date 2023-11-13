@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -33,6 +34,13 @@ public class Person {
     private String citizenIdNumber;
     @Column(name = "passport_number")
     private String passportNumber;
+    @Column (name = "login")
+    private String login;
+    @Column (name = "password")
+    private String password;
+    @OneToMany
+    @JoinColumn(name = "person_id")
+    private Set<Role> roles;
     @OneToMany
     @JoinColumn(name = "person_id")
     private List<Address> addresses;

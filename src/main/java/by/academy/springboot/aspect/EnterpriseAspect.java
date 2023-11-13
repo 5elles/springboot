@@ -14,8 +14,8 @@ import java.util.Date;
 @Component
 @Aspect
 public class EnterpriseAspect {
-    @Pointcut("execution(* by.academy.springboot.service.impl.*.*(..))")
-    private void enterprisePointcut(){}
+//    @Pointcut("execution(* by.academy.springboot.service.impl.*.*(..))")
+//    private void enterprisePointcut(){}
 //    @Around("enterprisePointcut()")
 //    public void doTimeMeasurement(ProceedingJoinPoint point) throws Throwable {
 //        long start = new Date().getTime();

@@ -9,6 +9,7 @@
     </head>
     <body>
         <h1>Страница не найдена</h1>
+        ${message} -> ${cause}
     </body>
 </html>
 

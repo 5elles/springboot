@@ -1,6 +1,7 @@
 package by.academy.springboot.service;
 
 import by.academy.springboot.dto.*;
+import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.model.entity.Person;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface CustomerService {
 
     List<PaymentOrderDTO> findByToAccountNumber(String accountNumber);
 
-    BankAccountFullDataDTO findBankAccountFullData(int bankAccountId);
+    BankAccountFullDataDTO findBankAccountFullData(int bankAccountId) throws IncorrectParameterException;
 
     List<PaymentOrderDTO> findAllPaymentOrders();
 
