@@ -72,9 +72,9 @@ public class CustomersController {
                                   Model model
     ) throws IncorrectParameterException {
         BankAccountFullDataDTO dto = customerService.findBankAccountFullData(id);
-        if (dto == null) {
-            return NOT_FOUND;
-        }
+//        if (dto == null) {
+//            return NOT_FOUND;
+//        }
         model.addAttribute("data", dto);
         return CUSTOMERS_PATH + "bankAccount";
     }

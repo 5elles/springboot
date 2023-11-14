@@ -1,13 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!DOCTYPE html>
-    <head>
-        <meta charset="UTF-8">
-        <title>new employee</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-    <body>
+<%@ include file="header.jsp" %>
         <div>
             <div class="container">
                 <h3>Оформление новой рабочей ставки</h3>
@@ -21,9 +15,9 @@
 
                         <div class="field">
                             <label for="positionName">должность</label>
-                            <select name="positionName" id="positionName" required="">
+                            <select name="positionId" id="positionName" required="">
                                 <c:forEach items="${data}" var="item">
-                                    <option id="${item.id}" value=${item.positionName}>${item.positionName}</option>
+                                    <option id="${item.id}" value=${item.id}>${item.positionName}</option>
                                 </c:forEach>
                             </select>
                         </div>
@@ -41,5 +35,4 @@
                 </form>
             </div>
         </div>
-    </body>
-</html>
+<%@ include file="footer.jsp" %>

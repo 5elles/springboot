@@ -1,14 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>search result</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-    <body>
+<%@ include file="header.jsp" %>
+
         <c:choose>
             <c:when test="${data.size() > 0}">
                 <div>
@@ -62,5 +56,5 @@
         <form action="/newPersonCustomer">
             <button>добавить в систему физлицо</button>
         </form>
-    </body>
-</html>
+
+<%@ include file="footer.jsp" %>

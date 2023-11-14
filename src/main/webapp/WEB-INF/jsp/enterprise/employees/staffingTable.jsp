@@ -1,14 +1,8 @@
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>employees</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-
-    <body>
+<%@ include file="header.jsp" %>
         <c:set var="totalSalary" scope="session" value="${0}"></c:set>
         <div>
             <div>
@@ -60,5 +54,4 @@
             </div>
         </div>
         <br>
-    </body>
-</html>
+<%@ include file="footer.jsp" %>

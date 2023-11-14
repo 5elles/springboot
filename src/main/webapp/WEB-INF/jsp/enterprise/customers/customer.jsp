@@ -1,15 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>customer</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-    <body>
+<%@ include file="header.jsp" %>
         <div>
             <div>
                 <table border="1" cellspacing="0" cellpadding="12">
@@ -220,5 +212,4 @@
                 </table>
             </div>
         </div>
-    </body>
-</html>
+<%@ include file="footer.jsp" %>

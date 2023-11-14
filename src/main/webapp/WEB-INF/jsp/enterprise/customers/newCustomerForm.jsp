@@ -1,13 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!DOCTYPE html>
-    <head>
-        <meta charset="UTF-8">
-        <title>new customer</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-    <body>
+<%@ include file="header.jsp" %>
         <div>
             <div class="container">
                 <h3>Регистрация нового клиента банка</h3>
@@ -32,5 +26,4 @@
                 </form>
             </div>
         </div>
-    </body>
-</html>
+<%@ include file="footer.jsp" %>

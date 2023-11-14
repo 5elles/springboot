@@ -1,14 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>log</title>
-    </head>
-    <body>
+<%@ include file="header.jsp" %>
         <table border="1" cellspacing="0" cellpadding="12">
             <tr>
                 <td colspan="2" align="center"><b>платёжное поручение</b></td>
@@ -62,5 +55,4 @@
                 <td>${order.amount} ${order.fromAccountCurrencyAbbreviation}</td>
             </tr>
         </table>
-    </body>
-</html>
+<%@ include file="footer.jsp" %>

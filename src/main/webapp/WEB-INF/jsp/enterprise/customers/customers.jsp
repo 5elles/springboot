@@ -1,16 +1,8 @@
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>customers</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-
-
-    <body>
+<%@ include file="header.jsp" %>
         <div>
             <div class="container">
                 <h3>Поиск лица в системе</h3>
@@ -76,5 +68,5 @@
         <form class="redirect_btn" name="redirect" action="/operationsLog" method="get">
             <button class="transparent_btn default">Журнал учета банковских операций</button>
         </form>
-    </body>
-</html>
+
+<%@ include file="footer.jsp" %>

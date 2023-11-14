@@ -18,7 +18,7 @@
 
 
                 <label for="countryName">страна</label>
-                <select name="countryName" id="countryName" required="">
+                <select name="countryName" id="countryName" >
                     <c:forEach items="${data.countries}" var="item">
                         <option id=${item.id} value=${item.id}>${item.countryName}</option>
                     </c:forEach>

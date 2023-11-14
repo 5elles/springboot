@@ -80,7 +80,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public BankAccountFullDataDTO findBankAccountFullData(int bankAccountId) throws IncorrectParameterException {
         BankAccount account = bankAccountRepository.findById(bankAccountId)
-                .orElseThrow(() -> new IncorrectParameterException("no such bank account: id" + bankAccountId));
+                .orElseThrow(() -> new IncorrectParameterException("no such bank account: id " + bankAccountId));
 
         String accountNumber = account.getAccountNumber();
         List<PaymentOrderDTO> incomingPayments = findByToAccountNumber(accountNumber);

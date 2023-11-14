@@ -76,7 +76,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public boolean createNewWageRate(WageRateFullDataDTO dto, Integer personId) {
         Person person = personRepository.findById(personId).orElse(null);
-        Position position = positionRepository.findPositionByPositionName(dto.getPositionName());
+//        Position position = positionRepository.findPositionByPositionName(dto.getPositionName());
+        Position position = positionRepository.findPositionById(dto.getPositionId());
         if (person != null ||
                 position != null) {
             Employee employee = employeeRepository.findByPerson(person);
@@ -87,7 +88,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee = employeeRepository.findByPerson(person);
             }
             dto.setEmployeeId(employee.getId());
-            dto.setPositionId(position.getId());
+//            dto.setPositionId(position.getId());
             wageRateRepository.save(WageRateFullDataMapper.INSTANCE.toModel(dto));
             return true;
         }

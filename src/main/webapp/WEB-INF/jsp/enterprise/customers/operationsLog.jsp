@@ -1,15 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>log</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-    <body>
+<%@ include file="header.jsp" %>
         <div>
             <div>
                 <table>
@@ -23,7 +15,7 @@
                         <th>валюта списания</th>
                         <th>счет зачисления</th>
                         <th>валюта зачисления</th>
-                        <th>сумма в валюте зачисления</th>
+<%--                        <th>сумма в валюте зачисления</th>--%>
                     </tr>
 
                     <c:forEach items="${orders}" var="item">
@@ -40,13 +32,11 @@
                             <td>${item.fromAccountCurrencyAbbreviation}</td>
                             <td>${item.toAccountNumber}</td>
                             <td>${item.toAccountCurrencyAbbreviation}</td>
-                            <td>${item.amount * item.fromAccountCurrencyRate / item.toAccountCurrencyRate}</td>
+<%--                            <td>${item.amount * item.fromAccountCurrencyRate / item.toAccountCurrencyRate}</td>--%>
                         </tr>
                     </c:forEach>
 
                 </table>
             </div>
         </div>
-
-    </body>
-</html>
+<%@ include file="footer.jsp" %>
