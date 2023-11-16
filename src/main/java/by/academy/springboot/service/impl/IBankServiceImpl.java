@@ -8,6 +8,7 @@ import by.academy.springboot.exception.ForbiddenActionException;
 import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.BankAccountFullDataMapper;
 import by.academy.springboot.mapper.CustomerFullDataMapper;
+import by.academy.springboot.mapper.PaymentOrderListMapper;
 import by.academy.springboot.mapper.PaymentOrderMapper;
 import by.academy.springboot.model.entity.*;
 import by.academy.springboot.model.repository.*;
@@ -69,10 +70,8 @@ public class IBankServiceImpl implements IBankService {
 
     @Override
     public List<PaymentOrderDTO> findByFromAccountNumber(String accountNumber) {
-        List<PaymentOrder> order = paymentOrderRepository.findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(accountNumber);
-        return order.stream()
-                .map(PaymentOrderMapper.INSTANCE::toDTO)
-                .toList();
+        List<PaymentOrder> order = paymentOrderRepository.findAll(accountNumber);
+        return PaymentOrderListMapper.INSTANCE.toDTOList(order);
     }
 
     @Override

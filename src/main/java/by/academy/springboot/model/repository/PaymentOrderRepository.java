@@ -11,7 +11,10 @@ import java.util.List;
 public interface PaymentOrderRepository extends JpaRepository<PaymentOrder, Integer> {
     List<PaymentOrder> findDistinctByFromAccount_AccountNumberOrToAccount_AccountNumberOrderByTimeStamp(String accountNumber1, String accountNumber2);
     List<PaymentOrder> findPaymentOrdersByFromAccount_AccountNumberOrderByTimeStamp(String accountNumber);
+    @Query("from PaymentOrder where fromAccount.accountNumber = :fromAccountNumber order by timeStamp")
+    List<PaymentOrder> findAll(String fromAccountNumber);
     List<PaymentOrder> findPaymentOrdersByToAccount_AccountNumberOrderByTimeStamp(String accountNumber);
     @Query("from PaymentOrder order by timeStamp desc ")
     List<PaymentOrder> findAllOrders();
+
 }

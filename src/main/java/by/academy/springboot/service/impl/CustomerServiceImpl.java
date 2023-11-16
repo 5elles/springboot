@@ -27,17 +27,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDTO> findAllCustomers() {
-        List<Customer> customers = customerRepository.findAll();
-        customers.sort(Comparator.comparing(o -> o.getPerson().getLastName()));
+        List<Customer> customers = customerRepository.findAllOrderByPersonLastName();
         return CustomerListMapper.INSTANCE.toDTOList(customers);
     }
 
     @Override
-    public CustomerFullDataDTO findFullData(Integer customerId) {
-        Customer customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null) {
-            return null;
-        }
+    public CustomerFullDataDTO findFullData(Integer customerId) throws IncorrectParameterException {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(()->new IncorrectParameterException("wrong customer parameter, id " + customerId));
         Contact contact = contactRepository.findByPerson(customer.getPerson());
         List<Currency> currencies = currencyRepository.findAllByCurrencyAbbreviationIsNot("BYN");
         return CustomerFullDataMapper.INSTANCE.modelsToDTO(customer, contact, currencies);
@@ -53,11 +50,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public PaymentOrderDTO findById(int id) {
-        PaymentOrder order = paymentOrderRepository.findById(id).orElse(null);
-        if (order == null) {
-            return null;
-        }
+    public PaymentOrderDTO findById(int id) throws IncorrectParameterException {
+        PaymentOrder order = paymentOrderRepository.findById(id)
+                .orElseThrow(()->new IncorrectParameterException("wrong order id: " + id));
         return PaymentOrderMapper.INSTANCE.toDTO(order);
     }
 
@@ -102,7 +97,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public void closeAccount(int accountId) {
+    public void closeAccount(int accountId) throws IncorrectParameterException, ForbiddenActionException {
         BankAccount account = bankAccountRepository.findById(accountId)
                 .orElseThrow(() -> new IncorrectParameterException("no such bank account: id " + accountId));
         if (account.getCurrentBalance() != 0) {
@@ -114,7 +109,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public void terminateContract(int customerId) {
+    public void terminateContract(int customerId) throws IncorrectParameterException, ForbiddenActionException {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new IncorrectParameterException("no such customer: id " + customerId));
         if (!isReadyForTermination(customer)) {

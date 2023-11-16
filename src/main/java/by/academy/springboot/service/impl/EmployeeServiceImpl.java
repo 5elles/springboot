@@ -34,21 +34,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<EmployeeDTO> findAll() {
-        List<Employee> list = employeeRepository.findAll();
-        list.sort(Comparator.comparing(o -> o.getPerson().getLastName()));
-        return list.stream()
-                .map(EmployeeMapper.INSTANCE::toDTO)
-                .toList();
+        List<Employee> list = employeeRepository.findAllEmployees();
+        return EmployeeListMapper.INSTANCE.toDTO(list);
     }
 
     @Override
-    public EmployeeDTO findById(int id) {
-        Employee employee = employeeRepository.findById(id).orElse(null);
-        if (employee == null) {
-            return null;
-        } else {
+    public EmployeeDTO findById(int id) throws IncorrectParameterException {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new IncorrectParameterException("wrong employee id " + id));
             return EmployeeMapper.INSTANCE.toDTO(employee);
-        }
     }
 
     @Override
