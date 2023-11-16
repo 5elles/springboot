@@ -1,14 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>customer</title>
-        <link rel="stylesheet" href="/css/style.css">
-    </head>
-    <body>
+<%@ include file="header.jsp" %>
+
         Мы рады Вам, <b>${customer.firstName} ${customer.middleName}</b>!
 
         <br>
@@ -73,6 +67,6 @@
                 </tr>
             </c:forEach>
         </table>
-    </body>
-</html>
+
+<%@ include file="footer.jsp" %>
 

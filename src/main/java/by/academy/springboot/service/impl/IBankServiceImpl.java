@@ -4,6 +4,8 @@ import by.academy.springboot.dto.BankAccountFullDataDTO;
 import by.academy.springboot.dto.CustomerFullDataDTO;
 import by.academy.springboot.dto.OrderDTO;
 import by.academy.springboot.dto.PaymentOrderDTO;
+import by.academy.springboot.exception.ForbiddenActionException;
+import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.BankAccountFullDataMapper;
 import by.academy.springboot.mapper.CustomerFullDataMapper;
 import by.academy.springboot.mapper.PaymentOrderMapper;
@@ -30,11 +32,9 @@ public class IBankServiceImpl implements IBankService {
     private final ContactRepository contactRepository;
 
     @Override
-    public CustomerFullDataDTO findFullData(Integer customerId) {
-        Customer iBankCustomer = customerRepository.findById(customerId).orElse(null);
-        if (iBankCustomer == null) {
-            return null;
-        }
+    public CustomerFullDataDTO findFullData(Integer customerId) throws IncorrectParameterException {
+        Customer iBankCustomer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IncorrectParameterException("no such customer, id " + customerId));
         Contact contact = contactRepository.findByPerson(iBankCustomer.getPerson());
         List<Currency> currencies = currencyRepository.findAllByCurrencyAbbreviationIsNot("BYN");
         return CustomerFullDataMapper.INSTANCE.modelsToDTO(iBankCustomer, contact, currencies);
@@ -90,17 +90,12 @@ public class IBankServiceImpl implements IBankService {
 
     @Transactional
     @Override
-    public boolean save(OrderDTO order) {
-        BankAccount fromBankAccount = bankAccountRepository.findById(order.getFromAccountId()).orElseThrow(NoSuchElementException::new);
+    public void save(OrderDTO order) throws IncorrectParameterException, ForbiddenActionException {
+        BankAccount fromBankAccount = bankAccountRepository.findById(order.getFromAccountId())
+                .orElseThrow(() -> new IncorrectParameterException("no such from account!"));
         BankAccount toBankAccount = bankAccountRepository.findBankAccountByAccountNumber(order.getToAccountNumber());
-        if (
-                toBankAccount == null
-                        || !fromBankAccount.getCurrency().getCurrencyAbbreviation().equals(toBankAccount.getCurrency().getCurrencyAbbreviation())
-                        || toBankAccount.getClosureDate() != null
-                        || fromBankAccount.getClosureDate() != null
-                        || fromBankAccount.getCurrentBalance() < order.getAmount()
-        ) {
-            return false;
+        if (isForbiddenForExecution(fromBankAccount, toBankAccount, order)) {
+            throw new ForbiddenActionException("operation is forbidden. check parameters!");
         }
         double amount = (double) Math.round(order.getAmount() * 100) / 100;
         PaymentOrder paymentOrder = PaymentOrder.builder()
@@ -114,21 +109,32 @@ public class IBankServiceImpl implements IBankService {
         toBankAccount.setCurrentBalance(toBankAccount.getCurrentBalance() + amount);
         bankAccountRepository.save(fromBankAccount);
         bankAccountRepository.save(toBankAccount);
-        return true;
+    }
+
+    @Override
+    public boolean isForbiddenForExecution(BankAccount fromAccount, BankAccount toAccount, OrderDTO order) {
+        return toAccount == null
+                || fromAccount == null
+                || !fromAccount.getCurrency().getCurrencyAbbreviation().equals(toAccount.getCurrency().getCurrencyAbbreviation())
+                || toAccount.getClosureDate() != null
+                || fromAccount.getClosureDate() != null
+                || fromAccount.getCurrentBalance() < order.getAmount();
     }
 
     @Transactional
     @Override
-    public boolean closeBankAccount(int accountId) {
-        BankAccount account = bankAccountRepository.findById(accountId).orElse(null);
-        if (
-                account == null ||
-                        account.getCurrentBalance() != 0
-        ) {
-            return false;
+    public void closeBankAccount(int accountId) throws ForbiddenActionException, IncorrectParameterException {
+        BankAccount account = bankAccountRepository.findById(accountId)
+                .orElseThrow(() -> new IncorrectParameterException("no such bank account, id " + accountId));
+        if (isForbiddenForExecution(account)) {
+            throw new ForbiddenActionException("bank account can not be null or has current balance > 0");
         }
         account.setClosureDate(LocalDate.now());
-        return true;
+    }
+    @Override
+    public boolean isForbiddenForExecution(BankAccount account){
+        return account == null ||
+                account.getCurrentBalance() != 0;
     }
 }
 

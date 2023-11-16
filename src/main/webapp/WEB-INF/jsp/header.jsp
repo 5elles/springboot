@@ -16,13 +16,11 @@
             </div>
         </div>
     </section>
-
     <section>
         <ul class="header">
-<%--            реализовать условие отображения вкладки с персоналом в зависимости от роли пользователя--%>
-            <li><a class="active" href="/employees">Управление персоналом</a></li>
-            <li><a class="header_li" href="/customers">Клиенты</a></li>
-            <li><a class="header_li" href="/operationsLog">Учёт банковских операций</a></li>
-            <li><a class="header_li" href="/findCustomers">Поиск клиента</a></li>
+            <li><a class="active" href="#home"></a></li>
+            <li><a class="header_li" href="#news"></a></li>
+            <li><a class="header_li" href="#contact"></a></li>
+            <li><a class="header_li" href="#about_us"></a></li>
         </ul>
     </section>

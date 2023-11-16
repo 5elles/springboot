@@ -1,6 +1,8 @@
 package by.academy.springboot.controller.enterprise;
 
 import by.academy.springboot.dto.*;
+import by.academy.springboot.exception.ForbiddenActionException;
+import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.service.EmployeeService;
 import by.academy.springboot.service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,6 @@ public class EmployeesController {
     private final PersonService personService;
     private static final String EMPLOYEES_PATH = "/enterprise/employees/";
     private static final String PERSONS_PATH = "/enterprise/persons/";
-    private static final String NOT_FOUND = "notFound";
-    private static final String OPERATION_ERROR = "operationError";
     private static final String ALL_EMPLOYEES = "/employees";
     private static final String EMPLOYEE = "/employee";
 
@@ -33,14 +33,10 @@ public class EmployeesController {
 
     @GetMapping(value = EMPLOYEE)
     public String showEmployee(@RequestParam("id") int id,
-                               Model model) {
+                               Model model) throws IncorrectParameterException {
         EmployeeFullDataDTO employeeFullData = employeeService.findEmployeeFullData(id);
-        if (employeeFullData == null) {
-            return NOT_FOUND;
-        } else {
-            model.addAttribute("employee", employeeFullData);
-            return EMPLOYEES_PATH + "employee";
-        }
+        model.addAttribute("employee", employeeFullData);
+        return EMPLOYEES_PATH + "employee";
     }
 
     @GetMapping("/findPersons")
@@ -65,17 +61,14 @@ public class EmployeesController {
     }
 
     @PostMapping("/newPersonEmployee")
-    public String createNewPersonEmployee(@ModelAttribute("person") PersonDTO personDTO) {
-        int id = personService.save(personDTO);
-        if (id > 0) {
-            return "redirect:" + ALL_EMPLOYEES;
-        }
-        return OPERATION_ERROR;
+    public String createNewPersonEmployee(@ModelAttribute("person") PersonDTO personDTO) throws ForbiddenActionException {
+        personService.save(personDTO);
+        return "redirect:" + ALL_EMPLOYEES;
     }
 
     @PostMapping("/showNewWageRateForm")
     public String setNewWageRate(@RequestParam("pid") int pid,
-                                 Model model){
+                                 Model model) {
         model.addAttribute("pid", pid);
         model.addAttribute("data", employeeService.findAllPositions());
         return EMPLOYEES_PATH + "newWageRateForm";
@@ -83,16 +76,14 @@ public class EmployeesController {
 
     @PostMapping("/setNewWageRate")
     public String setNewWageRate(@ModelAttribute WageRateFullDataDTO dto,
-                                 @RequestParam("pid") int pid){
-        if (employeeService.createNewWageRate(dto, pid)){
-            return "redirect:" + EMPLOYEE + "?id=" + employeeService.findEmployeeIdByPersonId(pid);
-        }
-        return OPERATION_ERROR;
+                                 @RequestParam("pid") int pid) throws IncorrectParameterException {
+        employeeService.createNewWageRate(dto, pid);
+        return "redirect:" + EMPLOYEE + "?id=" + employeeService.findEmployeeIdByPersonId(pid);
     }
 
     @PostMapping("/addEmailEmployee")
     public String addEmployeeEmail(@RequestParam("eid") int eid,
-                           Model model) {
+                                   Model model) {
         model.addAttribute("pid", employeeService.findPersonIdByEmployeeId(eid));
         model.addAttribute("entityId", "Employee?eid=" + eid);
         return PERSONS_PATH + "newEmailForm";
@@ -100,11 +91,9 @@ public class EmployeesController {
 
     @PostMapping("/saveEmailEmployee")
     public String addEmployeeEmail(@RequestParam("eid") int eid,
-                                   @ModelAttribute("email") EmailDTO dto) {
-        if (personService.createNewEmail(dto)) {
-            return "redirect:" + EMPLOYEE + "?id=" + eid;
-        }
-        return OPERATION_ERROR;
+                                   @ModelAttribute("email") EmailDTO dto) throws ForbiddenActionException, IncorrectParameterException {
+        personService.createNewEmail(dto);
+        return "redirect:" + EMPLOYEE + "?id=" + eid;
     }
 
     @PostMapping("/addPhoneNumberEmployee")
@@ -117,34 +106,29 @@ public class EmployeesController {
 
     @PostMapping("/savePhoneNumberEmployee")
     public String savePhoneNumber(@ModelAttribute("phoneNumber") PhoneNumberDTO dto,
-                                  @RequestParam("eid") int eid) {
-        if (personService.createNewPhoneNumber(dto)) {
-            return "redirect:" + EMPLOYEE + "?id=" + eid;
-        }
-        return OPERATION_ERROR;
+                                  @RequestParam("eid") int eid) throws IncorrectParameterException, ForbiddenActionException {
+        personService.createNewPhoneNumber(dto);
+        return "redirect:" + EMPLOYEE + "?id=" + eid;
     }
 
     @PostMapping("/fire")
     public String terminateContract(@RequestParam("wid") int wid,
-                                    @RequestParam("eid") int eid) {
-        if (employeeService.closeWageRate(wid)) {
-            return "redirect:" + EMPLOYEE + "?id=" + eid;
-        }
-        return OPERATION_ERROR;
+                                    @RequestParam("eid") int eid) throws ForbiddenActionException {
+        employeeService.closeWageRate(wid);
+        return "redirect:" + EMPLOYEE + "?id=" + eid;
     }
 
     @GetMapping("/staffingTable")
-    public String showStaffingTable(Model model){
+    public String showStaffingTable(Model model) {
         model.addAttribute("data", employeeService.getAllPositions());
         return EMPLOYEES_PATH + "staffingTable";
     }
 
     @GetMapping("/employeesByPosition")
     public String showEmployeesByPosition(@RequestParam("posId") int posId,
-                                          Model model){
+                                          Model model) {
         model.addAttribute("data", employeeService.findAlLActualEmployeesByPositionId(posId));
         model.addAttribute("positionName", employeeService.findPositionNameById(posId));
         return EMPLOYEES_PATH + "employeesByPositon";
     }
-
 }

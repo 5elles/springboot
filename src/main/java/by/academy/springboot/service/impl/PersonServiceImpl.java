@@ -4,6 +4,8 @@ import by.academy.springboot.dto.AddressFullDataDTO;
 import by.academy.springboot.dto.EmailDTO;
 import by.academy.springboot.dto.PersonDTO;
 import by.academy.springboot.dto.PhoneNumberDTO;
+import by.academy.springboot.exception.ForbiddenActionException;
+import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.*;
 import by.academy.springboot.model.entity.*;
 import by.academy.springboot.model.repository.*;
@@ -28,17 +30,20 @@ public class PersonServiceImpl implements PersonService {
     private final EmailRepository emailRepository;
 
     /**
-     * @return new person`s id or -1
+     * @return new person`s id
      */
     @Override
     @Transactional
-    public int save(PersonDTO dto) {
-        if (dto == null
-                || personRepository.findByCitizenIdNumber(dto.getCitizenIdNumber()) != null) {
-            return -1;
+    public int save(PersonDTO dto) throws ForbiddenActionException {
+        if (isForbiddenForCreation(dto)) {
+            throw new ForbiddenActionException("dto is null or person with such citizen ID exists");
         }
         Person model = PersonMapper.INSTANCE.toModel(dto);
         return personRepository.save(model).getId();
+    }
+
+    public boolean isForbiddenForCreation(PersonDTO dto) {
+        return dto == null || personRepository.findByCitizenIdNumber(dto.getCitizenIdNumber()) != null;
     }
 
     @Override
@@ -67,40 +72,57 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     @Transactional
-    public boolean createNewPhoneNumber(PhoneNumberDTO dto) {
-        if (dto == null
-                || dto.getPersonId() == null){
-            return false;
+    public void createNewPhoneNumber(PhoneNumberDTO dto) throws ForbiddenActionException, IncorrectParameterException {
+        if (isForbiddenForCreation(dto)) {
+            throw new ForbiddenActionException("PhoneNumberDTO is not valid");
         }
-        Person person = personRepository.findById(dto.getPersonId()).orElse(null);
+        Person person = personRepository.findById(dto.getPersonId())
+                .orElseThrow(() -> new IncorrectParameterException("no such person, id " + dto.getPersonId()));
         Contact contact = contactRepository.findByPerson(person);
-        if (contact == null){
-            Contact newContact = new Contact();
-            newContact.setPerson(person);
-            contactRepository.save(newContact);
+        if (contact == null) {
+            createNewContact(person);
             contact = contactRepository.findByPerson(person);
         }
         dto.setContactId(contact.getId());
         phoneNumberRepository.save(PhoneNumberMapper.INSTANCE.toModel(dto));
-        return true;
     }
 
     @Override
-    public boolean createNewEmail(EmailDTO dto) {
-        if (dto == null
-                || dto.getPersonId() == null){
-            return false;
-        }
-        Person person = personRepository.findById(dto.getPersonId()).orElse(null);
+    public void createNewContact(Person person) throws ForbiddenActionException {
         Contact contact = contactRepository.findByPerson(person);
-        if (contact == null){
+        if (contact == null) {
             Contact newContact = new Contact();
             newContact.setPerson(person);
             contactRepository.save(newContact);
+        } else {
+            throw new ForbiddenActionException("contact exists");
+        }
+    }
+
+    @Transactional
+    @Override
+    public void createNewEmail(EmailDTO dto) throws ForbiddenActionException, IncorrectParameterException {
+        if (isForbiddenForCreation(dto)) {
+            throw new ForbiddenActionException("EmailDTO is not valid");
+        }
+        Person person = personRepository.findById(dto.getPersonId())
+                .orElseThrow(() -> new IncorrectParameterException("person can not be null!"));
+        Contact contact = contactRepository.findByPerson(person);
+        if (contact == null) {
+            createNewContact(person);
             contact = contactRepository.findByPerson(person);
         }
         dto.setContactId(contact.getId());
         emailRepository.save(EmailMapper.INSTANCE.toModel(dto));
-        return true;
+    }
+
+    @Override
+    public boolean isForbiddenForCreation(EmailDTO dto) {
+        return dto == null || dto.getPersonId() == null;
+    }
+
+    @Override
+    public boolean isForbiddenForCreation(PhoneNumberDTO dto) {
+        return dto == null || dto.getPersonId() == null;
     }
 }

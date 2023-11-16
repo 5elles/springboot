@@ -12,10 +12,10 @@ public interface EmployeeService  {
     EmployeeDTO findById(int id);
     EmployeeFullDataDTO findEmployeeFullData(int employeeId);
     List<PositionDTO> findAllPositions();
-    boolean createNewWageRate(WageRateFullDataDTO dto, Integer personId);
+    void createNewWageRate(WageRateFullDataDTO dto, Integer personId);
     Integer findEmployeeIdByPersonId(Integer pid);
     Integer findPersonIdByEmployeeId(Integer employeeId);
-    boolean closeWageRate(Integer wageRateId);
+    void closeWageRate(Integer wageRateId);
     List<PositionDTO> getAllPositions();
     List<EmployeeDTO> findAlLActualEmployeesByPositionId(Integer positionId);
     String findPositionNameById(Integer positionId);

@@ -4,6 +4,8 @@ import by.academy.springboot.dto.EmployeeFullDataDTO;
 import by.academy.springboot.dto.EmployeeDTO;
 import by.academy.springboot.dto.PositionDTO;
 import by.academy.springboot.dto.WageRateFullDataDTO;
+import by.academy.springboot.exception.ForbiddenActionException;
+import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.*;
 import by.academy.springboot.model.entity.Employee;
 import by.academy.springboot.model.entity.Person;
@@ -51,16 +53,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeFullDataDTO findEmployeeFullData(int employeeId)
-            throws IllegalArgumentException {
+            throws IncorrectParameterException {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElse(null);
-        if (employee == null) {
-            return null;
-        } else {
+                .orElseThrow(() -> new IncorrectParameterException("there is no such employee, id " + employeeId));
             return EmployeeFullDataMapper.INSTANCE.toDTO(
                     employee,
                     contactRepository.findByPerson(employee.getPerson()));
-        }
     }
 
     @Override
@@ -74,12 +72,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public boolean createNewWageRate(WageRateFullDataDTO dto, Integer personId) {
-        Person person = personRepository.findById(personId).orElse(null);
-//        Position position = positionRepository.findPositionByPositionName(dto.getPositionName());
+    public void createNewWageRate(WageRateFullDataDTO dto, Integer personId) throws IncorrectParameterException {
+        Person person = personRepository.findById(personId)
+                .orElseThrow(()->new IncorrectParameterException("no such person, id " + personId));
         Position position = positionRepository.findPositionById(dto.getPositionId());
-        if (person != null ||
-                position != null) {
+        if (position != null) {
             Employee employee = employeeRepository.findByPerson(person);
             if (employee == null) {
                 Employee newEmployee = new Employee();
@@ -88,11 +85,10 @@ public class EmployeeServiceImpl implements EmployeeService {
                 employee = employeeRepository.findByPerson(person);
             }
             dto.setEmployeeId(employee.getId());
-//            dto.setPositionId(position.getId());
             wageRateRepository.save(WageRateFullDataMapper.INSTANCE.toModel(dto));
-            return true;
+        } else {
+            throw new IncorrectParameterException("position can not be null");
         }
-        return false;
     }
 
     /**
@@ -120,14 +116,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public boolean closeWageRate(Integer wageRateId) {
+    public void closeWageRate(Integer wageRateId) {
         WageRate wageRate = wageRateRepository.findById(wageRateId).orElse(null);
         if (wageRate != null){
             wageRate.setFinishDate(LocalDate.now());
             wageRateRepository.save(wageRate);
-            return true;
-        }
-        return false;
+        } else throw new ForbiddenActionException("wage rate must be not null");
     }
     @Override
     public List<PositionDTO> getAllPositions(){

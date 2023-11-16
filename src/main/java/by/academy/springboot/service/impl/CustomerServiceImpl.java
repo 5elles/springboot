@@ -1,6 +1,7 @@
 package by.academy.springboot.service.impl;
 
 import by.academy.springboot.dto.*;
+import by.academy.springboot.exception.ForbiddenActionException;
 import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.*;
 import by.academy.springboot.model.entity.*;
@@ -81,7 +82,6 @@ public class CustomerServiceImpl implements CustomerService {
     public BankAccountFullDataDTO findBankAccountFullData(int bankAccountId) throws IncorrectParameterException {
         BankAccount account = bankAccountRepository.findById(bankAccountId)
                 .orElseThrow(() -> new IncorrectParameterException("no such bank account: id " + bankAccountId));
-
         String accountNumber = account.getAccountNumber();
         List<PaymentOrderDTO> incomingPayments = findByToAccountNumber(accountNumber);
         List<PaymentOrderDTO> allPayments = findAllOutgoingAndIncoming(accountNumber, accountNumber);
@@ -96,42 +96,43 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<PaymentOrderDTO> findAllPaymentOrders() {
-        List<PaymentOrder> orders = paymentOrderRepository.findAll();
-        orders.sort(Comparator.comparing(PaymentOrder::getTimeStamp));
+        List<PaymentOrder> orders = paymentOrderRepository.findAllOrders();
         return PaymentOrderListMapper.INSTANCE.toDTOList(orders);
     }
 
     @Transactional
     @Override
-    public boolean closeAccount(int accountId) {
-        BankAccount account = bankAccountRepository.findById(accountId).orElse(null);
-        if (
-                account == null
-                        || account.getCurrentBalance() != 0
-        ) {
-            return false;
+    public void closeAccount(int accountId) {
+        BankAccount account = bankAccountRepository.findById(accountId)
+                .orElseThrow(() -> new IncorrectParameterException("no such bank account: id " + accountId));
+        if (account.getCurrentBalance() != 0) {
+            throw new ForbiddenActionException("current balance can not be above 0, account: id" + accountId);
         }
         account.setClosureDate(LocalDate.now());
-        return true;
+        bankAccountRepository.save(account);
     }
 
     @Override
     @Transactional
-    public boolean terminateContract(int customerId) {
-        Customer customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null
-                || customer.getAgreementDate() == null
-                || hasActiveBankAccounts(customerId)
-        ) {
-            return false;
+    public void terminateContract(int customerId) {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IncorrectParameterException("no such customer: id " + customerId));
+        if (!isReadyForTermination(customer)) {
+            throw new ForbiddenActionException("contract can not be terminated, customer: id " + customerId);
         }
         customer.setClosureDate(LocalDate.now());
-        return true;
+    }
+
+    public boolean isReadyForTermination(Customer customer) {
+        return customer.getAgreementDate() != null && !hasActiveBankAccounts(customer.getId());
     }
 
     @Override
     public boolean hasActiveBankAccounts(int customerID) {
         List<BankAccount> bankAccounts = bankAccountRepository.findBankAccountsByCustomerId(customerID);
+        if (bankAccounts.isEmpty()) {
+            return false;
+        }
         for (BankAccount account : bankAccounts) {
             if (account.getClosureDate() != null) {
                 return false;
@@ -142,40 +143,46 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public boolean createNewBankContract(CustomerDTO dto) {
-        Customer customer = customerRepository.findById(dto.getId()).orElse(null);
-        if (customer == null
-                || customer.getClosureDate() == null
-        ) {
-            return false;
+    public void createNewBankContract(CustomerDTO dto) throws IncorrectParameterException, ForbiddenActionException {
+        Customer customer = customerRepository.findById(dto.getId())
+                .orElseThrow(() -> new IncorrectParameterException("no such customer, id " + dto.getId()));
+        if (isForbiddenForCreation(customer)) {
+            throw new ForbiddenActionException("new contract creation is forbidden, check customer id " + dto.getId());
         }
         customer.setAgreementNumber(dto.getAgreementNumber());
         customer.setAgreementDate(dto.getAgreementDate());
         customer.setClosureDate(null);
-        return true;
+    }
+
+    @Override
+    public boolean isForbiddenForCreation(Customer customer) {
+        return customer == null || customer.getClosureDate() == null;
     }
 
     @Override
     public List<CurrencyDTO> findAllCurrencies() {
-        List<Currency> currencies = currencyRepository.findAll();
-        currencies.sort(Comparator.comparing(Currency::getCurrencyName));
+        List<Currency> currencies = currencyRepository.findAllOrderByCurrencyAbbreviation();
         return CurrencyListMapper.INSTANCE.toDTO(currencies);
     }
 
     @Transactional
     @Override
-    public boolean createNewBankAccount(BankAccountDTO dto) {
-        Customer customer = customerRepository.findById(dto.getCustomerID()).orElse(null);
-        if (customer == null
-                || customer.getClosureDate() != null
-                || dto.getOpeningDate() == null
-                || dto.getAccountNumber() == null
-                || dto.getCurrencyID() == null
-                || dto.getCustomerID() == null) {
-            return false;
+    public void createNewBankAccount(BankAccountDTO dto) {
+        Customer customer = customerRepository.findById(dto.getCustomerID())
+                .orElseThrow(() -> new IncorrectParameterException("no such customer, id " + dto.getCustomerID()));
+        if (!isReadyForBankAccountCreation(customer, dto)) {
+            throw new ForbiddenActionException("new bank account creation is forbidden! check the customer`s contract and validate the new account form");
         }
         bankAccountRepository.save(BankAccountMapper.INSTANCE.dtoToModel(dto));
-        return true;
+    }
+
+    @Override
+    public boolean isReadyForBankAccountCreation(Customer customer, BankAccountDTO dto) {
+        return customer.getClosureDate() == null
+                && dto.getOpeningDate() != null
+                && dto.getAccountNumber() != null
+                && dto.getCurrencyID() != null
+                && dto.getCustomerID() != null;
     }
 
     /**
@@ -186,11 +193,15 @@ public class CustomerServiceImpl implements CustomerService {
     public Integer createCustomer(CustomerDTO dto) {
         Person person = personRepository.findById(dto.getPersonId()).orElse(null);
         Customer customer = customerRepository.findCustomerByPerson(person);
-        if (person == null
-                || customer != null) {
-            return -1;
+        if (isForbiddenForCreation(person, customer)) {
+            throw new ForbiddenActionException("new customer creation is forbidden. check dto or person, person id: " + dto.getPersonId());
         }
         return customerRepository.save(CustomerMapper.INSTANCE.toModel(dto)).getId();
+    }
+
+    @Override
+    public boolean isForbiddenForCreation(Person person, Customer customer) {
+        return person == null || customer != null;
     }
 
     /**
@@ -199,7 +210,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Integer findPersonIdByCustomerId(Integer customerId) {
         Customer customer = customerRepository.findById(customerId).orElse(null);
-        if (customer == null){
+        if (customer == null) {
             return -1;
         }
         return customer.getPerson().getId();

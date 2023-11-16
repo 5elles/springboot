@@ -1,7 +1,6 @@
 package by.academy.springboot.controller.enterprise;
 
 import by.academy.springboot.service.EmployeeService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -20,6 +20,8 @@ public interface IBankService {
     List<PaymentOrderDTO> findByFromAccountNumber(String accountNumber);
     List<PaymentOrderDTO> findByToAccountNumber(String accountNumber);
     void save(PaymentOrder order);
-    boolean save(OrderDTO order);
-    boolean closeBankAccount(int accountId);
+    void save(OrderDTO order);
+    boolean isForbiddenForExecution(BankAccount fromAccount, BankAccount toAccount, OrderDTO order);
+    void closeBankAccount(int accountId);
+    boolean isForbiddenForExecution(BankAccount account);
 }

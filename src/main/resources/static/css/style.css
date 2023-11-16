@@ -1,10 +1,18 @@
 .main {
 }
 
+/* это сбрасывает дефолтные стили у тэгов */
 * {
-    margin: 0;
     padding: 0;
+    margin: 0;
+    box-sizing: border-box;
 }
+
+/*  у все контейнера внутри body должен быть этот класс */
+.tipa_body {
+    position: relative;
+}
+
 html,
 body {
     height: 100%;
@@ -233,27 +241,25 @@ input[type=submit]:hover {
 }
 
 .footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     background-color: #0a2149;
     text-align: center;
     padding: 10px;
     color: white;
     font-family: "Helvetica Now", serif;
-    flex: 0 0 auto;
-
 }
-#Mail__footer{
-    font-size: 48px;
 
+.footer > div {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
 }
-#mail{
+.footer a {
     text-decoration: none;
-    color: white;
+    color: #fff;
+    font-size: 48px;
 }
-#Company__footer{
-    font-size: 15px;
-    text-align: left;
-}
-#City__footer{
-    font-size: 12px;
-    padding-bottom: 0;
-}
+

@@ -1,20 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<html lang="en" xmlns:th="http://thymeleaf.org">
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>account</title>
-        <link rel="stylesheet" href="/css/style.css">
-
-    </head>
-    <body>
+<%@ include file="header.jsp" %>
         <div>
             <table border="1" cellspacing="0" cellpadding="12">
                 <tr>
-                    <td colspan="2" align="center"><b>реквизиты счета</b></td>
+                    <th colspan="2">реквизиты счета</th>
                 </tr>
 
                 <tr>
@@ -42,7 +33,7 @@
                 </tr>
 
                 <tr>
-                    <td>Остаток по счет</td>
+                    <td>Остаток по счету</td>
                     <th><b>${data.currentBalance}</b> ${data.currencyAbbreviation}</th>
                 </tr>
             </table>
@@ -51,7 +42,7 @@
         <c:if test="${data.closureDate == null}">
             <div>
                 <div class="container">
-                    <h3>перевести деньги на другой счет:</h3>
+                    <h3>перевести на другой счет:</h3>
                         <form id="add_form" name="payment" action="/account?aid=${data.id}" method="post" >
                             <fieldset>
                                 <legend>платежные реквизиты</legend>
@@ -158,6 +149,4 @@
                 </c:forEach>
             </table>
         </div>
-    </body>
-</html>
-
+<%@ include file="footer.jsp" %>

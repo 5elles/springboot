@@ -4,7 +4,7 @@
 <%@ include file="header.jsp" %>
 
     <div>
-
+        <br>
         <table border="1" cellspacing="0" cellpadding="12">
             <tr>
                 <td colspan="2" align="center"><b>реквизиты счета</b></td>

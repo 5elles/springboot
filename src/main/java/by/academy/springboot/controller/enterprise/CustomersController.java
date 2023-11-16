@@ -1,6 +1,7 @@
 package by.academy.springboot.controller.enterprise;
 
 import by.academy.springboot.dto.*;
+import by.academy.springboot.exception.ForbiddenActionException;
 import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.service.CustomerService;
 import by.academy.springboot.service.PersonService;
@@ -16,8 +17,6 @@ public class CustomersController {
     private final PersonService personService;
     private static final String CUSTOMERS_PATH = "/enterprise/customers/";
     private static final String PERSONS_PATH = "/enterprise/persons/";
-    private static final String OPERATION_ERROR = "operationError";
-    private static final String NOT_FOUND = "notFound";
     private static final String CUSTOMER_PAGE = "/customer?id=";
 
     @GetMapping("/customers")
@@ -42,29 +41,25 @@ public class CustomersController {
 
     @PostMapping("/customer")
     public String createNewContract(@RequestParam("cid") int cid,
-                                    CustomerDTO dto) {
-        if (customerService.createNewBankContract(dto)) {
-            return "redirect:/customer?id=" + cid;
-        }
-        return NOT_FOUND;
+                                    CustomerDTO dto)
+            throws ForbiddenActionException, IncorrectParameterException {
+        customerService.createNewBankContract(dto);
+        return "redirect:/customer?id=" + cid;
     }
 
     @PostMapping("/closeAccount")
     public String closeAccount(@RequestParam("aid") int aid,
-                               @RequestParam("cid") int cid) {
-        boolean closed = customerService.closeAccount(aid);
-        if (closed) {
-            return "redirect:/customer?id=" + cid;
-        }
-        return OPERATION_ERROR;
+                               @RequestParam("cid") int cid)
+            throws IncorrectParameterException, ForbiddenActionException {
+        customerService.closeAccount(aid);
+        return "redirect:/customer?id=" + cid;
     }
 
     @PostMapping("/terminate")
-    public String terminateContract(@RequestParam("cid") int cid) {
-        if (customerService.terminateContract(cid)) {
-            return "redirect:/customer?id=" + cid;
-        }
-        return OPERATION_ERROR;
+    public String terminateContract(@RequestParam("cid") int cid)
+            throws ForbiddenActionException, IncorrectParameterException {
+        customerService.terminateContract(cid);
+        return "redirect:/customer?id=" + cid;
     }
 
     @GetMapping("/bankAccount")
@@ -72,9 +67,6 @@ public class CustomersController {
                                   Model model
     ) throws IncorrectParameterException {
         BankAccountFullDataDTO dto = customerService.findBankAccountFullData(id);
-//        if (dto == null) {
-//            return NOT_FOUND;
-//        }
         model.addAttribute("data", dto);
         return CUSTOMERS_PATH + "bankAccount";
     }
@@ -90,6 +82,11 @@ public class CustomersController {
                                    Model model) {
         model.addAttribute("order", customerService.findById(id));
         return CUSTOMERS_PATH + "paymentOrder";
+    }
+
+    @GetMapping("/findCustomers")
+    public String findCustomer() {
+        return CUSTOMERS_PATH + "findCustomer";
     }
 
     @GetMapping("/persons")
@@ -114,12 +111,10 @@ public class CustomersController {
     }
 
     @PostMapping("/newPersonCustomer")
-    public String createNewPerson(@ModelAttribute("person") PersonDTO personDTO) {
-        int id = personService.save(personDTO);
-        if (id > 0) {
-            return "redirect:/customers";
-        }
-        return OPERATION_ERROR;
+    public String createNewPerson(@ModelAttribute("person") PersonDTO personDTO)
+            throws ForbiddenActionException {
+        personService.save(personDTO);
+        return "redirect:/customers";
     }
 
     @PostMapping("/newcustomer")
@@ -130,11 +125,9 @@ public class CustomersController {
     }
 
     @PostMapping("/createNewCustomer")
-    public String createNewCustomer(@ModelAttribute("customer") CustomerDTO customerDTO) {
+    public String createNewCustomer(@ModelAttribute("customer") CustomerDTO customerDTO)
+            throws ForbiddenActionException {
         int id = customerService.createCustomer(customerDTO);
-        if (id < 0) {
-            return OPERATION_ERROR;
-        }
         return "redirect:" + CUSTOMER_PAGE + id;
     }
 
@@ -163,11 +156,10 @@ public class CustomersController {
 
     @PostMapping("/createBankAccount")
     public String createNewBankAccount(@ModelAttribute("bankAccount") BankAccountDTO dto,
-                                       @RequestParam("cid") int cid) {
-        if (customerService.createNewBankAccount(dto)) {
-            return "redirect:/customer?id=" + cid;
-        }
-        return OPERATION_ERROR;
+                                       @RequestParam("cid") int cid)
+            throws IncorrectParameterException, ForbiddenActionException {
+        customerService.createNewBankAccount(dto);
+        return "redirect:/customer?id=" + cid;
     }
 
     @PostMapping("/addPhoneNumberCustomer")
@@ -180,11 +172,10 @@ public class CustomersController {
 
     @PostMapping("/savePhoneNumberCustomer")
     public String savePhoneNumber(@ModelAttribute("phoneNumber") PhoneNumberDTO dto,
-                                  @RequestParam("cid") int cid) {
-        if (personService.createNewPhoneNumber(dto)) {
-            return "redirect:/customer?id=" + cid;
-        }
-        return OPERATION_ERROR;
+                                  @RequestParam("cid") int cid)
+            throws ForbiddenActionException, IncorrectParameterException {
+        personService.createNewPhoneNumber(dto);
+        return "redirect:/customer?id=" + cid;
     }
 
     @PostMapping("/addEmailCustomer")
@@ -197,11 +188,8 @@ public class CustomersController {
 
     @PostMapping("/saveEmailCustomer")
     public String saveEmail(@ModelAttribute("email") EmailDTO dto,
-                            @RequestParam("cid") int cid) {
-
-        if (personService.createNewEmail(dto)) {
-            return "redirect:/customer?id=" + cid;
-        }
-        return OPERATION_ERROR;
+                            @RequestParam("cid") int cid) throws ForbiddenActionException, IncorrectParameterException {
+        personService.createNewEmail(dto);
+        return "redirect:/customer?id=" + cid;
     }
 }

@@ -2,6 +2,8 @@ package by.academy.springboot.controller.ibank;
 
 import by.academy.springboot.dto.OrderDTO;
 import by.academy.springboot.dto.PaymentOrderDTO;
+import by.academy.springboot.exception.ForbiddenActionException;
+import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.model.entity.BankAccount;
 import by.academy.springboot.model.entity.Customer;
 import by.academy.springboot.model.entity.PaymentOrder;
@@ -20,7 +22,6 @@ import java.util.List;
 public class IBankController {
     private final IBankService iBankService;
     private static final String PATH = "/ibank/";
-    private static final String OPERATION_ERROR = "operationError";
 
     @GetMapping()
     public String showHomePage() {
@@ -48,21 +49,15 @@ public class IBankController {
 
     @PostMapping("/account")
     public String create(@ModelAttribute("order") OrderDTO order,
-                         @RequestParam(value = "aid") int aid) {
-
-        boolean isDone = iBankService.save(order);
-        if (isDone) {
-            return "redirect:/account?aid=" + aid;
-        }
-        return OPERATION_ERROR;
+                         @RequestParam(value = "aid") int aid) throws ForbiddenActionException, IncorrectParameterException {
+        iBankService.save(order);
+        return "redirect:/account?aid=" + aid;
     }
 
     @PostMapping("/ibankCloseAccount")
     public String closeBankAccount(@RequestParam("aid") int aid,
-                                   @RequestParam("cid") int cid){
-        if (iBankService.closeBankAccount(aid)){
-            return "redirect:/lc?id=" + cid;
-        }
-        return OPERATION_ERROR;
+                                   @RequestParam("cid") int cid) throws ForbiddenActionException, IncorrectParameterException {
+        iBankService.closeBankAccount(aid);
+        return "redirect:/lc?id=" + cid;
     }
 }

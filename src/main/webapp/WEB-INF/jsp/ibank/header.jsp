@@ -5,7 +5,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>IBank</title>
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
@@ -18,9 +18,9 @@
     </section>
     <section>
         <ul class="header">
-            <li><a class="active" href="#home">Домой - тыц</a></li>
-            <li><a class="header_li" href="#news">Новости - тыц</a></li>
-            <li><a class="header_li" href="#contact">Контакты - тыц</a></li>
-            <li><a class="header_li" href="#about_us">О нас - тыц</a></li>
+            <li><a class="active" href="#home">Домой</a></li>
+<%--            <li><a class="header_li" href="#news">Новости - тыц</a></li>--%>
+<%--            <li><a class="header_li" href="#contact">Контакты - тыц</a></li>--%>
+            <li><a class="header_li" href="/logout">Выход</a></li>
         </ul>
     </section>
