@@ -1,92 +1,89 @@
-//package by.academy.springboot.config;
-//
-//import by.academy.springboot.model.repository.PersonRepository;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.core.userdetails.User;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.core.userdetails.UserDetailsService;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-//import org.springframework.security.web.SecurityFilterChain;
-//import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-//import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-//
-//@Configuration
-//@EnableWebSecurity
-//@RequiredArgsConstructor
-//public class SecurityConfig {
-//    private final PersonRepository personRepository;
-//    @Bean
-//    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
+package by.academy.springboot.config;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.firewall.*;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+@Configuration
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig
+//extends WebSecurityConfigurerAdapter
+{
+    private final UserDetailsService userDetailsService;
+
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.authenticationProvider(authenticationProvider());
 //    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(AntPathRequestMatcher.antMatcher("/login")
+                                )
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/")
+                        .permitAll()
+                        )
+                .logout(LogoutConfigurer::permitAll)
+
+
+
+
+//                        .requestMatchers(AntPathRequestMatcher.antMatcher("/login"))
+//                        .permitAll()
 //
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(requests -> requests
-//                        .requestMatchers(AntPathRequestMatcher.antMatcher("/"), AntPathRequestMatcher.antMatcher("/home")).permitAll()
-////                        .requestMatchers(
-////                                "/ibank",
-////                                "/lc",
-////                                "/account",
-////                                "/ibankCloseAccount")
-////                        .hasAnyRole("USER", "ADMIN")
-////                        .requestMatchers(
-////                                "/customer",
-////                                "/customers",
-////                                "/closeAccount",
-////                                "/terminate",
-////                                "/bankAccount",
-////                                "/operationsLog",
-////                                "/po",
-////                                "/persons",
-////                                "/newPersonCustomer",
-////                                "/newcustomer",
-////                                "/createNewCustomer",
-////                                "/newAddress",
-////                                "/createNewAddress",
-////                                "/newbankaccount",
-////                                "/createBankAccount",
-////                                "/addPhoneNumberCustomer",
-////                                "/savePhoneNumberCustomer",
-////                                "/addEmailCustomer",
-////                                "/saveEmailCustomer")
-////                        .hasAnyRole("MANAGER", "ADMIN")
+//                        .requestMatchers(AntPathRequestMatcher.antMatcher("/ibank"))
+//                        .hasAnyRole("USER", "ADMIN")
+//                        .requestMatchers(AntPathRequestMatcher.antMatcher("/customer"))
+//                        .hasAnyRole("MANAGER", "ADMIN")
+//                        .anyRequest()
+//                        .authenticated()
 //                )
-////                .formLogin(form -> form
-////                        .loginPage("/login")
-////                        .permitAll()
+//                .formLogin(form -> form
+//                        .loginPage("/login")
+//                        .loginProcessingUrl("/")
+//                        .permitAll()
 ////                        .defaultSuccessUrl("/home")
-////                )
+//                )
 //                .logout(logout -> logout
 //                        .logoutUrl("/logout")
-//                        .logoutSuccessUrl("/login")
-//                        .deleteCookies("JSESSIONID")
-//                );
+//                        .logoutSuccessUrl("/")
+//                )
+                .build();
 //        return http.build();
-//    }
-//
-//
-//    @Bean
-//    PasswordEncoder passwordEncoder(){
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Bean
-//    public UserDetailsService userDetailsService() {
-//        UserDetails userDetails = User.withDefaultPasswordEncoder()
-//                .username("user")
-//                .password("password")
-//                .roles("USER")
-//                .build();
-//        return new InMemoryUserDetailsManager(userDetails);
-//    }
-//}
+    }
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
+
+
+}

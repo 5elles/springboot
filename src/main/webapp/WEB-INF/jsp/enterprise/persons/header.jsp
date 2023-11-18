@@ -5,7 +5,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>employees</title>
+        <title>person</title>
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
@@ -20,9 +20,9 @@
     <section>
         <ul class="header">
 <%--            реализовать условие отображения вкладки с клиентами в зависимости от роли пользователя--%>
-            <li><a class="active" href="/customers">Клиенты</a></li>
-            <li><a class="header_li" href="/employees">Сотрудники</a></li>
-            <li><a class="header_li" href="/staffingTable">Штатное расписание</a></li>
-            <li><a class="header_li" href="/findEmployees">Поиск сотрудника</a></li>
+            <li><a class="active" href="/customers"></a></li>
+            <li><a class="header_li" href="/employees"></a></li>
+            <li><a class="header_li" href="/staffingTable"></a></li>
+            <li><a class="header_li" href="">Выход</a></li>
         </ul>
     </section>

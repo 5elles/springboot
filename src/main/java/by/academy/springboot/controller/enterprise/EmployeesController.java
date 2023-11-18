@@ -131,4 +131,9 @@ public class EmployeesController {
         model.addAttribute("positionName", employeeService.findPositionNameById(posId));
         return EMPLOYEES_PATH + "employeesByPositon";
     }
+
+    @GetMapping("/findEmployees")
+    public String findCustomer() {
+        return EMPLOYEES_PATH + "findEmployee";
+    }
 }

@@ -3,18 +3,19 @@
 
 <%@ include file="header.jsp" %>
         <div>
-            <div>
-                <table>
+            <br>
+            <div class="container">
+                <table border="1" cellspacing="0" cellpadding="12">
                     <tr class="table-title">
-                        <td colspan="7">реестр банковских операций</td>
+                        <th colspan="7">реестр банковских операций</th>
                     </tr>
                     <tr>
-                        <th>дaта и время операции</th>
-                        <th>счет списания</th>
-                        <th>сумма списания</th>
-                        <th>валюта списания</th>
-                        <th>счет зачисления</th>
-                        <th>валюта зачисления</th>
+                        <th>дaта и время<br>операции</th>
+                        <th>счет<br>списания</th>
+                        <th>сумма<br>списания</th>
+                        <th>валюта<br>списания</th>
+                        <th>счет<br>зачисления</th>
+                        <th>валюта<br>зачисления</th>
 <%--                        <th>сумма в валюте зачисления</th>--%>
                     </tr>
 

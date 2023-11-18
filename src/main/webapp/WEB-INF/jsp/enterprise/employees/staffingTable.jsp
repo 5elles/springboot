@@ -5,6 +5,7 @@
 <%@ include file="header.jsp" %>
         <c:set var="totalSalary" scope="session" value="${0}"></c:set>
         <div>
+            <br>
             <div>
                 <table border="1" cellspacing="0" cellpadding="12">
                     <tr>
@@ -47,7 +48,7 @@
                     </c:forEach>
                     <tr>
                         <td colspan="5">
-                            фонд оплаты труда: <b class="text-red">${totalSalary}</b> BYN/месяц
+                            фонд оплаты труда: <b class="text-red">${totalSalary}</b> BYN / месяц
                         </td>
                     </tr>
                 </table>

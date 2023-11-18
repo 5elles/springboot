@@ -1,5 +1,6 @@
 package by.academy.springboot.model.entity;
 
+import by.academy.springboot.model.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,9 +39,6 @@ public class Person {
     private String login;
     @Column (name = "password")
     private String password;
-    @OneToMany
-    @JoinColumn(name = "person_id")
-    private Set<Role> roles;
     @OneToMany
     @JoinColumn(name = "person_id")
     private List<Address> addresses;

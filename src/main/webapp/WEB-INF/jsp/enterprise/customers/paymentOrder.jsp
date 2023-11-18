@@ -2,9 +2,12 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <%@ include file="header.jsp" %>
+
+    <br>
+    <div class="container">
         <table border="1" cellspacing="0" cellpadding="12">
             <tr>
-                <td colspan="2" align="center"><b>платёжное поручение</b></td>
+                <th colspan="2">платёжное поручение</th>
             </tr>
             <tr>
                 <td>Дата и время операции</td>
@@ -33,7 +36,7 @@
             </tr>
 
 
-                <th colspan="2" ><b>получатель</b></th>
+            <th colspan="2" ><b>получатель</b></th>
             </tr>
             <tr>
             <tr>
@@ -55,4 +58,6 @@
                 <td>${order.amount} ${order.fromAccountCurrencyAbbreviation}</td>
             </tr>
         </table>
+    </div>
+
 <%@ include file="footer.jsp" %>

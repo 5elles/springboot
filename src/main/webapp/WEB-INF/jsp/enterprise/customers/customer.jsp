@@ -3,7 +3,8 @@
 
 <%@ include file="header.jsp" %>
         <div>
-            <div>
+            <br>
+            <div class="container">
                 <table border="1" cellspacing="0" cellpadding="12">
                     <tr>
                         <th colspan="4">персональные данные клиента</th>
@@ -104,7 +105,7 @@
             <div>
                 <table border="1" cellspacing="0" cellpadding="12">
                     <tr>
-                        <td colspan="6" align="center">договор обслуживания клиента</td>
+                        <th colspan="6">договор обслуживания клиента</th>
                     </tr>
                     <tr>
                         <th>дата заключения</th>
@@ -212,4 +213,5 @@
                 </table>
             </div>
         </div>
+<br>
 <%@ include file="footer.jsp" %>

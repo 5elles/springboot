@@ -3,8 +3,8 @@
 
 <%@ include file="header.jsp" %>
     <div>
-
-        <div>
+        <br>
+        <div class="container">
             <table border="1" cellspacing="0" cellpadding="12">
                 <tr>
                     <th colspan="4">cписок ${positionName}ов банка на текущую дату</th>
@@ -22,11 +22,15 @@
                         </td>
                         <td>
                             <c:forEach items="${item.wageRates}" var="item">
-                            <c:choose>
-                            <c:when test="${item.finishDate == null}">
-                            c ${item.startDate.getDayOfMonth()}.${item.startDate.getMonthValue()}.${item.startDate.getYear()} по н.в. -
-                            </c:when>
-                            </c:choose>
+                                <c:choose>
+                                    <c:when test="${item.finishDate == null}">
+                                        c ${item.startDate.getDayOfMonth()}.${item.startDate.getMonthValue()}.${item.startDate.getYear()} по н.в. -
+                                    </c:when>
+                                    <c:otherwise>
+                                        c ${item.startDate.getDayOfMonth()}.${item.startDate.getMonthValue()}.${item.startDate.getYear()} по
+                                        ${item.finishDate.getDayOfMonth()}.${item.finishDate.getMonthValue()}.${item.finishDate.getYear()} -
+                                    </c:otherwise>
+                                </c:choose>
                                 ${item.positionName}<br>
                             </c:forEach>
                     </tr>

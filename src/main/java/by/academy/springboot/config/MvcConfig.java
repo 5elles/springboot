@@ -5,10 +5,10 @@
 //
 //public class MvcConfig implements WebMvcConfigurer {
 //    public void addViewControllers(ViewControllerRegistry registry) {
-////        registry.addViewController("/customers").setViewName("customers");
-////        registry.addViewController("/").setViewName("home");
-////        registry.addViewController("/hello").setViewName("hello");
-////        registry.addViewController("/login").setViewName("login");
+//        registry.addViewController("/customers").setViewName("customers");
+//        registry.addViewController("/").setViewName("home");
+//        registry.addViewController("/hello").setViewName("hello");
+//        registry.addViewController("/login").setViewName("login");
 //    }
 //
 //}

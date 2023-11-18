@@ -9,7 +9,7 @@
             <div>
                 <table border="1" cellspacing="0" cellpadding="12">
                     <tr>
-                        <td colspan="6" align="center">Список клиентов банка</td>
+                        <th colspan="6" >Список клиентов банка</th>
                     </tr>
                     <tr>
                         <th>паспортные данные</th>
@@ -30,7 +30,7 @@
                                                 актуальный
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="highlight">архивный</span>
+                                                <span class="text-red">архивный</span>
                                             </c:otherwise>
                                         </c:choose>
                             </td>

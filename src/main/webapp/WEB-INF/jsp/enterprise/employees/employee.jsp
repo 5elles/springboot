@@ -3,6 +3,7 @@
 
 <%@ include file="header.jsp" %>
         <div>
+            <br>
             <div>
                 <table border="1" cellspacing="0" cellpadding="12">
                     <tr>
