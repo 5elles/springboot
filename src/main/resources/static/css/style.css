@@ -1,105 +1,108 @@
 .main {
-}
-
-/* это сбрасывает дефолтные стили у тэгов */
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-/*  у все контейнера внутри body должен быть этот класс */
-.tipa_body {
     position: relative;
+    /*187px + 10% (19px) высота footer*/
+    min-height: calc(100vh - 187px - 19px);
 }
 
-html,
-body {
-    height: 100%;
-}
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-.content {
-    flex: 1 0 auto;
+html * {
+    margin: 0;
+    padding: 0;
 }
 
 .container {
     display: flex;
     align-items: center;
     flex-direction: column;
+    padding: 16px;
 }
-.form {
+
+form {
     font-family: Arial, Helvetica, sans-serif;
     display: flex;
     width: 600px;
+    max-width: 100%;
     flex-direction: column;
 }
 
-.form fieldset {
+form fieldset {
     padding: 20px;
     border: 1px solid #9a9a9a;
 }
 
-.form .field {
+form .field {
     width: 100%;
     display: flex;
     margin-bottom: 10px;
     justify-content: space-between;
+    align-items: center;
+    column-gap: 10px;
 }
 
-.form label {
+form label {
     font-weight: bold;
+    font-size: 12px;
+    font-family: "Helvetica", serif;
+    display: inline-block;
+    width: 200px;
+    text-align: left;
 }
 
-.form input {
-    font-weight: bold;
-    flex: 0 0 75%;
-}
-
-.form button {
+form button {
     margin-top: 10px;
     margin-left: auto;
     padding: 12px 36px;
     border-radius: 8px;
     border: 1px solid #9a9a9a;
-    margin-left: auto;
 }
 
+.tables {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+}
 
-table{
+.tables .table:not(:last-child) {
+    margin-bottom: 30px;
+}
+
+.table {
+    width: 800px;
+    max-width: 100%;
+}
+
+table {
     font-family: Arial, Helvetica, sans-serif;
     margin: auto;
     border-collapse: collapse;
-
     border-spacing: 1px;
-    width: auto;
+    width: 100%;
     border: 1px solid #ddd;
 }
 
-th{
-    text-align: center;
-    width: fit-content;
+th {
+    padding: 16px;
 }
 
-td{
-    /*border: 1px solid;*/
+td {
     text-align: left;
     padding: 16px;
 }
 
-/*tr:nth-child(even) {*/
-/*    background-color: #f2f2f2;*/
-/*}*/
+li {
+    list-style-type: none;
+}
 
-.table-title{
-    text-align:center;
+.wrapper {
+    text-align: center;
+}
+
+.table-title {
+    text-align: center;
     align-content: center;
 }
 
-.highlight{
+.highlight {
     text-decoration-color: crimson;
     text-overline-color: crimson;
 }
@@ -112,6 +115,7 @@ td{
     padding: 10px 28px;
     font-size: 16px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 /* Green */
@@ -127,7 +131,7 @@ td{
 
 .info {
     border-color: #2196F3;
-    color: dodgerblue
+    color: dodgerblue;
 }
 
 .info:hover {
@@ -170,7 +174,7 @@ td{
 
 
 /* Style inputs */
-input[type=text], select {
+input, select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -178,23 +182,6 @@ input[type=text], select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-}
-
-/* Style the submit button */
-input[type=submit] {
-    width: 100%;
-    background-color: #04AA6D;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-/* Add a background color to the submit button on mouse-over */
-input[type=submit]:hover {
-    background-color: #45a049;
 }
 
 .text-red{
@@ -221,7 +208,7 @@ input[type=submit]:hover {
     color: #fff;
 }
 
-.header{
+.header {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -231,14 +218,29 @@ input[type=submit]:hover {
     top: 0;
 }
 
-.header_li, .active {
-    display: block;
-    color: white;
-    text-align: center;
+.header li {
     padding: 14px 16px;
-    text-decoration: none;
     float: left;
+    color: white;
 }
+
+.header li a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.header li:hover {
+    background-color: white;
+    color: #0a2149;
+    transition: background-color linear 200ms, color ease-in-out 500ms;
+}
+
+.header div {
+    padding: 14px 16px;
+    float: right;
+    color: white;
+}
+
 
 .footer {
     position: absolute;
@@ -250,6 +252,7 @@ input[type=submit]:hover {
     padding: 10px;
     color: white;
     font-family: "Helvetica Now", serif;
+    transform: translateY(110%);
 }
 
 .footer > div {
@@ -262,4 +265,6 @@ input[type=submit]:hover {
     color: #fff;
     font-size: 48px;
 }
+
+
 

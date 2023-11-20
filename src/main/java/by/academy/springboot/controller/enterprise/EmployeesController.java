@@ -21,7 +21,9 @@ public class EmployeesController {
     private static final String EMPLOYEES_PATH = "/enterprise/employees/";
     private static final String PERSONS_PATH = "/enterprise/persons/";
     private static final String ALL_EMPLOYEES = "/employees";
-    private static final String EMPLOYEE = "/employee";
+    private static final String EMPLOYEE_PAGE = "/employee?id=";
+    private static final String EMPLOYEE_SUFFIX = "Employee?id=";
+
 
 
     @GetMapping(value = ALL_EMPLOYEES)
@@ -31,7 +33,7 @@ public class EmployeesController {
 
     }
 
-    @GetMapping(value = EMPLOYEE)
+    @GetMapping(value = "/employee")
     public String showEmployee(@RequestParam("id") int id,
                                Model model) throws IncorrectParameterException {
         EmployeeFullDataDTO employeeFullData = employeeService.findEmployeeFullData(id);
@@ -66,7 +68,7 @@ public class EmployeesController {
         return "redirect:" + ALL_EMPLOYEES;
     }
 
-    @PostMapping("/showNewWageRateForm")
+    @GetMapping("/showNewWageRateForm")
     public String setNewWageRate(@RequestParam("pid") int pid,
                                  Model model) {
         model.addAttribute("pid", pid);
@@ -76,12 +78,13 @@ public class EmployeesController {
 
     @PostMapping("/setNewWageRate")
     public String setNewWageRate(@ModelAttribute WageRateFullDataDTO dto,
-                                 @RequestParam("pid") int pid) throws IncorrectParameterException {
+                                 @RequestParam("pid") int pid)
+            throws IncorrectParameterException {
         employeeService.createNewWageRate(dto, pid);
-        return "redirect:" + EMPLOYEE + "?id=" + employeeService.findEmployeeIdByPersonId(pid);
+        return "redirect:" + EMPLOYEE_PAGE + employeeService.findEmployeeIdByPersonId(pid);
     }
 
-    @PostMapping("/addEmailEmployee")
+    @GetMapping("/addEmailEmployee")
     public String addEmployeeEmail(@RequestParam("eid") int eid,
                                    Model model) {
         model.addAttribute("pid", employeeService.findPersonIdByEmployeeId(eid));
@@ -91,12 +94,13 @@ public class EmployeesController {
 
     @PostMapping("/saveEmailEmployee")
     public String addEmployeeEmail(@RequestParam("eid") int eid,
-                                   @ModelAttribute("email") EmailDTO dto) throws ForbiddenActionException, IncorrectParameterException {
+                                   @ModelAttribute("email") EmailDTO dto)
+            throws ForbiddenActionException, IncorrectParameterException {
         personService.createNewEmail(dto);
-        return "redirect:" + EMPLOYEE + "?id=" + eid;
+        return "redirect:" + EMPLOYEE_PAGE + eid;
     }
 
-    @PostMapping("/addPhoneNumberEmployee")
+    @GetMapping("/addPhoneNumberEmployee")
     public String addPhoneNumber(@RequestParam("eid") int eid,
                                  Model model) {
         model.addAttribute("pid", employeeService.findPersonIdByEmployeeId(eid));
@@ -108,14 +112,14 @@ public class EmployeesController {
     public String savePhoneNumber(@ModelAttribute("phoneNumber") PhoneNumberDTO dto,
                                   @RequestParam("eid") int eid) throws IncorrectParameterException, ForbiddenActionException {
         personService.createNewPhoneNumber(dto);
-        return "redirect:" + EMPLOYEE + "?id=" + eid;
+        return "redirect:" + EMPLOYEE_PAGE + eid;
     }
 
-    @PostMapping("/fire")
+    @GetMapping("/fire")
     public String terminateContract(@RequestParam("wid") int wid,
                                     @RequestParam("eid") int eid) throws ForbiddenActionException {
         employeeService.closeWageRate(wid);
-        return "redirect:" + EMPLOYEE + "?id=" + eid;
+        return "redirect:" + EMPLOYEE_PAGE + eid;
     }
 
     @GetMapping("/staffingTable")
@@ -132,8 +136,25 @@ public class EmployeesController {
         return EMPLOYEES_PATH + "employeesByPositon";
     }
 
-    @GetMapping("/findEmployees")
-    public String findCustomer() {
+    @GetMapping("/findEmployee")
+    public String findEm() {
         return EMPLOYEES_PATH + "findEmployee";
+    }
+
+    @GetMapping("/addNewAddress")
+    public String showNewAddressForm(@RequestParam("eid") int eid,
+                                     Model model) {
+        model.addAttribute("pid", employeeService.findPersonIdByEmployeeId(eid));
+        model.addAttribute("suffix", EMPLOYEE_SUFFIX + eid);
+        model.addAttribute("data", personService.findAddressesFullData());
+        return PERSONS_PATH + "newAddressForm";
+    }
+
+    @PostMapping("/createNewAddressEmployee")
+    public String createNewAddress(@RequestParam("id") int eid,
+                                   @ModelAttribute("address") NewAddressDTO dto)
+            throws ForbiddenActionException {
+        personService.createNewAddress(dto);
+        return "redirect:" + EMPLOYEE_PAGE + eid;
     }
 }

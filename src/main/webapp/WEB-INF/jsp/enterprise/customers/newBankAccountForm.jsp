@@ -31,11 +31,7 @@
                                 </c:forEach>
                             </select>
                         </div>
-                        <div>
-                            <div class="field">
-                                <input hidden="hidden" type="number" name="customerID" id="customerID" value="${cid}"/>
-                            </div>
-                        </div>
+                            <input type="hidden" name="customerID" value="${cid}"/>
                     </fieldset>
 
                     <button class="btn success" type="submit" name="Add">сохранить</button>

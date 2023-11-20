@@ -14,17 +14,17 @@ public interface BankAccountFullDataMapper {
     BankAccountFullDataMapper INSTANCE = Mappers.getMapper(BankAccountFullDataMapper.class);
 
     @Mapping(source = "bankAccount.customer.person.firstName",
-            target = "accountHolderFirstName")
+            target = "firstName")
     @Mapping(source = "bankAccount.customer.person.middleName",
-            target = "accountHolderMiddleName")
+            target = "middleName")
     @Mapping(source = "bankAccount.customer.person.lastName",
-            target = "accountHolderLastName")
+            target = "lastName")
     @Mapping(source = "bankAccount.customer.person.dateOfBirth",
-            target = "accountHolderDateOfBirth")
+            target = "dateOfBirth")
     @Mapping(source = "bankAccount.customer.person.citizenIdNumber",
-            target = "accountHolderCitizenIdNumber")
+            target = "citizenIdNumber")
     @Mapping(source = "bankAccount.customer.person.passportNumber",
-            target = "accountHolderPassportNumber")
+            target = "passportNumber")
     @Mapping(source = "bankAccount.currency.currencyAbbreviation",
             target = "currencyAbbreviation")
     @Mapping(source = "bankAccount.currency.currencyRate",

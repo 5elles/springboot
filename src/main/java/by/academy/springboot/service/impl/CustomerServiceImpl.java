@@ -31,7 +31,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerFullDataDTO findFullData(Integer customerId) throws IncorrectParameterException {
+    public CustomerFullDataDTO findFullData(Integer customerId)
+            throws IncorrectParameterException {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(()->new IncorrectParameterException("wrong customer parameter, id " + customerId));
         Contact contact = contactRepository.findByPerson(customer.getPerson());

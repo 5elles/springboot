@@ -31,4 +31,7 @@ public class Address {
     private String houseNumber;
     @Column(name = "apartment_number")
     private String apartmentNumber;
+    @ManyToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
 }

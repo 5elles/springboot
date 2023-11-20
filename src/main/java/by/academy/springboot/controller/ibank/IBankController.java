@@ -36,7 +36,7 @@ public class IBankController {
     @GetMapping("/lc")
     public String showAllBankAccounts(@RequestParam(value = "id") int id,
                                       Model model) {
-        model.addAttribute("customer", iBankService.findFullData(id));
+        model.addAttribute("data", iBankService.findFullData(id));
         return PATH + "main";
     }
 
@@ -54,7 +54,7 @@ public class IBankController {
         return "redirect:/account?aid=" + aid;
     }
 
-    @PostMapping("/ibankCloseAccount")
+    @GetMapping("/ibankCloseAccount")
     public String closeBankAccount(@RequestParam("aid") int aid,
                                    @RequestParam("cid") int cid) throws ForbiddenActionException, IncorrectParameterException {
         iBankService.closeBankAccount(aid);

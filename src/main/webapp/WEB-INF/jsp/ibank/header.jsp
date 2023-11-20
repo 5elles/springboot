@@ -9,18 +9,18 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
-    <section class="hero">
-        <div class="container">
-            <div class="hero__message">
-                Your Money or Your Life
+        <div class="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero__message">
+                    Your Money or Your Life
+                </div>
             </div>
-        </div>
-    </section>
-    <section>
-        <ul class="header">
-            <li><a class="active" href="#home">Домой</a></li>
-<%--            <li><a class="header_li" href="#news">Новости - тыц</a></li>--%>
-<%--            <li><a class="header_li" href="#contact">Контакты - тыц</a></li>--%>
-            <li><a class="header_li" href="/logout">Выход</a></li>
-        </ul>
-    </section>
+        </section>
+        <section>
+            <ul class="header">
+                <li><a class="active" href="#home">Домой</a></li>
+                <li><a class="header_li" href="/logout">Выход</a></li>
+            </ul>
+        </section>
+        <%String style = "border=\"1\" cellspacing=\"0\" cellpadding=\"12\"";%>

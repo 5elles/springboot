@@ -17,10 +17,7 @@
                             <label for="agreementDate">дата оформления</label>
                             <input type="date" name="agreementDate" id="agreementDate" required/>
                         </div>
-
-                        <div class="field">
-                            <input hidden="hidden" type="number" name="personId" id="personId" value="${pid}"/>
-                        </div>
+                            <input type="hidden" name="personId" id="personId" value="${pid}"/>
                     </fieldset>
                     <button class="btn success" type="submit" name="Add">сохранить</button>
                 </form>

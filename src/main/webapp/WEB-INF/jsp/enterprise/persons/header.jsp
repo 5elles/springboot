@@ -9,20 +9,18 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
-    <section class="hero">
-        <div class="container">
-            <div class="hero__message">
-                Your Money or Your Life
+    <div class="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero__message">
+                    Your Money or Your Life
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section>
-        <ul class="header">
-<%--            реализовать условие отображения вкладки с клиентами в зависимости от роли пользователя--%>
-            <li><a class="active" href="/customers"></a></li>
-            <li><a class="header_li" href="/employees"></a></li>
-            <li><a class="header_li" href="/staffingTable"></a></li>
-            <li><a class="header_li" href="">Выход</a></li>
-        </ul>
-    </section>
+        <section>
+            <ul class="header">
+                <li><a href="/employees">Управление персоналом</a></li>
+                <li><a href="/customers">Клиенты</a></li>
+            </ul>
+        </section>

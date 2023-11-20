@@ -8,9 +8,8 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper
 public interface AddressMapper {
-    EmployeeFullDataMapper INSTANCE = Mappers.getMapper(EmployeeFullDataMapper.class);
+    AddressMapper INSTANCE = Mappers.getMapper(AddressMapper.class);
 
-    Address addressDTOtoModel(AddressDTO addressDTO);
     @Mapping(source = "address.settlement.region.country.countryName",
             target = "countryName")
     @Mapping(source = "address.settlement.region.regionName",
@@ -22,7 +21,7 @@ public interface AddressMapper {
     @Mapping(source = "address.settlement.settlementName",
             target = "settlementName")
     @Mapping(source = "address.streetType.shortName", target = "streetTypeShortName")
-    AddressDTO addressModelToDTO(Address address);
+    AddressDTO toDTO(Address address);
 
 }
 

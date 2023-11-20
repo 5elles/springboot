@@ -8,12 +8,12 @@ import java.util.List;
 @Data
 public class BankAccountFullDataDTO {
     private Integer id;
-    private String accountHolderFirstName;
-    private String accountHolderMiddleName;
-    private String accountHolderLastName;
-    private LocalDate accountHolderDateOfBirth;
-    private String accountHolderCitizenIdNumber;
-    private String accountHolderPassportNumber;
+    private String firstName;
+    private String middleName;
+    private String lastName;
+    private LocalDate dateOfBirth;
+    private String citizenIdNumber;
+    private String passportNumber;
     private String accountNumber;
     private LocalDate openingDate;
     private LocalDate closureDate;

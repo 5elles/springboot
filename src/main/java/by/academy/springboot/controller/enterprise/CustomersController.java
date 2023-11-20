@@ -18,6 +18,8 @@ public class CustomersController {
     private static final String CUSTOMERS_PATH = "/enterprise/customers/";
     private static final String PERSONS_PATH = "/enterprise/persons/";
     private static final String CUSTOMER_PAGE = "/customer?id=";
+    private static final String CUSTOMER_SUFFIX = "Customer?cid=";
+
 
     @GetMapping("/customers")
     public String showAllCustomers(Model model) {
@@ -29,13 +31,10 @@ public class CustomersController {
 
     @GetMapping("/customer")
     public String showOneCustomer(@RequestParam("id") int id,
-                                  Model model) {
+                                  Model model)
+    throws  IncorrectParameterException {
         CustomerFullDataDTO fullData = customerService.findFullData(id);
-        if (fullData == null) {
-            return "notFound";
-        }
-        model.addAttribute(
-                "customerFullData", fullData);
+        model.addAttribute("customerFullData", fullData);
         return CUSTOMERS_PATH + "customer";
     }
 
@@ -44,10 +43,10 @@ public class CustomersController {
                                     CustomerDTO dto)
             throws ForbiddenActionException, IncorrectParameterException {
         customerService.createNewBankContract(dto);
-        return "redirect:/customer?id=" + cid;
+        return "redirect:" + CUSTOMER_PAGE + cid;
     }
 
-    @PostMapping("/closeAccount")
+    @GetMapping("/closeAccount")
     public String closeAccount(@RequestParam("aid") int aid,
                                @RequestParam("cid") int cid)
             throws IncorrectParameterException, ForbiddenActionException {
@@ -55,7 +54,7 @@ public class CustomersController {
         return "redirect:/customer?id=" + cid;
     }
 
-    @PostMapping("/terminate")
+    @GetMapping("/terminate")
     public String terminateContract(@RequestParam("cid") int cid)
             throws ForbiddenActionException, IncorrectParameterException {
         customerService.terminateContract(cid);
@@ -117,7 +116,7 @@ public class CustomersController {
         return "redirect:/customers";
     }
 
-    @PostMapping("/newcustomer")
+    @GetMapping("/newcustomer")
     public String showNewCustomerForm(@RequestParam("pid") int pid,
                                       Model model) {
         model.addAttribute("pid", pid);
@@ -131,22 +130,25 @@ public class CustomersController {
         return "redirect:" + CUSTOMER_PAGE + id;
     }
 
-    @PostMapping("/newAddress")
+    @GetMapping("/newAddress")
     public String showNewAddressForm(@RequestParam("cid") int cid,
                                      Model model) {
         model.addAttribute("pid", customerService.findPersonIdByCustomerId(cid));
-        model.addAttribute("cid", cid);
+        model.addAttribute("suffix", CUSTOMER_SUFFIX + cid);
         model.addAttribute("data", personService.findAddressesFullData());
         return PERSONS_PATH + "newAddressForm";
     }
 
-    @PostMapping("/createNewAddress")
-    public String createNewAddress(@RequestParam("cid") int cid) {
+    @PostMapping("/createNewAddressCustomer")
+    public String createNewAddress(@RequestParam("cid") int cid,
+                                   @ModelAttribute("address") NewAddressDTO dto)
+    throws ForbiddenActionException {
+        personService.createNewAddress(dto);
         return "redirect:" + CUSTOMER_PAGE + cid;
     }
 
 
-    @PostMapping("/newbankaccount")
+    @GetMapping("/newbankaccount")
     public String showNewBankAccountForm(@RequestParam("cid") int cid,
                                          Model model) {
         model.addAttribute("cid", cid);
@@ -159,14 +161,14 @@ public class CustomersController {
                                        @RequestParam("cid") int cid)
             throws IncorrectParameterException, ForbiddenActionException {
         customerService.createNewBankAccount(dto);
-        return "redirect:/customer?id=" + cid;
+        return "redirect:" + CUSTOMER_PAGE + cid;
     }
 
-    @PostMapping("/addPhoneNumberCustomer")
+    @GetMapping("/addPhoneNumberCustomer")
     public String addPhoneNumber(@RequestParam("cid") int cid,
                                  Model model) {
         model.addAttribute("pid", customerService.findPersonIdByCustomerId(cid));
-        model.addAttribute("entityId", "Customer?cid=" + cid);
+        model.addAttribute("entityId", CUSTOMER_SUFFIX + cid);
         return PERSONS_PATH + "newPhoneNumberForm";
     }
 
@@ -175,14 +177,14 @@ public class CustomersController {
                                   @RequestParam("cid") int cid)
             throws ForbiddenActionException, IncorrectParameterException {
         personService.createNewPhoneNumber(dto);
-        return "redirect:/customer?id=" + cid;
+        return "redirect:" + CUSTOMER_PAGE + cid;
     }
 
-    @PostMapping("/addEmailCustomer")
+    @GetMapping("/addEmailCustomer")
     public String addEmail(@RequestParam("cid") int cid,
                            Model model) {
         model.addAttribute("pid", customerService.findPersonIdByCustomerId(cid));
-        model.addAttribute("entityId", "Customer?cid=" + cid);
+        model.addAttribute("entityId", CUSTOMER_SUFFIX + cid);
         return PERSONS_PATH + "newEmailForm";
     }
 
@@ -190,6 +192,6 @@ public class CustomersController {
     public String saveEmail(@ModelAttribute("email") EmailDTO dto,
                             @RequestParam("cid") int cid) throws ForbiddenActionException, IncorrectParameterException {
         personService.createNewEmail(dto);
-        return "redirect:/customer?id=" + cid;
+        return "redirect:" + CUSTOMER_PAGE + cid;
     }
 }

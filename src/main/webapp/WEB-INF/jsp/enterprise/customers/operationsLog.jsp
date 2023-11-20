@@ -2,10 +2,9 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <%@ include file="header.jsp" %>
-        <div>
-            <br>
-            <div class="container">
-                <table border="1" cellspacing="0" cellpadding="12">
+        <section class="tables">
+            <div class="table">
+                <table <%=style%>>
                     <tr class="table-title">
                         <th colspan="7">реестр банковских операций</th>
                     </tr>
@@ -16,9 +15,7 @@
                         <th>валюта<br>списания</th>
                         <th>счет<br>зачисления</th>
                         <th>валюта<br>зачисления</th>
-<%--                        <th>сумма в валюте зачисления</th>--%>
                     </tr>
-
                     <c:forEach items="${orders}" var="item">
                         <tr>
                             <td>
@@ -33,11 +30,9 @@
                             <td>${item.fromAccountCurrencyAbbreviation}</td>
                             <td>${item.toAccountNumber}</td>
                             <td>${item.toAccountCurrencyAbbreviation}</td>
-<%--                            <td>${item.amount * item.fromAccountCurrencyRate / item.toAccountCurrencyRate}</td>--%>
                         </tr>
                     </c:forEach>
-
                 </table>
             </div>
-        </div>
+        </section>
 <%@ include file="footer.jsp" %>

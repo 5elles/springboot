@@ -1,9 +1,6 @@
 package by.academy.springboot.service.impl;
 
-import by.academy.springboot.dto.AddressFullDataDTO;
-import by.academy.springboot.dto.EmailDTO;
-import by.academy.springboot.dto.PersonDTO;
-import by.academy.springboot.dto.PhoneNumberDTO;
+import by.academy.springboot.dto.*;
 import by.academy.springboot.exception.ForbiddenActionException;
 import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.*;
@@ -28,6 +25,7 @@ public class PersonServiceImpl implements PersonService {
     private final ContactRepository contactRepository;
     private final PhoneNumberRepository phoneNumberRepository;
     private final EmailRepository emailRepository;
+    private final AddressRepository addressRepository;
 
     /**
      * @return new person`s id
@@ -114,6 +112,16 @@ public class PersonServiceImpl implements PersonService {
         }
         dto.setContactId(contact.getId());
         emailRepository.save(EmailMapper.INSTANCE.toModel(dto));
+    }
+
+    @Transactional
+    @Override
+    public void createNewAddress(NewAddressDTO dto) throws ForbiddenActionException{
+        Address model = NewAddressMapper.INSTANCE.toModel(dto);
+        if (model == null){
+            throw new ForbiddenActionException("Forbidden action! Check your address.");
+        }
+        addressRepository.save(model);
     }
 
     @Override

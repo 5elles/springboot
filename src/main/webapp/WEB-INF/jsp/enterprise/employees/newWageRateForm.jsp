@@ -26,10 +26,7 @@
                             <label for="rate">размер ставки</label>
                             <input type="number" min="0.1" max="1" step="any" name="rate" id="rate" required />
                         </div>
-
-                        <div class="field">
-                            <input hidden="hidden" type="number" name="personId" id="personId" value="${pid}"/>
-                        </div>
+                        <input type="hidden" name="personId" id="personId" value="${pid}"/>
                     </fieldset>
                     <button class="btn success" type="submit" name="Add">сохранить</button>
                 </form>

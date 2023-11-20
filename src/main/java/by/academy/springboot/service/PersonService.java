@@ -1,14 +1,16 @@
 package by.academy.springboot.service;
 
-import by.academy.springboot.dto.AddressFullDataDTO;
-import by.academy.springboot.dto.EmailDTO;
-import by.academy.springboot.dto.PersonDTO;
-import by.academy.springboot.dto.PhoneNumberDTO;
+import by.academy.springboot.dto.*;
+import by.academy.springboot.exception.ForbiddenActionException;
 import by.academy.springboot.model.entity.Person;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 public interface PersonService {
+    @Transactional
+    void createNewAddress(NewAddressDTO dto) throws ForbiddenActionException;
+
     boolean isForbiddenForCreation(EmailDTO dto);
     boolean isForbiddenForCreation(PhoneNumberDTO dto);
     int save(PersonDTO dto);

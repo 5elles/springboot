@@ -9,20 +9,21 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
-    <section class="hero">
-        <div class="container">
-            <div class="hero__message">
-                Your Money or Your Life
+    <div class="main">
+        <section class="hero">
+            <div class="container">
+                <div class="hero__message">
+                    Your Money or Your Life
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section>
-        <ul class="header">
-<%--            реализовать условие отображения вкладки с клиентами в зависимости от роли пользователя--%>
-            <li><a class="active" href="/customers">Клиенты</a></li>
-            <li><a class="header_li" href="/employees">Сотрудники</a></li>
-            <li><a class="header_li" href="/staffingTable">Штатное расписание</a></li>
-            <li><a class="header_li" href="/findEmployees">Поиск сотрудника</a></li>
-        </ul>
-    </section>
+        <section>
+            <ul class="header">
+                <li><a class="active" href="/customers">Клиенты</a></li>
+                <li><a class="header_li" href="/employees">Сотрудники</a></li>
+                <li><a class="header_li" href="/staffingTable">Штатное расписание</a></li>
+                <li><a class="header_li" href="/findEmployee">Поиск сотрудника</a></li>
+            </ul>
+        </section>
+            <%String style = "border=\"1\" cellspacing=\"0\" cellpadding=\"12\"";%>

@@ -2,9 +2,9 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <%@ include file="header.jsp" %>
+<link rel="stylesheet" href="/css/style.css">
 
-    <div>
-        <br>
+    <section>
         <div class="container">
             <h3>Поиск лица в системе</h3>
             <form id="add_form" class="form" name="searchThePerson" action="/findPersons" method="get">
@@ -28,6 +28,6 @@
                 <button class="btn info" type="submit" name="Add">найти</button>
             </form>
         </div>
-    </div>
+    </section>
 
 <%@ include file="footer.jsp" %>
