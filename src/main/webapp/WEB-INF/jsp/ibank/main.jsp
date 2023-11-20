@@ -49,9 +49,6 @@
                                             <a href="" class="btn default">закрыть</a>
                                         </c:when>
                                         <c:otherwise>
-<%--                                            <form name="closeAccount" action="/ibankCloseAccount?aid=${entity.id}&cid=${customer.id}" method="post">--%>
-<%--                                                <button class="btn danger" type="submit">закрыть</button>--%>
-<%--                                            </form>--%>
                                             <a href="/ibankCloseAccount?aid=${data.id}&cid=${data.id}&cid=${data.id}" class="btn danger">закрыть</a>
                                         </c:otherwise>
                                     </c:choose>
