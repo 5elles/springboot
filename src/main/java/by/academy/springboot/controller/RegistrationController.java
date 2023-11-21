@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 @RequiredArgsConstructor
 public class RegistrationController {
-//    private final RegistrationService registrationService;
-//
+    private final RegistrationService registrationService;
+
 //    @GetMapping("/registration")
 //    public String registration() {
 //        return "registration";

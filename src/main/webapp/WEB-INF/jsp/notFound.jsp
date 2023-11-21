@@ -10,7 +10,6 @@
                     Error:
                     ${exception}
                 </span>
-
             </div>
         </div>
 

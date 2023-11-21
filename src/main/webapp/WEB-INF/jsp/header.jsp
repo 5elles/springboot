@@ -5,22 +5,25 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title></title>
+        <title>customers</title>
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
-    <section class="hero">
-        <div class="container">
-            <div class="hero__message">
-                Your Money or Your Life
-            </div>
-        </div>
-    </section>
-    <section>
-        <ul class="header">
-            <li><a class="active" href="#home"></a></li>
-            <li><a class="header_li" href="#news"></a></li>
-            <li><a class="header_li" href="#contact"></a></li>
-            <li><a class="header_li" href="#about_us"></a></li>
-        </ul>
-    </section>
+        <div class="main">
+            <section class="hero">
+                <div class="container">
+                    <div class="hero__message">
+                        Your Money or Your Life
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <ul class="header">
+                    <li><a class="active" href=""></a></li>
+                    <li><a class="header_li" href=""></a></li>
+                    <li><a class="header_li" href=""></a></li>
+                    <li><a class="header_li" href=""></a></li>
+                </ul>
+            </section>
+<%String style = "border=\"1\" cellspacing=\"0\" cellpadding=\"12\"";%>

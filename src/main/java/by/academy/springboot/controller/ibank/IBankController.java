@@ -28,10 +28,10 @@ public class IBankController {
         return PATH + "startPage";
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return PATH + "login";
-    }
+//    @GetMapping("/login")
+//    public String login() {
+//        return PATH + "login";
+//    }
 
     @GetMapping("/lc")
     public String showAllBankAccounts(@RequestParam(value = "id") int id,
