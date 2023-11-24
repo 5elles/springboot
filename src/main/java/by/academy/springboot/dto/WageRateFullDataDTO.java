@@ -14,4 +14,5 @@ public class WageRateFullDataDTO {
     private LocalDate finishDate;
     private Double rate;
     private Integer employeeId;
+    private String role;
 }

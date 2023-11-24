@@ -2,7 +2,9 @@ package by.academy.springboot.model.entity;
 
 import by.academy.springboot.model.entity.enums.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +12,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "user")
 public class User implements UserDetails {
     @Id
@@ -31,9 +36,13 @@ public class User implements UserDetails {
     private boolean credentialsNonExpired;
     @Column(name = "enabled")
     private boolean enabled;
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<Role> roles;
+    private Set<Role> roles;
+    @OneToOne
+    @JoinColumn(name = "person_id")
+    private Person person;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -43,31 +52,31 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return accountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return accountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return credentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return enabled;
     }
 }

@@ -13,10 +13,12 @@ public interface WageRateFullDataMapper {
     @Mapping(source = "wageRate.position.salary", target = "positionSalary")
     @Mapping(source = "wageRate.employee.id", target = "employeeId")
     @Mapping(source = "wageRate.position.id", target = "positionId")
+    @Mapping(source = "wageRate.position.role", target = "role")
     WageRateFullDataDTO toDTO(WageRate wageRate);
     @Mapping(source = "dto.positionName", target = "position.positionName")
     @Mapping(source = "dto.positionSalary", target = "position.salary")
     @Mapping(source = "dto.employeeId", target = "employee.id")
     @Mapping(source = "dto.positionId", target = "position.id")
+    @Mapping(source = "dto.role", target = "position.role")
     WageRate toModel(WageRateFullDataDTO dto);
 }

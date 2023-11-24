@@ -9,6 +9,9 @@
         <link rel="stylesheet" href="/css/style.css">
     </head>
     <body>
+    <c:set var="admin" scope="session" value="ROLE_ADMIN"/>
+    <c:set var="manager" scope="session" value="ROLE_MANAGER"/>
+
     <div class="main">
         <section class="hero">
             <div class="container">
@@ -20,10 +23,16 @@
 
         <section>
             <ul class="header">
-                <li><a class="active" href="/customers">Клиенты</a></li>
+                <c:forEach var="item" items="${personData.roles}">
+                    <c:if test="${item == admin || item == manager}">
+                        <li><a class="active" href="/customers">Клиенты</a></li>
+                    </c:if>
+                </c:forEach>
                 <li><a class="header_li" href="/employees">Сотрудники</a></li>
                 <li><a class="header_li" href="/staffingTable">Штатное расписание</a></li>
                 <li><a class="header_li" href="/findEmployee">Поиск сотрудника</a></li>
+                <li><a class="header_li" href="/home">Домой</a></li>
+                <li><a class="header_li" href="/logout">Выход</a></li>
             </ul>
         </section>
             <%String style = "border=\"1\" cellspacing=\"0\" cellpadding=\"12\"";%>

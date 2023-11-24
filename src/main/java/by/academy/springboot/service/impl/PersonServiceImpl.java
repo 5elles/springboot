@@ -8,6 +8,7 @@ import by.academy.springboot.model.entity.*;
 import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.PersonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class PersonServiceImpl implements PersonService {
     private final PhoneNumberRepository phoneNumberRepository;
     private final EmailRepository emailRepository;
     private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
 
     /**
      * @return new person`s id
@@ -132,5 +134,14 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public boolean isForbiddenForCreation(PhoneNumberDTO dto) {
         return dto == null || dto.getPersonId() == null;
+    }
+    @Override
+    public PersonDTO findPersonDto(UserDetails userDetails) throws IncorrectParameterException {
+        User user = userRepository.getUserByUsername(userDetails.getUsername());
+        Person person =user.getPerson();
+        if (person == null){
+            throw new IncorrectParameterException("No such person. Check username " + userDetails.getUsername());
+        }
+        return PersonMapper.INSTANCE.toDTO(person);
     }
 }

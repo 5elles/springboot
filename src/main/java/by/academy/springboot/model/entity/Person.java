@@ -42,4 +42,6 @@ public class Person {
     private Customer customer;
     @OneToOne(mappedBy = "person")
     private Employee employee;
+    @OneToOne(mappedBy = "person")
+    private User user;
 }

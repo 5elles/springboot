@@ -20,10 +20,8 @@
 
             <section>
                 <ul class="header">
-                    <li><a class="active" href=""></a></li>
-                    <li><a class="header_li" href=""></a></li>
-                    <li><a class="header_li" href=""></a></li>
-                    <li><a class="header_li" href=""></a></li>
+                    <li><a class="header_li" href="/home">Домой</a></li>
+                    <li><a class="header_li" href="/logout">Выход</a></li>
                 </ul>
             </section>
 <%String style = "border=\"1\" cellspacing=\"0\" cellpadding=\"12\"";%>

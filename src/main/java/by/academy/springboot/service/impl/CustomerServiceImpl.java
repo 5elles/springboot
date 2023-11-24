@@ -5,8 +5,10 @@ import by.academy.springboot.exception.ForbiddenActionException;
 import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.*;
 import by.academy.springboot.model.entity.*;
+import by.academy.springboot.model.entity.enums.Role;
 import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.CustomerService;
+import by.academy.springboot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,8 @@ public class CustomerServiceImpl implements CustomerService {
     private final BankAccountRepository bankAccountRepository;
     private final ContactRepository contactRepository;
     private final CurrencyRepository currencyRepository;
+    private final RegistrationService registrationService;
+    private final UserRepository userRepository;
 
     @Override
     public List<CustomerDTO> findAllCustomers() {
@@ -34,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerFullDataDTO findFullData(Integer customerId)
             throws IncorrectParameterException {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(()->new IncorrectParameterException("wrong customer parameter, id " + customerId));
+                .orElseThrow(() -> new IncorrectParameterException("wrong customer parameter, id " + customerId));
         Contact contact = contactRepository.findByPerson(customer.getPerson());
         List<Currency> currencies = currencyRepository.findAllByCurrencyAbbreviationIsNot("BYN");
         return CustomerFullDataMapper.INSTANCE.modelsToDTO(customer, contact, currencies);
@@ -52,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public PaymentOrderDTO findById(int id) throws IncorrectParameterException {
         PaymentOrder order = paymentOrderRepository.findById(id)
-                .orElseThrow(()->new IncorrectParameterException("wrong order id: " + id));
+                .orElseThrow(() -> new IncorrectParameterException("wrong order id: " + id));
         return PaymentOrderMapper.INSTANCE.toDTO(order);
     }
 
@@ -99,9 +103,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void closeAccount(int accountId) throws IncorrectParameterException, ForbiddenActionException {
         BankAccount account = bankAccountRepository.findById(accountId)
-                .orElseThrow(() -> new IncorrectParameterException("no such bank account: id " + accountId));
+                .orElseThrow(() -> new IncorrectParameterException(
+                        "no such bank account: id " + accountId));
         if (account.getCurrentBalance() != 0) {
-            throw new ForbiddenActionException("current balance can not be above 0, account: id" + accountId);
+            throw new ForbiddenActionException(
+                    "current balance can not be above 0, account: id" + accountId);
         }
         account.setClosureDate(LocalDate.now());
         bankAccountRepository.save(account);
@@ -111,15 +117,21 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void terminateContract(int customerId) throws IncorrectParameterException, ForbiddenActionException {
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new IncorrectParameterException("no such customer: id " + customerId));
+                .orElseThrow(() -> new IncorrectParameterException(
+                        "no such customer: id " + customerId));
         if (!isReadyForTermination(customer)) {
-            throw new ForbiddenActionException("contract can not be terminated, customer: id " + customerId);
+            throw new ForbiddenActionException(
+                    "contract can not be terminated, customer: id " + customerId);
         }
         customer.setClosureDate(LocalDate.now());
+        registrationService.deleteRole(UserMapper.INSTANCE
+                        .toDTO(customer.getPerson().getUser()),
+                Role.ROLE_CUSTOMER);
     }
 
     public boolean isReadyForTermination(Customer customer) {
-        return customer.getAgreementDate() != null && !hasActiveBankAccounts(customer.getId());
+        return customer.getAgreementDate() != null
+                && !hasActiveBankAccounts(customer.getId());
     }
 
     @Override
@@ -136,17 +148,27 @@ public class CustomerServiceImpl implements CustomerService {
         return true;
     }
 
-    @Override
     @Transactional
+    @Override
     public void createNewBankContract(CustomerDTO dto) throws IncorrectParameterException, ForbiddenActionException {
         Customer customer = customerRepository.findById(dto.getId())
-                .orElseThrow(() -> new IncorrectParameterException("no such customer, id " + dto.getId()));
+                .orElseThrow(() -> new IncorrectParameterException(
+                        "no such customer, id " + dto.getId()));
         if (isForbiddenForCreation(customer)) {
-            throw new ForbiddenActionException("new contract creation is forbidden, check customer id " + dto.getId());
+            throw new ForbiddenActionException(
+                    "new contract creation is forbidden, check customer id " + dto.getId());
         }
         customer.setAgreementNumber(dto.getAgreementNumber());
         customer.setAgreementDate(dto.getAgreementDate());
         customer.setClosureDate(null);
+        if (customer.getPerson().getUser() == null){
+            registrationService.createUser(
+                    PersonMapper.INSTANCE.toDTO(customer.getPerson()));
+        }
+        User user = userRepository.getUserByPersonId(customer.getPerson().getId());
+        registrationService.addRole(
+                UserMapper.INSTANCE.toDTO(user),
+                Role.ROLE_CUSTOMER);
     }
 
     @Override

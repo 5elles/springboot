@@ -19,7 +19,7 @@
         </section>
         <section>
             <ul class="header">
-                <li><a class="active" href="#home">Домой</a></li>
+                <li><a class="header_li" href="/home">Домой</a></li>
                 <li><a class="header_li" href="/logout">Выход</a></li>
             </ul>
         </section>

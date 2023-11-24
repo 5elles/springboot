@@ -11,6 +11,7 @@ public interface PersonMapper {
     PersonMapper INSTANCE = Mappers.getMapper(PersonMapper.class);
     @Mapping(source = "person.employee.id", target = "employeeId")
     @Mapping(source = "person.customer.id", target = "customerId")
+    @Mapping(source = "person.user.roles", target = "roles")
     PersonDTO toDTO(Person person);
     Person toModel(PersonDTO personDTO);
 }

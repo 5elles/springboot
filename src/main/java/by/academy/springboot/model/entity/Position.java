@@ -25,4 +25,6 @@ public class Position {
     @OneToMany
     @JoinColumn(name = "position_id")
     private List<WageRate> wageRates;
+    @Column(name = "role")
+    private String role;
 }

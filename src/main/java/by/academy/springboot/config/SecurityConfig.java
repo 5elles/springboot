@@ -2,41 +2,65 @@ package by.academy.springboot.config;
 
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
 
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+        HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/");
+
+        requestCache.setMatchingRequestParameterName(null);
         http
-                .authorizeHttpRequests(auth -> auth
+                .csrf(AbstractHttpConfigurer::disable)
+                .requestCache(cache ->cache.requestCache(requestCache))
+                .authorizeHttpRequests(authz -> authz
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher ("/login")).permitAll()
-                        .requestMatchers(AntPathRequestMatcher.antMatcher("/")).permitAll()
-                        .anyRequest()
-                        .authenticated())
+                                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/home")
+                                ).permitAll()
+                        .anyRequest().authenticated())
+
+                .formLogin(Customizer.withDefaults())
+
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login")
-                        .logoutSuccessUrl("/")
                 )
                 .logout(LogoutConfigurer::permitAll);
         return http.build();
+    }
+
+    @Bean
+    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
+        return new MvcRequestMatcher.Builder(introspector);
     }
 
     @Bean

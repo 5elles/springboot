@@ -7,12 +7,11 @@ import by.academy.springboot.dto.WageRateFullDataDTO;
 import by.academy.springboot.exception.ForbiddenActionException;
 import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.*;
-import by.academy.springboot.model.entity.Employee;
-import by.academy.springboot.model.entity.Person;
-import by.academy.springboot.model.entity.Position;
-import by.academy.springboot.model.entity.WageRate;
+import by.academy.springboot.model.entity.*;
+import by.academy.springboot.model.entity.enums.Role;
 import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.EmployeeService;
+import by.academy.springboot.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +29,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PositionRepository positionRepository;
     private final PersonRepository personRepository;
     private final WageRateRepository wageRateRepository;
+    private final RegistrationService registrationService;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -66,16 +67,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public void createNewWageRate(WageRateFullDataDTO dto, Integer personId) throws IncorrectParameterException {
+    public void createNewWageRate(WageRateFullDataDTO dto, Integer personId)
+            throws IncorrectParameterException {
         Person person = personRepository.findById(personId)
                 .orElseThrow(()->new IncorrectParameterException("no such person, id " + personId));
         Position position = positionRepository.findPositionById(dto.getPositionId());
         if (position != null) {
             Employee employee = employeeRepository.findByPerson(person);
             if (employee == null) {
-                Employee newEmployee = new Employee();
-                newEmployee.setPerson(person);
-                employeeRepository.saveAndFlush(newEmployee);
+                employeeRepository.saveAndFlush(
+                        Employee.builder()
+                        .person(person)
+                        .build());
                 employee = employeeRepository.findByPerson(person);
             }
             dto.setEmployeeId(employee.getId());
@@ -83,6 +86,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         } else {
             throw new IncorrectParameterException("position can not be null");
         }
+        if (person.getUser() == null){
+            registrationService.createUser(
+                    PersonMapper.INSTANCE.toDTO(person));
+        }
+        User user = userRepository.getUserByPersonId(personId);
+        registrationService.addRole(
+                UserMapper.INSTANCE.toDTO(user),
+                Role.valueOf(positionRepository.findPositionById(dto.getPositionId()).getRole()));
     }
 
     /**
@@ -115,6 +126,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (wageRate != null){
             wageRate.setFinishDate(LocalDate.now());
             wageRateRepository.save(wageRate);
+            registrationService.deleteRole(
+                    UserMapper.INSTANCE.toDTO(wageRate.getEmployee().getPerson().getUser()),
+                    Role.valueOf(wageRate.getPosition().getRole()));
         } else throw new ForbiddenActionException("wage rate must be not null");
     }
     @Override

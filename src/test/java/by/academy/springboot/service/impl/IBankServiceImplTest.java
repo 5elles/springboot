@@ -13,13 +13,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.access.method.P;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class IBankServiceImplTest {
@@ -141,5 +145,17 @@ class IBankServiceImplTest {
     void givenBankAccountWithCurrentBalanceGreaterZero_whenIsForbiddenForExecution_thenTrue() {
         account.setCurrentBalance(12.0);
         assertThat(iBankService.isForbiddenForExecution(account)).isTrue();
+    }
+
+
+    @DisplayName("test for save method")
+    @Test
+    void givenPaymentOrder_whenSave_thenDoNothing() {
+        PaymentOrder paymentOrder = PaymentOrder.builder()
+                .id(1)
+                .build();
+        given(paymentOrderRepository.save(any(PaymentOrder.class))).willReturn(any(PaymentOrder.class));
+        iBankService.save(paymentOrder);
+        verify(paymentOrderRepository, times(1)).save(paymentOrder);
     }
 }

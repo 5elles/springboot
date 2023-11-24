@@ -6,63 +6,76 @@ import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.service.CustomerService;
 import by.academy.springboot.service.PersonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequiredArgsConstructor
 public class CustomersController {
     private final CustomerService customerService;
     private final PersonService personService;
-    private static final String CUSTOMERS_PATH = "/enterprise/customers/";
-    private static final String PERSONS_PATH = "/enterprise/persons/";
+    private static final String CUSTOMERS_PATH = "enterprise/customers/";
+    private static final String PERSONS_PATH = "enterprise/persons/";
     private static final String CUSTOMER_PAGE = "/customer?id=";
     private static final String CUSTOMER_SUFFIX = "Customer?cid=";
+    private static final String REDIRECT = "redirect:";
 
-
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/customers")
-    public String showAllCustomers(Model model) {
-        model.addAttribute(
-                "customers", customerService.findAllCustomers()
-        );
+    public String showAllCustomers(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        model.addAttribute("customers", customerService.findAllCustomers());
+        model.addAttribute("personData", personService.findPersonDto(userDetails));
+
         return CUSTOMERS_PATH + "customers";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/customer")
     public String showOneCustomer(@RequestParam("id") int id,
+                                  @AuthenticationPrincipal UserDetails userDetails,
                                   Model model)
-    throws  IncorrectParameterException {
+            throws IncorrectParameterException {
         CustomerFullDataDTO fullData = customerService.findFullData(id);
         model.addAttribute("customerFullData", fullData);
+        model.addAttribute("personData", personService.findPersonDto(userDetails));
         return CUSTOMERS_PATH + "customer";
     }
 
+//    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/customer")
-    public String createNewContract(@RequestParam("cid") int cid,
+    public String createNewContract(@RequestParam("id") int cid,
                                     CustomerDTO dto)
             throws ForbiddenActionException, IncorrectParameterException {
         customerService.createNewBankContract(dto);
-        return "redirect:" + CUSTOMER_PAGE + cid;
+        return REDIRECT + CUSTOMER_PAGE + cid;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/closeAccount")
     public String closeAccount(@RequestParam("aid") int aid,
                                @RequestParam("cid") int cid)
             throws IncorrectParameterException, ForbiddenActionException {
         customerService.closeAccount(aid);
-        return "redirect:/customer?id=" + cid;
+        return REDIRECT + CUSTOMER_PAGE + cid;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/terminate")
     public String terminateContract(@RequestParam("cid") int cid)
             throws ForbiddenActionException, IncorrectParameterException {
         customerService.terminateContract(cid);
-        return "redirect:/customer?id=" + cid;
+        return REDIRECT + CUSTOMER_PAGE + cid;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/bankAccount")
     public String showBankAccount(@RequestParam(value = "id") int id,
+
                                   Model model
     ) throws IncorrectParameterException {
         BankAccountFullDataDTO dto = customerService.findBankAccountFullData(id);
@@ -70,19 +83,25 @@ public class CustomersController {
         return CUSTOMERS_PATH + "bankAccount";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/operationsLog")
-    public String showBankOperationsLog(Model model) {
+    public String showBankOperationsLog(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("orders", customerService.findAllPaymentOrders());
+        model.addAttribute("personData", personService.findPersonDto(userDetails));
         return CUSTOMERS_PATH + "operationsLog";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/po")
     public String showPaymentOrder(@RequestParam("id") int id,
+                                   @AuthenticationPrincipal UserDetails userDetails,
                                    Model model) {
         model.addAttribute("order", customerService.findById(id));
+        model.addAttribute("personData", personService.findPersonDto(userDetails));
         return CUSTOMERS_PATH + "paymentOrder";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/findCustomers")
     public String findCustomer() {
         return CUSTOMERS_PATH + "findCustomer";
@@ -103,19 +122,24 @@ public class CustomersController {
         return CUSTOMERS_PATH + "persons";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/newPersonCustomer")
-    public String showNewPersonForm(Model model) {
+    public String showNewPersonForm(Model model,
+                                    @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("status", "Customer");
+        model.addAttribute("personData", personService.findPersonDto(userDetails));
         return PERSONS_PATH + "newPersonForm";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/newPersonCustomer")
     public String createNewPerson(@ModelAttribute("person") PersonDTO personDTO)
             throws ForbiddenActionException {
         personService.save(personDTO);
-        return "redirect:/customers";
+        return REDIRECT + "/customers";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/newcustomer")
     public String showNewCustomerForm(@RequestParam("pid") int pid,
                                       Model model) {
@@ -123,13 +147,15 @@ public class CustomersController {
         return CUSTOMERS_PATH + "newCustomerForm";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/createNewCustomer")
     public String createNewCustomer(@ModelAttribute("customer") CustomerDTO customerDTO)
             throws ForbiddenActionException {
         int id = customerService.createCustomer(customerDTO);
-        return "redirect:" + CUSTOMER_PAGE + id;
+        return REDIRECT + CUSTOMER_PAGE + id;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN', 'ROLE_HR')")
     @GetMapping("/newAddress")
     public String showNewAddressForm(@RequestParam("cid") int cid,
                                      Model model) {
@@ -139,15 +165,17 @@ public class CustomersController {
         return PERSONS_PATH + "newAddressForm";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/createNewAddressCustomer")
     public String createNewAddress(@RequestParam("cid") int cid,
                                    @ModelAttribute("address") NewAddressDTO dto)
-    throws ForbiddenActionException {
+            throws ForbiddenActionException {
         personService.createNewAddress(dto);
-        return "redirect:" + CUSTOMER_PAGE + cid;
+        return REDIRECT + CUSTOMER_PAGE + cid;
     }
 
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/newbankaccount")
     public String showNewBankAccountForm(@RequestParam("cid") int cid,
                                          Model model) {
@@ -156,14 +184,16 @@ public class CustomersController {
         return CUSTOMERS_PATH + "newBankAccountForm";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/createBankAccount")
     public String createNewBankAccount(@ModelAttribute("bankAccount") BankAccountDTO dto,
                                        @RequestParam("cid") int cid)
             throws IncorrectParameterException, ForbiddenActionException {
         customerService.createNewBankAccount(dto);
-        return "redirect:" + CUSTOMER_PAGE + cid;
+        return REDIRECT + CUSTOMER_PAGE + cid;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/addPhoneNumberCustomer")
     public String addPhoneNumber(@RequestParam("cid") int cid,
                                  Model model) {
@@ -172,14 +202,16 @@ public class CustomersController {
         return PERSONS_PATH + "newPhoneNumberForm";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/savePhoneNumberCustomer")
     public String savePhoneNumber(@ModelAttribute("phoneNumber") PhoneNumberDTO dto,
                                   @RequestParam("cid") int cid)
             throws ForbiddenActionException, IncorrectParameterException {
         personService.createNewPhoneNumber(dto);
-        return "redirect:" + CUSTOMER_PAGE + cid;
+        return REDIRECT + CUSTOMER_PAGE + cid;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/addEmailCustomer")
     public String addEmail(@RequestParam("cid") int cid,
                            Model model) {
@@ -188,10 +220,11 @@ public class CustomersController {
         return PERSONS_PATH + "newEmailForm";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/saveEmailCustomer")
     public String saveEmail(@ModelAttribute("email") EmailDTO dto,
                             @RequestParam("cid") int cid) throws ForbiddenActionException, IncorrectParameterException {
         personService.createNewEmail(dto);
-        return "redirect:" + CUSTOMER_PAGE + cid;
+        return REDIRECT + CUSTOMER_PAGE + cid;
     }
 }

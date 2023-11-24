@@ -94,7 +94,7 @@
                 <c:if test="${customerFullData.closureDate != null}">
                     <div class="container">
                         <h3>Регистрация нового договора банковского обслуживания</h3>
-                        <form id="add_form" class="form" name="newContract" action="/customer?cid=${customerFullData.id}" method="post" >
+                        <form id="add_form" class="form" name="newContract" action="/customer?id=${customerFullData.id}" method="post" >
                             <fieldset>
                                 <legend>реквизиты договора</legend>
                                 <div class="field">
