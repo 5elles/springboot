@@ -11,6 +11,8 @@
     <body>
     <c:set var="admin" scope="session" value="ROLE_ADMIN"/>
     <c:set var="manager" scope="session" value="ROLE_MANAGER"/>
+    <c:set var="customer" scope="session" value="ROLE_CUSTOMER"/>
+
 
     <div class="main">
         <section class="hero">
@@ -23,6 +25,7 @@
 
         <section>
             <ul class="header">
+
                 <c:forEach var="item" items="${personData.roles}">
                     <c:if test="${item == admin || item == manager}">
                         <li><a class="active" href="/customers">Клиенты</a></li>

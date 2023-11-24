@@ -116,7 +116,7 @@
             <div class="table">
                 <table <%=style%>>
                     <tr>
-                        <td colspan="5"><b>списания со счета</b></td>
+                        <th colspan="5">списания со счета</th>
                     </tr>
                     <tr>
                         <th>Дата и время операции</th>

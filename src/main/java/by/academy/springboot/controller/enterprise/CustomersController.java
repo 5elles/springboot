@@ -46,7 +46,7 @@ public class CustomersController {
         return CUSTOMERS_PATH + "customer";
     }
 
-//    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/customer")
     public String createNewContract(@RequestParam("id") int cid,
                                     CustomerDTO dto)

@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -35,20 +36,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
-        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector).servletPath("/");
-
         requestCache.setMatchingRequestParameterName(null);
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .requestCache(cache ->cache.requestCache(requestCache))
                 .authorizeHttpRequests(authz -> authz
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                .requestMatchers(mvcMatcherBuilder.pattern(HttpMethod.GET, "/home")
+                                .requestMatchers(
+                                        antMatcher("/registration"),
+                                        antMatcher("/register"),
+                                        antMatcher("/login"),
+                                        antMatcher("/resources/**"),
+                                        antMatcher("/static/**"),
+                                        antMatcher("/.*.css"),
+                                        antMatcher("/js/**"),
+                                        antMatcher("/fonts/**")
                                 ).permitAll()
                         .anyRequest().authenticated())
 
-                .formLogin(Customizer.withDefaults())
-
+                .formLogin(
+                        login -> login
+                                .loginPage("/login")
+                                .defaultSuccessUrl("/home")
+                )
 
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -56,11 +66,6 @@ public class SecurityConfig {
                 )
                 .logout(LogoutConfigurer::permitAll);
         return http.build();
-    }
-
-    @Bean
-    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
-        return new MvcRequestMatcher.Builder(introspector);
     }
 
     @Bean

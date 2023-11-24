@@ -2,10 +2,10 @@ package by.academy.springboot.service.impl;
 
 import by.academy.springboot.dto.PersonDTO;
 import by.academy.springboot.dto.UserDTO;
+import by.academy.springboot.dto.UserRegistrationDTO;
 import by.academy.springboot.exception.ForbiddenActionException;
 import by.academy.springboot.exception.IncorrectParameterException;
 import by.academy.springboot.mapper.UserMapper;
-import by.academy.springboot.model.entity.Person;
 import by.academy.springboot.model.entity.User;
 import by.academy.springboot.model.entity.UserRole;
 import by.academy.springboot.model.entity.enums.Role;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -99,5 +100,25 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .build();
         User saved = userRepository.save(UserMapper.INSTANCE.toModel(newUserDto));
         return saved.getId();
+    }
+
+    @Override
+    @Transactional
+    public void registerNewUser(UserRegistrationDTO dto) throws ForbiddenActionException {
+        if (isReadyForRegistration(dto)){
+            User user = userRepository.getUserByUsername(dto.getUsername());
+            user.setPassword(encrypt(dto.getPassword()));
+            userRepository.save(user);
+        } else {
+            throw new ForbiddenActionException("registration has been denied");
+        }
+    }
+
+    @Override
+    public boolean isReadyForRegistration(UserRegistrationDTO dto){
+        User user = userRepository.getUserByUsername(dto.getUsername());
+        return  user != null &&
+                user.getPassword() == null &&
+                Objects.equals(dto.getPassword(), dto.getPasswordConfirmation());
     }
 }

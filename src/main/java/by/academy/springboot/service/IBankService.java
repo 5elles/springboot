@@ -8,6 +8,7 @@ import by.academy.springboot.model.entity.BankAccount;
 import by.academy.springboot.model.entity.Currency;
 import by.academy.springboot.model.entity.Customer;
 import by.academy.springboot.model.entity.PaymentOrder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface IBankService {
     boolean isForbiddenForExecution(BankAccount fromAccount, BankAccount toAccount, OrderDTO order);
     void closeBankAccount(int accountId);
     boolean isForbiddenForExecution(BankAccount account);
+    boolean isAllowedToHaveAccess(UserDetails details, Integer customerIdToAccess);
+    boolean isAllowedToAccountAccess(UserDetails details, Integer accountIdToAccess);
 }

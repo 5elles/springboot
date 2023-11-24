@@ -11,6 +11,7 @@
     <body>
         <c:set var="admin" scope="session" value="ROLE_ADMIN"/>
         <c:set var="hr" scope="session" value="ROLE_HR"/>
+        <c:set var="customer" scope="session" value="ROLE_CUSTOMER"/>
         <div class="main">
             <section class="hero">
                 <div class="container">

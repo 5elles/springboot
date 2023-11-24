@@ -2,6 +2,7 @@ package by.academy.springboot.service;
 
 import by.academy.springboot.dto.PersonDTO;
 import by.academy.springboot.dto.UserDTO;
+import by.academy.springboot.dto.UserRegistrationDTO;
 import by.academy.springboot.model.entity.enums.Role;
 
 public interface RegistrationService {
@@ -11,4 +12,7 @@ public interface RegistrationService {
     void deleteRole(UserDTO dto, Role role);
     public void addRole(UserDTO dto, Role role);
     Integer createUser(PersonDTO dto);
+    boolean isReadyForRegistration(UserRegistrationDTO dto);
+    void registerNewUser(UserRegistrationDTO dto);
+
 }

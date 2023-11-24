@@ -14,6 +14,8 @@
         <c:set var="admin" scope="session" value="ROLE_ADMIN"/>
         <c:set var="manager" scope="session" value="ROLE_MANAGER"/>
         <c:set var="hr" scope="session" value="ROLE_HR"/>
+        <c:set var="customer" scope="session" value="ROLE_CUSTOMER"/>
+
         <div class="main">
             <section class="hero">
                 <div class="container">
@@ -26,7 +28,7 @@
             <section>
                 <ul class="header">
                     <c:forEach var="item" items="${personData.roles}">
-                        <c:if test="${item == user}">
+                        <c:if test="${item == customer}">
                             <li><a class="header_li" href="/lc?id=${personData.customerId}">Личный кабинет пользователя</a></li>
                         </c:if>
                     </c:forEach>

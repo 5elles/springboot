@@ -15,6 +15,7 @@ import by.academy.springboot.model.repository.*;
 import by.academy.springboot.service.IBankService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,8 @@ public class IBankServiceImpl implements IBankService {
     private final CurrencyRepository currencyRepository;
     private final PaymentOrderRepository paymentOrderRepository;
     private final ContactRepository contactRepository;
+    private final PersonRepository personRepository;
+    private final UserRepository userRepository;
 
     @Override
     public CustomerFullDataDTO findFullData(Integer customerId) throws IncorrectParameterException {
@@ -130,10 +134,34 @@ public class IBankServiceImpl implements IBankService {
         }
         account.setClosureDate(LocalDate.now());
     }
+
     @Override
-    public boolean isForbiddenForExecution(BankAccount account){
+    public boolean isForbiddenForExecution(BankAccount account) {
         return account == null ||
                 account.getCurrentBalance() != 0;
+    }
+
+    @Override
+    public boolean isAllowedToHaveAccess(UserDetails details, Integer customerIdToAccess) {
+        Person person = personRepository.findPerson(userRepository.getUserByUsername(details.getUsername()));
+        Customer customer = person.getCustomer();
+        if (customer == null || !Objects.equals(customerIdToAccess, customer.getId())) {
+            throw new ForbiddenActionException("access denied");
+        }
+        return true;
+    }
+    @Override
+    public boolean isAllowedToAccountAccess(UserDetails details, Integer accountIdToAccess)
+    throws ForbiddenActionException {
+        User user = userRepository.getUserByUsername(details.getUsername());
+        Customer customer = personRepository.findPerson(user).getCustomer();
+        List<BankAccount> bankAccounts = customer.getBankAccounts();
+        boolean match = bankAccounts.stream()
+                .anyMatch(account -> account.getId().equals(accountIdToAccess));
+        if (!match) {
+            throw new ForbiddenActionException("access denied");
+        }
+        return true;
     }
 }
 

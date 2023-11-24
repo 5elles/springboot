@@ -17,9 +17,9 @@ public class EnterpriseController {
     private final PersonService personService;
     private static final String PATH = "enterprise/";
 
-    @GetMapping("/auth")
+    @GetMapping("/login")
     public String showLoginForm(){
-        return PATH + "enterpriseLogin";
+        return "enterpriseLogin";
     }
 
 

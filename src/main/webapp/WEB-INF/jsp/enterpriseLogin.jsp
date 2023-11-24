@@ -215,10 +215,6 @@
             margin: 20px 0;
             padding: 0;
         }
-        .text-red{
-            color: crimson;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -234,21 +230,20 @@
     <section>
         <ul class="header">
             <li><a class="header_li" href="/home">Домой</a></li>
+            <li><a class="header_li" href="/registration">Регистрация</a></li>
             <li><a class="header_li" href="/logout">Выход</a></li>
         </ul>
     </section>
-
-        <div class="tipa_body">
-            <div class="container">
-                <br>
-                    <h3 class="text-red">CONTENT IS NOT FOUND OR IS UNAVAILABLE </h3>
-                <span class="text-red">
-                    Error:
-                    ${exception}
-                </span>
-            </div>
+    <div>
+        <div class="container">
+            <h3>Пожалуйста, авторизуйтесь</h3>
+            <form method="post" name="user" action="/login">
+                <input type="text" id="id-number" name="username" placeholder="введите ID гражданина..." required>
+                <input type="password" id="password" name="password" placeholder="введите пароль..." required>
+                <button class="btn info" type="submit">Отправить</button>
+            </form>
         </div>
-
+    </div>
     <section class="footer">
         <div>
             <p class="company">Cool Bank</p>
