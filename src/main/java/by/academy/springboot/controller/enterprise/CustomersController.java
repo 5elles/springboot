@@ -24,12 +24,13 @@ public class CustomersController {
     private static final String CUSTOMER_PAGE = "/customer?id=";
     private static final String CUSTOMER_SUFFIX = "Customer?cid=";
     private static final String REDIRECT = "redirect:";
+    private static final String PERSON_DATA = "personData";
 
     @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @GetMapping("/customers")
     public String showAllCustomers(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("customers", customerService.findAllCustomers());
-        model.addAttribute("personData", personService.findPersonDto(userDetails));
+        model.addAttribute(PERSON_DATA, personService.findPersonDto(userDetails));
 
         return CUSTOMERS_PATH + "customers";
     }
@@ -42,7 +43,7 @@ public class CustomersController {
             throws IncorrectParameterException {
         CustomerFullDataDTO fullData = customerService.findFullData(id);
         model.addAttribute("customerFullData", fullData);
-        model.addAttribute("personData", personService.findPersonDto(userDetails));
+        model.addAttribute(PERSON_DATA, personService.findPersonDto(userDetails));
         return CUSTOMERS_PATH + "customer";
     }
 
@@ -87,7 +88,7 @@ public class CustomersController {
     @GetMapping("/operationsLog")
     public String showBankOperationsLog(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("orders", customerService.findAllPaymentOrders());
-        model.addAttribute("personData", personService.findPersonDto(userDetails));
+        model.addAttribute(PERSON_DATA, personService.findPersonDto(userDetails));
         return CUSTOMERS_PATH + "operationsLog";
     }
 
@@ -97,7 +98,7 @@ public class CustomersController {
                                    @AuthenticationPrincipal UserDetails userDetails,
                                    Model model) {
         model.addAttribute("order", customerService.findById(id));
-        model.addAttribute("personData", personService.findPersonDto(userDetails));
+        model.addAttribute(PERSON_DATA, personService.findPersonDto(userDetails));
         return CUSTOMERS_PATH + "paymentOrder";
     }
 
@@ -127,7 +128,7 @@ public class CustomersController {
     public String showNewPersonForm(Model model,
                                     @AuthenticationPrincipal UserDetails userDetails) {
         model.addAttribute("status", "Customer");
-        model.addAttribute("personData", personService.findPersonDto(userDetails));
+        model.addAttribute(PERSON_DATA, personService.findPersonDto(userDetails));
         return PERSONS_PATH + "newPersonForm";
     }
 

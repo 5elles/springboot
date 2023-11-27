@@ -2,13 +2,10 @@ package by.academy.springboot.config;
 
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,9 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 
@@ -31,10 +25,15 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private static final String LOGIN_PAGE = "/login";
+    private static final String LOGOUT_PAGE = "/logout";
+    private static final String REGISTRATION_PAGE = "/registration";
+    private static final String HOME_PAGE = "/home";
+    private static final String REGISTER_PAGE = "/register";
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
         requestCache.setMatchingRequestParameterName(null);
         http
@@ -43,9 +42,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                                 .requestMatchers(
-                                        antMatcher("/registration"),
-                                        antMatcher("/register"),
-                                        antMatcher("/login"),
+                                        antMatcher(REGISTRATION_PAGE),
+                                        antMatcher(REGISTER_PAGE),
+                                        antMatcher(LOGIN_PAGE),
                                         antMatcher("/resources/**"),
                                         antMatcher("/static/**"),
                                         antMatcher("/.*.css"),
@@ -56,13 +55,13 @@ public class SecurityConfig {
 
                 .formLogin(
                         login -> login
-                                .loginPage("/login")
-                                .defaultSuccessUrl("/home")
+                                .loginPage(LOGIN_PAGE)
+                                .defaultSuccessUrl(HOME_PAGE)
                 )
 
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
+                        .logoutUrl(LOGOUT_PAGE)
+                        .logoutSuccessUrl(LOGIN_PAGE)
                 )
                 .logout(LogoutConfigurer::permitAll);
         return http.build();
@@ -80,6 +79,4 @@ public class SecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
-
-
 }

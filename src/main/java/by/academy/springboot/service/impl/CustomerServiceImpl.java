@@ -161,15 +161,10 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setAgreementNumber(dto.getAgreementNumber());
         customer.setAgreementDate(dto.getAgreementDate());
         customer.setClosureDate(null);
-        if (customer.getPerson().getUser() == null){
-            registrationService.createUser(
-                    PersonMapper.INSTANCE.toDTO(customer.getPerson()));
-        }
-        User user = userRepository.getUserByPersonId(customer.getPerson().getId());
-        registrationService.addRole(
-                UserMapper.INSTANCE.toDTO(user),
-                Role.ROLE_CUSTOMER);
+        setCustomerRole(customer);
     }
+
+
 
     @Override
     public boolean isForbiddenForCreation(Customer customer) {
@@ -213,7 +208,10 @@ public class CustomerServiceImpl implements CustomerService {
         if (isForbiddenForCreation(person, customer)) {
             throw new ForbiddenActionException("new customer creation is forbidden. check dto or person, person id: " + dto.getPersonId());
         }
-        return customerRepository.save(CustomerMapper.INSTANCE.toModel(dto)).getId();
+        Integer id = customerRepository.save(CustomerMapper.INSTANCE.toModel(dto)).getId();
+        customer = customerRepository.findById(id).orElseThrow(() ->new IncorrectParameterException("a customer has not been created"));
+        setCustomerRole(customer);
+        return id;
     }
 
     @Override
@@ -231,5 +229,18 @@ public class CustomerServiceImpl implements CustomerService {
             return -1;
         }
         return customer.getPerson().getId();
+    }
+    @Override
+    public void setCustomerRole(Customer customer) throws IncorrectParameterException{
+        if (customer.getPerson().getUser() == null){
+            Person person = personRepository.findById(customer.getPerson().getId()).orElseThrow(
+                    () -> new IncorrectParameterException("the customer role: check the person id"));
+            registrationService.createUser(
+                    PersonMapper.INSTANCE.toDTO(person));
+        }
+        User user = userRepository.getUserByPersonId(customer.getPerson().getId());
+        registrationService.addRole(
+                UserMapper.INSTANCE.toDTO(user),
+                Role.ROLE_CUSTOMER);
     }
 }

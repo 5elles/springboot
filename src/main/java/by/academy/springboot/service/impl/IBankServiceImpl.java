@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Service
@@ -98,7 +97,7 @@ public class IBankServiceImpl implements IBankService {
                 .orElseThrow(() -> new IncorrectParameterException("no such from account!"));
         BankAccount toBankAccount = bankAccountRepository.findBankAccountByAccountNumber(order.getToAccountNumber());
         if (isForbiddenForExecution(fromBankAccount, toBankAccount, order)) {
-            throw new ForbiddenActionException("operation is forbidden. check parameters!");
+            throw new ForbiddenActionException("operation is forbidden. check your parameters!");
         }
         double amount = (double) Math.round(order.getAmount() * 100) / 100;
         PaymentOrder paymentOrder = PaymentOrder.builder()
