@@ -22,7 +22,7 @@ public class PersonServiceImpl implements PersonService {
     private final RegionRepository regionRepository;
     private final SettlementRepository settlementRepository;
     private final SettlementTypeRepository settlementTypeRepository;
-    private final StreeetTypeRepository streeetTypeRepository;
+    private final StreetTypeRepository streetTypeRepository;
     private final ContactRepository contactRepository;
     private final PhoneNumberRepository phoneNumberRepository;
     private final EmailRepository emailRepository;
@@ -56,8 +56,7 @@ public class PersonServiceImpl implements PersonService {
                 firstName,
                 middleName
         );
-        List<PersonDTO> dtoList = PersonListMapper.INSTANCE.toDTO(personList);
-        return dtoList;
+        return PersonListMapper.INSTANCE.toDTO(personList);
     }
 
     @Override
@@ -66,7 +65,7 @@ public class PersonServiceImpl implements PersonService {
         List<Region> regions = regionRepository.findAll();
         List<SettlementType> settlementTypes = settlementTypeRepository.findAll();
         List<Settlement> settlements = settlementRepository.findAll();
-        List<StreetType> streetTypes = streeetTypeRepository.findAll();
+        List<StreetType> streetTypes = streetTypeRepository.findAll();
         return AddressFullDataMapper.INSTANCE.toDTO(countries, regions, settlementTypes, settlements, streetTypes);
     }
 
@@ -74,7 +73,7 @@ public class PersonServiceImpl implements PersonService {
     @Transactional
     public void createNewPhoneNumber(PhoneNumberDTO dto) throws ForbiddenActionException, IncorrectParameterException {
         if (isForbiddenForCreation(dto)) {
-            throw new ForbiddenActionException("PhoneNumberDTO is not valid");
+            throw new ForbiddenActionException("Something wrong with the phone number. It has not been saved.");
         }
         Person person = personRepository.findById(dto.getPersonId())
                 .orElseThrow(() -> new IncorrectParameterException("no such person, id " + dto.getPersonId()));
@@ -103,7 +102,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void createNewEmail(EmailDTO dto) throws ForbiddenActionException, IncorrectParameterException {
         if (isForbiddenForCreation(dto)) {
-            throw new ForbiddenActionException("EmailDTO is not valid");
+            throw new ForbiddenActionException("Something wrong with the email number. It has not been saved.");
         }
         Person person = personRepository.findById(dto.getPersonId())
                 .orElseThrow(() -> new IncorrectParameterException("person can not be null!"));
@@ -118,9 +117,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Transactional
     @Override
-    public void createNewAddress(NewAddressDTO dto) throws ForbiddenActionException{
+    public void createNewAddress(NewAddressDTO dto) throws ForbiddenActionException {
         Address model = NewAddressMapper.INSTANCE.toModel(dto);
-        if (model == null){
+        if (model == null) {
             throw new ForbiddenActionException("Forbidden action! Check your address.");
         }
         addressRepository.save(model);
@@ -128,19 +127,24 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public boolean isForbiddenForCreation(EmailDTO dto) {
-        return dto == null || dto.getPersonId() == null;
+        return dto == null ||
+                dto.getPersonId() == null ||
+                emailRepository.find(dto.getEmail()) != null;
     }
 
     @Override
     public boolean isForbiddenForCreation(PhoneNumberDTO dto) {
-        return dto == null || dto.getPersonId() == null;
+        return dto == null ||
+                dto.getPersonId() == null ||
+                phoneNumberRepository.find(dto.getPhoneNumber()) != null;
     }
+
     @Override
     public PersonDTO findPersonDto(UserDetails userDetails) throws IncorrectParameterException {
         User user = userRepository.getUserByUsername(userDetails.getUsername());
-        Person person =user.getPerson();
-        if (person == null){
-            throw new IncorrectParameterException("No such person. Check username " + userDetails.getUsername());
+        Person person = user.getPerson();
+        if (person == null) {
+            throw new IncorrectParameterException("No such person. Check the username " + userDetails.getUsername());
         }
         return PersonMapper.INSTANCE.toDTO(person);
     }

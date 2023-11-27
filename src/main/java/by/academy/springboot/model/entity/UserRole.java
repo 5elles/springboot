@@ -1,6 +1,5 @@
 package by.academy.springboot.model.entity;
 
-import by.academy.springboot.model.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

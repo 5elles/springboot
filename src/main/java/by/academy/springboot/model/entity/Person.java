@@ -1,6 +1,5 @@
 package by.academy.springboot.model.entity;
 
-import by.academy.springboot.model.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 
 @Data

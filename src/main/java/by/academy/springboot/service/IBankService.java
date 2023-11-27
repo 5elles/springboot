@@ -5,8 +5,6 @@ import by.academy.springboot.dto.CustomerFullDataDTO;
 import by.academy.springboot.dto.OrderDTO;
 import by.academy.springboot.dto.PaymentOrderDTO;
 import by.academy.springboot.model.entity.BankAccount;
-import by.academy.springboot.model.entity.Currency;
-import by.academy.springboot.model.entity.Customer;
 import by.academy.springboot.model.entity.PaymentOrder;
 import org.springframework.security.core.userdetails.UserDetails;
 

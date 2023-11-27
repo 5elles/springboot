@@ -121,7 +121,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void closeWageRate(Integer wageRateId) {
+    public void closeWageRate(Integer wageRateId) throws ForbiddenActionException{
         WageRate wageRate = wageRateRepository.findById(wageRateId).orElse(null);
         if (wageRate != null){
             wageRate.setFinishDate(LocalDate.now());

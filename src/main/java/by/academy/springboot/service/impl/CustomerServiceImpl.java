@@ -156,7 +156,7 @@ public class CustomerServiceImpl implements CustomerService {
                         "no such customer, id " + dto.getId()));
         if (isForbiddenForCreation(customer)) {
             throw new ForbiddenActionException(
-                    "new contract creation is forbidden, check customer id " + dto.getId());
+                    "the new contract creation is forbidden, check customer id " + dto.getId());
         }
         customer.setAgreementNumber(dto.getAgreementNumber());
         customer.setAgreementDate(dto.getAgreementDate());
@@ -179,11 +179,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Transactional
     @Override
-    public void createNewBankAccount(BankAccountDTO dto) {
+    public void createNewBankAccount(BankAccountDTO dto) throws ForbiddenActionException {
         Customer customer = customerRepository.findById(dto.getCustomerID())
                 .orElseThrow(() -> new IncorrectParameterException("no such customer, id " + dto.getCustomerID()));
         if (!isReadyForBankAccountCreation(customer, dto)) {
-            throw new ForbiddenActionException("new bank account creation is forbidden! check the customer`s contract and validate the new account form");
+            throw new ForbiddenActionException("the new bank account creation is forbidden! check the customer`s contract and validate the new account form");
         }
         bankAccountRepository.save(BankAccountMapper.INSTANCE.dtoToModel(dto));
     }
@@ -202,7 +202,7 @@ public class CustomerServiceImpl implements CustomerService {
      */
     @Override
     @Transactional
-    public Integer createCustomer(CustomerDTO dto) {
+    public Integer createCustomer(CustomerDTO dto) throws ForbiddenActionException {
         Person person = personRepository.findById(dto.getPersonId()).orElse(null);
         Customer customer = customerRepository.findCustomerByPerson(person);
         if (isForbiddenForCreation(person, customer)) {
