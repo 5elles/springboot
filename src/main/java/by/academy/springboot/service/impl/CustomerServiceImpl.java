@@ -235,8 +235,10 @@ public class CustomerServiceImpl implements CustomerService {
         if (customer.getPerson().getUser() == null){
             Person person = personRepository.findById(customer.getPerson().getId()).orElseThrow(
                     () -> new IncorrectParameterException("the customer role: check the person id"));
-            registrationService.createUser(
-                    PersonMapper.INSTANCE.toDTO(person));
+            if (person.getUser() == null){
+                registrationService.createUser(
+                        PersonMapper.INSTANCE.toDTO(person));
+            }
         }
         User user = userRepository.getUserByPersonId(customer.getPerson().getId());
         registrationService.addRole(

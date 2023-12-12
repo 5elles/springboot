@@ -5,19 +5,19 @@
 
 <section>
     <div class="tables">
-        <div class="table">
-                <table <%=style%>>
-                    <tr>
-                        <th colspan="2">текущие курсы валют</th>
-                    </tr>
-                    <c:forEach var="entry" items="${data.currencies}">
-                        <tr>
-                            <td><c:out value="${entry.currencyAbbreviation}"    /></td>
-                            <td><c:out value="${entry.currencyRate}"/> </td>
-                        </tr>
-                    </c:forEach>
-                </table>
-        </div>
+<%--        <div class="table">--%>
+<%--                <table <%=style%>>--%>
+<%--                    <tr>--%>
+<%--                        <th colspan="2">текущие курсы валют</th>--%>
+<%--                    </tr>--%>
+<%--                    <c:forEach var="entry" items="${data.currencies}">--%>
+<%--                        <tr>--%>
+<%--                            <td><c:out value="${entry.currencyAbbreviation}"    /></td>--%>
+<%--                            <td><c:out value="${entry.currencyRate}"/> </td>--%>
+<%--                        </tr>--%>
+<%--                    </c:forEach>--%>
+<%--                </table>--%>
+<%--        </div>--%>
         <div class="table">
             <table <%=style%>>
                 <tr>
@@ -49,7 +49,7 @@
                                             <a href="" class="btn default">закрыть</a>
                                         </c:when>
                                         <c:otherwise>
-                                            <a href="/ibankCloseAccount?aid=${data.id}&cid=${data.id}&cid=${data.id}" class="btn danger">закрыть</a>
+                                            <a href="/ibankCloseAccount?aid=${entity.id}&cid=${data.id}&cid=${data.id}" class="btn danger">закрыть</a>
                                         </c:otherwise>
                                     </c:choose>
                                 </c:otherwise>
